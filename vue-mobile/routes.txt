@@ -1,0 +1,8 @@
+  {
+    path: '/files',
+    component: () => import('src/../../../FilesMobileWebclient/vue-mobile/pages/Files'),
+  },
+  {
+    path: '/file/:id',
+    component: () => import('src/../../../FilesMobileWebclient/vue-mobile/pages/FileInfo'),
+  },
