@@ -109,8 +109,8 @@ import { mapActions } from 'vuex'
 
 import date from 'src/utils/date'
 
-import AppPaginator from 'components/common/AppPaginator'
-import ButtonDialog from '../common/ButtonDialog'
+import AppPaginator from 'src/components/common/AppPaginator'
+import ButtonDialog from 'src/components/common/ButtonDialog'
 
 export default {
   name: 'ShowHistoryDialog',

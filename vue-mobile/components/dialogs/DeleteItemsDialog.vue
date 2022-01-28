@@ -23,7 +23,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
-import ButtonDialog from '../common/ButtonDialog'
+import ButtonDialog from 'src/components/common/ButtonDialog'
 
 export default {
   name: 'DeleteItemsDialog',

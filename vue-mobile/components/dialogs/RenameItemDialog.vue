@@ -30,7 +30,7 @@ import { mapActions } from 'vuex'
 
 import AppDialogInput from 'components/common/AppDialogInput'
 
-import ButtonDialog from '../common/ButtonDialog'
+import ButtonDialog from 'src/components/common/ButtonDialog'
 
 export default {
   name: 'RenameItemDialog',

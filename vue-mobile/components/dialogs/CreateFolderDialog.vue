@@ -34,8 +34,8 @@
 <script>
 import { mapActions } from 'vuex'
 
-import AppInput from 'components/common/AppInput'
-import ButtonDialog from '../common/ButtonDialog'
+import AppInput from 'src/components/common/AppInput'
+import ButtonDialog from 'src/components/common/ButtonDialog'
 
 export default {
   name: 'CreateFolderDialog',

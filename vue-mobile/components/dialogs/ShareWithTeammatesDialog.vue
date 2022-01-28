@@ -113,7 +113,7 @@ import { getContactsSelectOptions } from 'src/utils/contacts/utils'
 import { getParametersForShare } from 'src/utils/files/utils'
 
 import ShowHistoryDialog from './ShowHistoryDialog'
-import ButtonDialog from '../common/ButtonDialog'
+import ButtonDialog from 'src/components/common/ButtonDialog'
 import PlusIcon from 'src/components/common/icons/PlusIcon'
 
 export default {
