@@ -14,12 +14,14 @@ export default {
       {
         pageName: 'files',
         pagePath: '/files',
-        pageComponent: () => import('./pages/Files')
+        pageComponent: () => import('./pages/Files'),
+        pageHeaderComponent: () => import('./components/header/FilesHeader'),
       },
       {
         pageName: 'file',
         pagePath: '/file/:id',
         pageComponent: () => import('./pages/FileInfo'),
+        pageHeaderComponent: () => import('./components/header/FileInfoHeader'),
       },
     ]
   },
