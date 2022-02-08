@@ -54,7 +54,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('files', [
+    ...mapActions('filesmobile', [
       'removeSelectedItems',
       'changeDialogComponent',
       'addCopyItems',

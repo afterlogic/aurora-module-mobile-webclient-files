@@ -20,7 +20,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters('files', ['copiedFiles']),
+    ...mapGetters('filesmobile', ['copiedFiles']),
 
     isCopiedFiles() {
       return !!this.copiedFiles.length

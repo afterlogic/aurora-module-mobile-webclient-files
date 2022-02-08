@@ -29,7 +29,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('files', ['currentPath', 'currentStorage']),
+    ...mapGetters('filesmobile', ['currentPath', 'currentStorage']),
     isShowFile() {
       if (!this.file) return false
       return (
@@ -43,7 +43,7 @@ export default {
     this.getProgressPercent()
   },
   methods: {
-    ...mapActions('files', ['changeUploadingStatus']),
+    ...mapActions('filesmobile', ['changeUploadingStatus']),
     getProgressPercent() {
       if (this.file) {
         if (this.file.file?.__progress !== 1) {

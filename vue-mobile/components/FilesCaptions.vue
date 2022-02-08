@@ -22,7 +22,7 @@ export default {
     BoxIcon,
   },
   computed: {
-    ...mapGetters('files', [
+    ...mapGetters('filesmobile', [
       'downloadFiles',
       'filesList',
       'foldersList',

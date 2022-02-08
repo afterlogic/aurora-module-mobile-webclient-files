@@ -14,7 +14,7 @@ export default {
     icon: { type: String, default: '' },
   },
   computed: {
-    ...mapGetters('files', ['dialogComponent']),
+    ...mapGetters('filesmobile', ['dialogComponent']),
     classes() {
       if (this.dialogComponent.component === 'CreateButtonsDialogs') {
         return 'z-index-max rotate'
@@ -23,7 +23,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('files', ['changeDialogComponent']),
+    ...mapActions('filesmobile', ['changeDialogComponent']),
     showDialog() {
       if (this.dialogComponent.component === 'CreateButtonsDialogs') {
         this.changeDialogComponent({ component: '' })

@@ -57,7 +57,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('files', ['asyncRenameItem', 'changeFileName']),
+    ...mapActions('filesmobile', ['asyncRenameItem', 'changeFileName']),
     async renameItem() {
       if (this.itemName.length) {
         this.saving = true

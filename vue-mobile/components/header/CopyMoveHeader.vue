@@ -49,10 +49,10 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'CopyMoveHeader',
   computed: {
-    ...mapGetters('files', ['copiedFiles', 'currentPaths']),
+    ...mapGetters('filesmobile', ['copiedFiles', 'currentPaths']),
   },
   methods: {
-    ...mapActions('files', [
+    ...mapActions('filesmobile', [
       'removeCopiedFiles',
       'changeDialogComponent',
       'changeCurrentPaths',

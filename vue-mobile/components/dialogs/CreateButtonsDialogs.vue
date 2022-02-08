@@ -39,7 +39,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('files', ['changeDialogComponent']),
+    ...mapActions('filesmobile', ['changeDialogComponent']),
     createFolder() {
       this.$emit('closeDialog')
       this.changeDialogComponent({ component: 'CreateFolderDialog' })

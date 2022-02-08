@@ -51,7 +51,7 @@ export default {
     IconAction,
   },
   computed: {
-    ...mapGetters('files', ['currentStorage', 'currentPath']),
+    ...mapGetters('filesmobile', ['currentStorage', 'currentPath']),
     actions() {
       return getFileActionsList(this.file)
     },

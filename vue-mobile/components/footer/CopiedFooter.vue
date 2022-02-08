@@ -40,7 +40,7 @@ export default {
     AppButton,
   },
   methods: {
-    ...mapActions('files', ['removeCopiedFiles', 'copyItems', 'moveItems']),
+    ...mapActions('filesmobile', ['removeCopiedFiles', 'copyItems', 'moveItems']),
     cancel() {
       this.removeCopiedFiles()
     },

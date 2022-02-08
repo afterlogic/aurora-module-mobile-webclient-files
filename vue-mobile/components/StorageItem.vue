@@ -25,7 +25,7 @@ export default {
     storage: { type: Object, default: null },
   },
   methods: {
-    ...mapActions('files', [
+    ...mapActions('filesmobile', [
       'changeCurrentStorage',
       'asyncGetFiles',
       'changeCurrentPaths',

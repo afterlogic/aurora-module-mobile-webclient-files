@@ -111,7 +111,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('files', [
+    ...mapActions('filesmobile', [
       'asyncCreateShareableLink',
       'asyncDeletePublicLink',
     ]),

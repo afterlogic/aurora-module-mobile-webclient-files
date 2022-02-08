@@ -60,13 +60,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('files', ['currentStorage', 'searchText']),
+    ...mapGetters('filesmobile', ['currentStorage', 'searchText']),
   },
   mounted() {
     this.text = this.searchText
   },
   methods: {
-    ...mapActions('files', [
+    ...mapActions('filesmobile', [
       'asyncGetFiles',
       'changeCurrentHeader',
       'changeSearchText',

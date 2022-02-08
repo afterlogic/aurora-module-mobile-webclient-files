@@ -14,7 +14,7 @@ export default {
     dialog: { type: Boolean, default: false },
   },
   computed: {
-    ...mapGetters('files', [
+    ...mapGetters('filesmobile', [
       'currentStorage',
       'currentPath',
       'dialogComponent',
@@ -34,7 +34,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('files', [
+    ...mapActions('filesmobile', [
       'addDownloadsFiles',
       'removeUploadedFiles',
       'asyncGetFiles',

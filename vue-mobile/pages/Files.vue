@@ -88,7 +88,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('files', [
+    ...mapGetters('filesmobile', [
       'filesList',
       'foldersList',
       'storageList',
@@ -113,7 +113,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('files', [
+    ...mapActions('filesmobile', [
       'asyncGetStorages',
       'asyncGetFiles',
       'selectFile',

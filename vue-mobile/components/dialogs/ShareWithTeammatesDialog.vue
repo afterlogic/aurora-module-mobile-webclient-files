@@ -148,7 +148,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('files', ['currentStorage']),
+    ...mapGetters('filesmobile', ['currentStorage']),
   },
   watch: {
     dialog(val) {
@@ -156,8 +156,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions('contacts', ['asyncGetContacts']),
-    ...mapActions('files', ['asyncUpdateShare']),
+    ...mapActions('contactsmobile', ['asyncGetContacts']),
+    ...mapActions('filesmobile', ['asyncUpdateShare']),
     selectUser(status) {
       if (this.currentUser) {
         this.currentUser.status = status

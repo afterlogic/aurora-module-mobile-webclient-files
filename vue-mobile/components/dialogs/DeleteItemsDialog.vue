@@ -49,7 +49,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters('files', ['selectedFiles']),
+    ...mapGetters('filesmobile', ['selectedFiles']),
     title() {
       if (this.selectedFiles.length > 1) {
         return this.$tc(
@@ -64,7 +64,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('files', ['asyncDeleteItems', 'changeItemsLists']),
+    ...mapActions('filesmobile', ['asyncDeleteItems', 'changeItemsLists']),
     closeDialog() {
       this.$emit('closeDialog')
     },

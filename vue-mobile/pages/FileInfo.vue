@@ -62,7 +62,7 @@ export default {
     DialogsList,
   },
   computed: {
-    ...mapGetters('files', ['currentFile']),
+    ...mapGetters('filesmobile', ['currentFile']),
     filePreview() {
       const api = getApiHost()
       return api + this.currentFile.viewUrl

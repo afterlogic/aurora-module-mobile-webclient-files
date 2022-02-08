@@ -88,13 +88,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('files', ['currentPaths', 'currentStorage']),
+    ...mapGetters('filesmobile', ['currentPaths', 'currentStorage']),
     storageName() {
       return this.currentStorage.Type
     },
   },
   methods: {
-    ...mapActions('files', [
+    ...mapActions('filesmobile', [
       'changeCurrentPaths',
       'asyncGetFiles',
       'changeCurrentHeader',

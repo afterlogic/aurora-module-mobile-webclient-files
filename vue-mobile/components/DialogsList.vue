@@ -40,7 +40,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('files', ['dialogComponent', 'currentFile']),
+    ...mapGetters('filesmobile', ['dialogComponent', 'currentFile']),
   },
   watch: {
     dialogComponent(val) {
@@ -59,7 +59,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('files', ['changeDialogComponent']),
+    ...mapActions('filesmobile', ['changeDialogComponent']),
     dialogAction(action) {
       this.closeDialog()
       if (action.component) {

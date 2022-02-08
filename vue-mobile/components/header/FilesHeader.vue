@@ -25,7 +25,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters('files', ['selectedFiles', 'copiedFiles', 'currentHeader']),
+    ...mapGetters('filesmobile', ['selectedFiles', 'copiedFiles', 'currentHeader']),
     isDefaultHeader() {
       return (
         !this.selectedFiles.length &&
@@ -48,7 +48,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('files', [
+    ...mapActions('filesmobile', [
       'changeCurrentHeader',
       'changeSearchText',
       'clearItemLists',

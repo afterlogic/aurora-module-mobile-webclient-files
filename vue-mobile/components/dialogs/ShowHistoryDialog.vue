@@ -131,7 +131,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('files', ['asyncGetHistory', 'asyncClearHistory']),
+    ...mapActions('filesmobile', ['asyncGetHistory', 'asyncClearHistory']),
     changePage(page) {
       this.currentPage = page
       this.offset = (page - 1) * 10

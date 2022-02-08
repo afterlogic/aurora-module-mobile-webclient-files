@@ -92,7 +92,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('files', ['filesList']),
+    ...mapGetters('filesmobile', ['filesList']),
   },
   watch: {
     'filesList.length'() {
@@ -100,7 +100,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('files', ['changeDialogComponent', 'asyncDownloadFile']),
+    ...mapActions('filesmobile', ['changeDialogComponent', 'asyncDownloadFile']),
     onPreviousPath() {
       this.$router.back()
     },

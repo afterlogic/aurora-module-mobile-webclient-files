@@ -100,7 +100,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('files', ['copiedFiles', 'isArchive']),
+    ...mapGetters('filesmobile', ['copiedFiles', 'isArchive']),
     fileName() {
       if (this.file) {
         return getShortName(this.file.name, 30)
@@ -128,7 +128,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('files', [
+    ...mapActions('filesmobile', [
       'changeCurrentPaths',
       'changeCurrentHeader',
       'asyncGetFiles',

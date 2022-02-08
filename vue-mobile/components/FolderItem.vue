@@ -62,7 +62,7 @@ export default {
     touchend: { type: Function, default: null, require: true },
   },
   computed: {
-    ...mapGetters('files', ['currentStorage']),
+    ...mapGetters('filesmobile', ['currentStorage']),
     folderName() {
       if (this.folder) {
         return getShortName(this.folder.name, 30)
@@ -76,7 +76,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('files', [
+    ...mapActions('filesmobile', [
       'changeCurrentPaths',
       'asyncGetFiles',
       'changeCurrentHeader',
