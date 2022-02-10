@@ -73,10 +73,11 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
-import { getShortName } from 'src/utils/files/utils'
 import text from 'src/utils/text'
 import date from 'src/utils/date'
 import { getApiHost } from 'src/api/helpers'
+
+import { getShortName } from '../utils/common'
 
 import FileItemIcon from './icons/FileItemIcon'
 import DownloadingProgress from './common/DownloadingProgress'

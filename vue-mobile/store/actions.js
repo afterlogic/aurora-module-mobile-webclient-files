@@ -1,13 +1,13 @@
 import types from 'src/utils/types'
+import { getApiHost } from 'src/api/helpers'
+
+import filesWebApi from '../files-web-api'
 import {
   getParseFiles,
   getParseFolders,
   getFiles,
   getFolders,
-} from 'src/utils/files/utils'
-import { getApiHost } from 'src/api/helpers'
-
-import filesWebApi from '../files-web-api'
+} from '../utils/common'
 
 export default {
   asyncGetStorages: async ({ commit, dispatch }) => {

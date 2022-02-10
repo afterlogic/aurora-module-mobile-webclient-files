@@ -57,7 +57,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 
-import MainLayout from 'src/views/layouts/MainLayout'
+import MainLayout from 'src/layouts/MainLayout'
 import FileItem from '../components/FileItem'
 import FolderItem from '../components/FolderItem'
 import StorageItem from '../components/StorageItem'

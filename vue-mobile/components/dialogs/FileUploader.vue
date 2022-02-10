@@ -6,7 +6,7 @@ import { mapActions, mapGetters } from 'vuex'
 import VueCookies from 'vue-cookies'
 
 import { getApiHost } from 'src/api/helpers'
-import { parseUploadedFile } from 'src/utils/files/utils'
+import { parseUploadedFile } from '../../utils/common'
 
 export default {
   name: 'FileUploader',

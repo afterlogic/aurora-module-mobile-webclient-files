@@ -37,7 +37,7 @@
 <script>
 import { mapGetters } from 'vuex'
 
-import { getFileActionsList } from 'src/utils/files/file-actions'
+import { getFileActionsList } from '../../utils/file-actions'
 
 import IconAction from '../common/IconAction'
 

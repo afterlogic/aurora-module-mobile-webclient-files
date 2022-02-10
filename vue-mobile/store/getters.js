@@ -1,4 +1,5 @@
-import { getFilteredItems } from 'src/utils/files/utils'
+import { getFilteredItems } from '../utils/common'
+
 export default {
   storageList: (state) => state.storageList,
   filesList: (state) => state.filesList,

@@ -49,7 +49,7 @@ import text from 'src/utils/text'
 import { getApiHost } from 'src/api/helpers'
 
 import DialogsList from '../components/DialogsList'
-import MainLayout from 'src/views/layouts/MainLayout'
+import MainLayout from 'src/layouts/MainLayout'
 import FileItemIcon from '../components/icons/FileItemIcon'
 import InputForm from '../components/common/InputForm'
 

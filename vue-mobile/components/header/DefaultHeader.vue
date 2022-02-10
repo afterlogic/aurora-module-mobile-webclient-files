@@ -78,7 +78,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
-import { getShortName } from 'src/utils/files/utils'
+import { getShortName } from '../../utils/common'
 
 export default {
   name: 'DefaultHeader',

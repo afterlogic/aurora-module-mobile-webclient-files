@@ -43,7 +43,7 @@
 <script>
 import { mapActions } from 'vuex'
 
-import { fileActions } from 'src/utils/files/file-actions'
+import { fileActions } from '../../utils/file-actions'
 
 export default {
   name: 'SelectHeader',

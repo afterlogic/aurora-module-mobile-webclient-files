@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { getPreviewIconName } from 'src/utils/files/utils'
+import { getPreviewIconName } from '../../utils/common'
 
 import FileIcon from './preview/FileIcon'
 import FIleImageIcon from './preview/FIleImageIcon'

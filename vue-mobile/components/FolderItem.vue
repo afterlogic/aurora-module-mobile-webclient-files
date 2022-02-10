@@ -45,7 +45,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 
-import { getShortName } from 'src/utils/files/utils'
+import { getShortName } from '../utils/common'
 
 import FolderIcon from './icons/FolderIcon'
 

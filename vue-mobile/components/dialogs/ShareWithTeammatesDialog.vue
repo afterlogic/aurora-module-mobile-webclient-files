@@ -110,7 +110,8 @@ import _ from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
 
 import { getContactsSelectOptions } from 'src/utils/contacts/utils'
-import { getParametersForShare } from 'src/utils/files/utils'
+
+import { getParametersForShare } from '../../utils/common'
 
 import ShowHistoryDialog from './ShowHistoryDialog'
 import ButtonDialog from 'src/components/common/ButtonDialog'
