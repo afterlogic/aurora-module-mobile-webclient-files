@@ -38,7 +38,7 @@
         flat
         :label="
           currentPaths.length <= 1
-            ? 'Aurora files'
+            ? $t('FILESWEBCLIENT.HEADING_BROWSER_TAB')
             : getShortName(currentPaths[currentPaths.length - 1].name, 20)
         "
       >
