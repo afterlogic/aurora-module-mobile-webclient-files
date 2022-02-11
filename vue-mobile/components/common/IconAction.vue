@@ -5,24 +5,27 @@
 </template>
 
 <script>
-import MoveFolderIcon from 'components/common/icons/actions/MoveFolderIcon'
-import SecureLinkIcon from 'components/common/icons/actions/SecureLinkIcon'
-import ShareIcon from 'components/common/icons/actions/ShareIcon'
-import DownloadIcon from 'components/common/icons/actions/DownloadIcon'
-import EditIcon from 'components/common/icons/actions/EditIcon'
-import DeleteIcon from 'components/common/icons/actions/DeleteIcon'
+import CopyMoveIcon from "../icons/file-actions/CopyMoveIcon";
+import DeleteIcon from "../icons/file-actions/DeleteIcon";
+import MoreIcon from "../icons/file-actions/MoreIcon";
+import RenameIcon from "../icons/file-actions/RenameIcon";
+import SecureLinkIcon from "../icons/file-actions/SecureLinkIcon";
+import SharingIcon from "../icons/file-actions/SharingIcon";
+import DownloadIcon from "../icons/file-actions/DownloadIcon";
+
 export default {
   name: 'IconAction',
   props: {
     icon: { type: String, required: true },
   },
   components: {
-    MoveFolderIcon,
     SecureLinkIcon,
-    ShareIcon,
-    DownloadIcon,
-    EditIcon,
+    CopyMoveIcon,
+    MoreIcon,
+    RenameIcon,
     DeleteIcon,
+    SharingIcon,
+    DownloadIcon
   },
 }
 </script>

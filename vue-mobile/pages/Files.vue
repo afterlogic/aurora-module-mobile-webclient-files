@@ -122,14 +122,12 @@ export default {
       'changeLoadingStatus',
     ]),
     async init() {
-      if (!this.copiedFiles.length) {
-        if (!this.currentFile) {
-          this.changeLoadingStatus(true)
-          await this.asyncGetStorages()
-        }
-        await this.asyncGetFiles()
-        this.changeLoadingStatus(false)
+      this.changeLoadingStatus(true)
+      if (!this.currentFile) {
+        await this.asyncGetStorages()
       }
+      await this.asyncGetFiles()
+      this.changeLoadingStatus(false)
     },
     showDialog({ file, component }) {
       this.selectFile(file)

@@ -1,23 +1,25 @@
 <template>
   <main-layout title="File info">
-    <div class="file__info">
+    <div v-if="currentFile" class="file__info">
       <div class="flex items-center justify-center">
         <div v-if="!currentFile.thumbnailUrl" class="file__preview q-my-xl">
           <file-item-icon
             v-if="!currentFile.thumbnailUrl"
             :file-name="currentFile.name"
+            :height="64"
+            :width="64"
           />
         </div>
         <div
-          class="q-my-md"
-          style="height: 248px"
+          class="q-my-lg"
+          style="height: 348px"
           v-if="currentFile.thumbnailUrl"
         >
           <div
             class="img-preview"
             :style="{
               background: `url(${filePreview}) no-repeat center`,
-              'background-size': 'contain',
+              'background-size': 'cover',
             }"
           />
         </div>
@@ -61,6 +63,11 @@ export default {
     InputForm,
     DialogsList,
   },
+  mounted() {
+    if (!this.currentFile) {
+      this.$router.push('/files')
+    }
+  },
   computed: {
     ...mapGetters('filesmobile', ['currentFile']),
     filePreview() {
@@ -83,7 +90,7 @@ export default {
   margin-bottom: 60px;
 }
 .img-preview {
-  height: 248px;
-  min-width: 248px;
+  height: 348px;
+  min-width: 348px;
 }
 </style>

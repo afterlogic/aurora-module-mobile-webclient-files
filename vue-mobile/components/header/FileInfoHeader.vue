@@ -4,7 +4,7 @@
       <q-btn
         flat
         size="17px"
-        color="grey-7"
+        color="black"
         round
         dense
         icon="chevron_left"
@@ -12,39 +12,25 @@
       />
     </q-card-actions>
     <div class="col-6 flex justify-end q-pr-sm">
-      <q-btn
-        flat
-        size="15px"
-        color="grey-7"
-        round
-        dense
-        icon="link"
-        @click="onPerformAction(actions.createShareableLink)"
+      <icon-action
+          class="q-mr-md"
+          icon="SecureLinkIcon"
+          @click="onPerformAction(actions.createShareableLink)"
       />
-      <q-btn
-        class="q-ml-sm"
-        flat
-        size="15px"
-        color="grey-7"
-        round
-        dense
-        icon="file_download"
-        @click="onPerformAction(actions.download)"
+      <icon-action
+          class="q-mr-md"
+          icon="DownloadIcon"
+          @click="onPerformAction(actions.download)"
       />
-      <q-btn
-        class="q-ml-sm"
-        flat
-        size="15px"
-        color="grey-7"
-        round
-        dense
-        icon="delete_outline"
-        @click="onPerformAction(actions.delete)"
+      <icon-action
+          class="q-mr-md"
+          icon="DeleteIcon"
+          @click="onPerformAction(actions.delete)"
       />
       <div class="dropdown-more flex justify-center items-center">
         <q-btn-dropdown :menu-offset="[8, -45]" flat unelevated dense>
           <template v-slot:label>
-            <q-icon color="grey-7" name="more_vert" />
+            <icon-action class="q-mr-md" icon="MoreIcon" />
           </template>
           <q-list>
             <q-item
@@ -52,6 +38,7 @@
               v-close-popup
               @click="onPerformAction(actions.shareWithTeammates)"
             >
+              <icon-action class="q-mr-md" :icon="actions.shareWithTeammates.icon" />
               <q-item-section>
                 <q-item-label>{{
                   actions.shareWithTeammates.displayName
@@ -59,6 +46,7 @@
               </q-item-section>
             </q-item>
             <q-item clickable v-close-popup @click="onCopyMove(actions.copy)">
+              <icon-action class="q-mr-md" :icon="actions.copy.icon" />
               <q-item-section>
                 <q-item-label>{{ actions.copy.displayName }}</q-item-label>
               </q-item-section>
@@ -68,6 +56,7 @@
               v-close-popup
               @click="onPerformAction(actions.rename)"
             >
+              <icon-action class="q-mr-md" :icon="actions.rename.icon" />
               <q-item-section>
                 <q-item-label>{{ actions.rename.displayName }}</q-item-label>
               </q-item-section>
@@ -80,12 +69,16 @@
 </template>
 
 <script>
+import IconAction from "../common/IconAction";
 import { mapActions, mapGetters } from 'vuex'
 
 import { fileActions } from '../../utils/file-actions'
 
 export default {
   name: 'FileInfoHeader',
+  components: {
+    IconAction
+  },
   data() {
     return {
       actions: fileActions,

@@ -1,5 +1,5 @@
 <template>
-  <component :is="componentName" />
+  <component :width="width" :height="height" :is="componentName" />
 </template>
 
 <script>
@@ -28,6 +28,8 @@ export default {
   },
   props: {
     fileName: { type: String, required: true },
+    width: { type: Number },
+    height: { type: Number }
   },
   computed: {
     componentName() {

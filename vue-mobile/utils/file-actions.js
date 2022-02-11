@@ -64,7 +64,7 @@ export const fileActions = {
     },
     name: 'copy',
     displayName: 'Copy/Move',
-    icon: 'MoveFolderIcon',
+    icon: 'CopyMoveIcon',
     isShowAction: isShowAction,
   },
   createShareableLink: {
@@ -80,7 +80,7 @@ export const fileActions = {
     name: 'shareWithTeammates',
     component: 'ShareWithTeammatesDialog',
     displayName: i18n.$t.SHAREDFILES.ACTION_SHARE,
-    icon: 'ShareIcon',
+    icon: 'SharingIcon',
     isShowAction: isShowAction,
   },
   download: {
@@ -103,7 +103,7 @@ export const fileActions = {
     name: 'rename',
     component: 'RenameItemDialog',
     displayName: i18n.$t.FILESWEBCLIENT.ACTION_RENAME,
-    icon: 'EditIcon',
+    icon: 'RenameIcon',
     isShowAction: isShowAction,
   },
   delete: {

@@ -1,7 +1,7 @@
 <template>
   <svg
-    width="32"
-    height="32"
+    :width="width"
+    :height="height"
     viewBox="0 0 32 32"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -35,6 +35,10 @@
 <script>
 export default {
   name: 'FilePdfIcon',
+  props: {
+    width: { type: Number, default: 32 },
+    height: { type: Number, default: 32 }
+  },
 }
 </script>
 

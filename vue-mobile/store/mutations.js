@@ -35,6 +35,7 @@ export default {
     })
   },
   REMOVE_FILES: (state, files) => {
+    console.log(files, 'REMOVE_FILES')
     files.forEach((file) => {
       const itemIndex = state.filesList.findIndex(
         (item) => item.hash === file.hash
