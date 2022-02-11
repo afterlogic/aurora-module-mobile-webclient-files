@@ -19,7 +19,7 @@
         <button-dialog
           :saving="saving"
           :action="createFolder"
-          :label="$t('COREWEBCLIENT.ACTION_SAVE')"
+          :label="$t('COREWEBCLIENT.ACTION_CREATE')"
         />
         <button-dialog
           :saving="saving"

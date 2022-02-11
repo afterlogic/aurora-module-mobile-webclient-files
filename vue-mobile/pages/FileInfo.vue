@@ -33,7 +33,7 @@
           <input-form readonly :value="fileDate" label="Created" />
         </div>
         <div class="q-ma-md">
-          <input-form readonly :value="currentFile.path" label="Location" />
+          <input-form readonly :value="filePatch" label="Location" />
         </div>
         <div class="q-ma-md">
           <input-form readonly :value="currentFile.owner" label="Owner" />
@@ -73,6 +73,9 @@ export default {
     filePreview() {
       const api = getApiHost()
       return api + this.currentFile.viewUrl
+    },
+    filePatch() {
+     return this.currentFile.path || '/'
     },
     fileDate() {
       return date.getDate(this.currentFile.lastModified)

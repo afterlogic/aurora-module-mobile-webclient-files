@@ -31,20 +31,10 @@
         autofocus
         borderless
         style="padding: 0 20px 0 20px"
-        class="col-10"
+        class="col-12"
         model-value=""
+        debounce="400"
       />
-      <div class="col-2 flex justify-end q-pr-sm">
-        <q-btn
-          flat
-          size="15px"
-          color="black"
-          round
-          dense
-          icon="search"
-          @click="search"
-        />
-      </div>
     </q-toolbar>
   </div>
 </template>
@@ -64,6 +54,11 @@ export default {
   },
   mounted() {
     this.text = this.searchText
+  },
+  watch: {
+    text() {
+      this.search()
+    }
   },
   methods: {
     ...mapActions('filesmobile', [

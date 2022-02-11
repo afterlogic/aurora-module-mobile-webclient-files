@@ -3,7 +3,7 @@
     <q-card class="q-dialog-size q-pt-md" style="min-width: 300px">
       <q-item>
         <app-dialog-input
-            placeholder="File name"
+            :placeholder="placeholder"
             v-model="itemName"
             :autofocus="true"
             outlined
@@ -13,7 +13,7 @@
         <button-dialog
           :saving="saving"
           :action="renameItem"
-          :label="inscription"
+          :label="$t('FILESWEBCLIENT.ACTION_RENAME')"
         />
         <button-dialog
           :saving="saving"
@@ -40,8 +40,8 @@ export default {
     dialog: { type: Boolean, default: false },
   },
   computed: {
-    inscription() {
-      return this.file.isFolder ? 'Rename folder' : 'Rename file'
+    placeholder() {
+      return this.file.isFolder ? 'Folder name' : 'File name'
     },
   },
   data() {

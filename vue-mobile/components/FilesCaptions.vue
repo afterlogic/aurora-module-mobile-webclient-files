@@ -1,11 +1,16 @@
 <template>
   <div class="caption flex items-center justify-center">
-    <div class="caption__inscription" v-if="isFolderEmpty">Folder is empty</div>
     <div class="flex column caption__box" v-if="isStorageEmpty">
       <div class="q-mb-md">
         <box-icon />
       </div>
       <div>This storage is empty</div>
+    </div>
+    <div class="flex column caption__box" v-if="isFolderEmpty">
+      <div class="q-mb-md">
+        <empty-folder-icon />
+      </div>
+      <div>Folder is empty</div>
     </div>
     <div class="caption__inscription" v-if="isNothingFound">Nothing found</div>
   </div>
@@ -15,11 +20,13 @@
 import { mapGetters } from 'vuex'
 
 import BoxIcon from './icons/BoxIcon'
+import EmptyFolderIcon from "./icons/EmptyFolderIcon";
 
 export default {
   name: 'FilesCaptions',
   components: {
     BoxIcon,
+    EmptyFolderIcon
   },
   computed: {
     ...mapGetters('filesmobile', [
