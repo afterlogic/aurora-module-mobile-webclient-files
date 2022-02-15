@@ -98,6 +98,7 @@ export default {
       'changeCurrentPaths',
       'asyncGetFiles',
       'changeCurrentHeader',
+      'changeSearchText'
     ]),
     getShortName,
     async openPath(path) {
@@ -109,6 +110,7 @@ export default {
       this.changeCurrentHeader('SearchHeader')
     },
     async onPreviousPath() {
+      this.changeSearchText('')
       await this.changeCurrentPaths({
         path: this.currentPaths[this.currentPaths.length - 2],
         lastStorage: false,

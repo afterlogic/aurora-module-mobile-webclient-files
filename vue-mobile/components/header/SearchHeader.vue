@@ -24,14 +24,17 @@
     </q-toolbar>
     <q-toolbar
       class="flex row"
-      style="height: 40px; font-size: 16px; padding: 0"
+      style="height: 74px; font-size: 16px; padding: 0"
     >
       <q-input
         v-model="text"
+        :style="{ height: '48px' }"
+        :input-style="{ height: '48px' }"
+        placeholder="Search"
         autofocus
         borderless
-        style="padding: 0 20px 0 20px"
-        class="col-12"
+        outlined
+        class="col-12 q-px-md search"
         model-value=""
         debounce="400"
       />
@@ -79,4 +82,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style>
+.search .q-field__control {
+  height: 48px;
+}
+</style>

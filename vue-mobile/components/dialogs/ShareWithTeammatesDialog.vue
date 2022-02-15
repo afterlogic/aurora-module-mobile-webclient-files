@@ -24,6 +24,7 @@
             dense
             dropdown-icon="none"
             :ripple="false"
+            ref="dropdown"
           >
             <template v-slot:label>
               <plus-icon
@@ -102,6 +103,11 @@
       </q-card-actions>
     </div>
     <show-history-dialog ref="showHistoryDialog" />
+    <not-added-user-dialog
+        @onContinueSaving="onContinueSaving"
+        @cancel="onContinueTyping"
+        ref="notAddedUserDialog"
+    />
   </q-dialog>
 </template>
 
@@ -116,6 +122,7 @@ import { getParametersForShare } from '../../utils/common'
 import ShowHistoryDialog from './ShowHistoryDialog'
 import ButtonDialog from 'src/components/common/ButtonDialog'
 import PlusIcon from 'src/components/common/icons/PlusIcon'
+import NotAddedUserDialog from "./NotAddedUserDialog";
 
 export default {
   name: 'ShareWithTeammatesDialog',
@@ -123,6 +130,7 @@ export default {
     ButtonDialog,
     PlusIcon,
     ShowHistoryDialog,
+    NotAddedUserDialog
   },
   created() {
     this.init()
@@ -158,7 +166,7 @@ export default {
   },
   methods: {
     ...mapActions('contactsmobile', ['asyncGetContacts']),
-    ...mapActions('filesmobile', ['asyncUpdateShare']),
+    ...mapActions('filesmobile', ['asyncUpdateShare', 'changeItemProperty']),
     selectUser(status) {
       if (this.currentUser) {
         this.currentUser.status = status
@@ -191,7 +199,7 @@ export default {
         WithoutTeamContactsDuplicates: true,
       }
       const contacts = await this.asyncGetContacts(parameters)
-      this.selectOptions = getContactsSelectOptions(contacts?.List)
+      this.selectOptions = getContactsSelectOptions(contacts?.List, this.contactsList)
       this.defaultSelectOptions = _.cloneDeep(this.selectOptions)
       if (this.contactsList.length) {
         this.contactsList.forEach((contact) => this.removeFindContact(contact))
@@ -217,10 +225,27 @@ export default {
       )
     },
     async save() {
+      console.log(this.currentUser, 'currentUser')
+      if (this.currentUser) {
+        this.$refs.notAddedUserDialog.openDialog(this.currentUser)
+      } else {
+        await this.onContinueSaving()
+      }
+    },
+    async onContinueSaving() {
       this.saving = true
       const parameters = getParametersForShare(this.contactsList, this.file)
       const result = await this.asyncUpdateShare(parameters)
+      console.log(result, 'result')
+      if (result) {
+        this.openDialog = false
+        this.$emit('closeDialog')
+      }
       this.saving = false
+    },
+    onContinueTyping() {
+      console.log(this.$refs.dropdown, 'this.$refs.dropdown')
+      this.$refs.dropdown.show()
     },
     cancel() {
       this.$emit('closeDialog')
