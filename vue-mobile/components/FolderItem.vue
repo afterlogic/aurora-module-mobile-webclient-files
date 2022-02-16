@@ -9,14 +9,14 @@
     @touchend="openFolder"
     @touchmove.stop="touchMove"
   >
-    <q-item-section avatar>
+    <q-item-section class="q-ml-lg" avatar>
       <folder-icon color="secondary"></folder-icon>
     </q-item-section>
     <q-item-section>
       <q-item-label class="file__name">{{ folderName }}</q-item-label>
       <q-item-label></q-item-label>
     </q-item-section>
-    <q-item-section avatar side>
+    <q-item-section class="q-mr-sm" avatar side>
       <q-btn
         v-if="!folder.isSelected"
         size="14px"

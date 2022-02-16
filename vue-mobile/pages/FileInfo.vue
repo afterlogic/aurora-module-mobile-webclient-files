@@ -39,6 +39,7 @@
           <input-form readonly :value="currentFile.owner" label="Owner" />
         </div>
       </div>
+      <div style="height: 50px"/>
     </div>
     <dialogs-list />
   </main-layout>

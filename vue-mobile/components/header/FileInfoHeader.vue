@@ -13,17 +13,17 @@
     </q-card-actions>
     <div class="col-6 flex justify-end q-pr-sm">
       <icon-action
-          class="q-mr-md"
+          class="q-mr-lg"
           icon="SecureLinkIcon"
           @click="onPerformAction(actions.createShareableLink)"
       />
       <icon-action
-          class="q-mr-md"
+          class="q-mr-lg"
           icon="DownloadIcon"
           @click="onPerformAction(actions.download)"
       />
       <icon-action
-          class="q-mr-md"
+          class="q-mr-lg"
           icon="DeleteIcon"
           @click="onPerformAction(actions.delete)"
       />

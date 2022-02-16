@@ -17,39 +17,7 @@
           />
         </div>
         <div class="flex col-2 justify-center items-center dropdown-plus">
-          <q-btn-dropdown
-            :disable="!currentUser"
-            flat
-            unelevated
-            dense
-            dropdown-icon="none"
-            :ripple="false"
-            ref="dropdown"
-          >
-            <template v-slot:label>
-              <plus-icon
-                class="text-center items-center justify-center"
-                style="fill: #d0d0d0"
-              />
-            </template>
-            <q-list>
-              <q-item clickable v-close-popup @click="selectUser(1)">
-                <q-item-section>
-                  <q-item-label>{{ statuses[1] }}</q-item-label>
-                </q-item-section>
-              </q-item>
-              <q-item clickable v-close-popup @click="selectUser(2)">
-                <q-item-section>
-                  <q-item-label>{{ statuses[2] }}</q-item-label>
-                </q-item-section>
-              </q-item>
-              <q-item clickable v-close-popup @click="selectUser(3)">
-                <q-item-section>
-                  <q-item-label>{{ statuses[3] }}</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-btn-dropdown>
+          <dropdown-contact-status :current-user="currentUser" :select-user="selectUser" />
         </div>
       </div>
       <div
@@ -119,6 +87,7 @@ import { getContactsSelectOptions } from 'src/utils/contacts/utils'
 
 import { getParametersForShare } from '../../utils/common'
 
+import DropdownContactStatus from "../common/DropdownContactStatus";
 import ShowHistoryDialog from './ShowHistoryDialog'
 import ButtonDialog from 'src/components/common/ButtonDialog'
 import PlusIcon from 'src/components/common/icons/PlusIcon'
@@ -130,7 +99,8 @@ export default {
     ButtonDialog,
     PlusIcon,
     ShowHistoryDialog,
-    NotAddedUserDialog
+    NotAddedUserDialog,
+    DropdownContactStatus
   },
   created() {
     this.init()
@@ -168,6 +138,10 @@ export default {
     ...mapActions('contactsmobile', ['asyncGetContacts']),
     ...mapActions('filesmobile', ['asyncUpdateShare', 'changeItemProperty']),
     selectUser(status) {
+      let arr = [0, 20, 21]
+      for (let el of arr) {
+        console.log(el)
+      }
       if (this.currentUser) {
         this.currentUser.status = status
         this.contactsList.push(this.currentUser)

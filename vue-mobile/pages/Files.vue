@@ -7,40 +7,40 @@
         :storage="storage"
       />
     </template>
-    <q-list v-if="!loadingStatus">
+    <q-scroll-area :thumb-style="{width: '5px'}" class="files__list" v-if="!loadingStatus">
       <folder-item
-        v-for="file in foldersList"
-        :key="file"
-        :folder="file"
-        :isSelected="isSelected"
-        :isCopied="isCopied"
-        :touchstart="touchstart"
-        :touchend="touchend"
-        @touchmove="touchend"
-        @showDialog="showDialog"
-        class="file"
+          v-for="file in foldersList"
+          :key="file"
+          :folder="file"
+          :isSelected="isSelected"
+          :isCopied="isCopied"
+          :touchstart="touchstart"
+          :touchend="touchend"
+          @touchmove="touchend"
+          @showDialog="showDialog"
+          class="file"
       />
       <download-file-item
-        v-for="file in downloadFiles"
-        :key="file.name"
-        :file="file"
-        class="file"
+          v-for="file in downloadFiles"
+          :key="file.name"
+          :file="file"
+          class="file"
       />
       <file-item
-        v-for="file in filesList"
-        :key="file"
-        :file="file"
-        :isSelected="isSelected"
-        :isCopied="isCopied"
-        :touchstart="touchstart"
-        :touchend="touchend"
-        @touchmove="touchend"
-        @showDialog="showDialog"
-        class="file"
+          v-for="file in filesList"
+          :key="file"
+          :file="file"
+          :isSelected="isSelected"
+          :isCopied="isCopied"
+          :touchstart="touchstart"
+          :touchend="touchend"
+          @touchmove="touchend"
+          @showDialog="showDialog"
+          class="file"
       />
       <files-captions v-if="!loadingStatus" />
-      <div style="height: 130px" class="full-width" />
-    </q-list>
+      <div style="height: 70px" class="full-width" />
+    </q-scroll-area>
     <div class="q-mt-xl flex items-center justify-center" v-if="loadingStatus">
       <q-circular-progress
         indeterminate
@@ -159,8 +159,7 @@ export default {
 <style lang="scss">
 .file {
   height: 60px !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-  margin: 0 24px 0 24px;
+  border-bottom: 1px solid #F6F6F6;
   padding: 0;
   &__name {
     font-style: normal;
@@ -177,5 +176,11 @@ export default {
     font-size: 12px;
     line-height: 10px;
   }
+}
+.files__list {
+  height: calc(100vh - 115px);
+}
+.files__list .q-scrollarea__content {
+  width: 100vw;
 }
 </style>

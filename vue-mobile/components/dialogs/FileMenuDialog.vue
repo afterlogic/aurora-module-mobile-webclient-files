@@ -1,9 +1,9 @@
 <template>
   <q-dialog v-model="openDialog" position="bottom">
-    <q-card v-if="file" style="height: 300px">
-      <q-card-section class="row items-center no-wrap" style="height: 50px">
+    <q-card class="menu card-radius" v-if="file" style="min-height: 301px; overflow: hidden">
+      <q-card-section class="row items-center no-wrap" style="min-height: 50px;">
         <div>
-          <div class="text-weight-bold">{{ file.name }}</div>
+          <div class="menu__title">{{ file.name }}</div>
         </div>
       </q-card-section>
       <q-separator />
@@ -74,4 +74,14 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.card-radius {
+  border-radius: 22px 22px 0 0;
+}
+.menu__title {
+  word-break: break-all;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 20px;
+}
+</style>

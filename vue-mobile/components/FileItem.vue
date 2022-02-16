@@ -9,7 +9,7 @@
     @touchmove.stop="touchMove"
     @touchend.stop="selectFile"
   >
-    <q-item-section avatar>
+    <q-item-section class="q-ml-lg" avatar>
       <file-item-icon v-if="!file.isImg" :fileName="file.name" />
       <div v-if="file.isImg" class="text-primary">
         <div
@@ -44,7 +44,7 @@
         <downloading-progress :file="file" />
       </q-item-label>
     </q-item-section>
-    <q-item-section avatar side>
+    <q-item-section class="q-mr-sm" avatar side>
       <q-btn
         v-if="!file.isSelected"
         v-ripple="!isCopied && !isSelected"

@@ -1,5 +1,5 @@
 <template>
-  <q-input class="form-input" :model-value="value" :label="label" stack-label dense />
+  <q-input class="form-input" borderless :model-value="value" :label="label" stack-label dense />
 </template>
 
 <script>
