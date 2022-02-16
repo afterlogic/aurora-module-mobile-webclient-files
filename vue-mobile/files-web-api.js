@@ -83,7 +83,7 @@ export default {
       moduleName: 'Files',
       methodName: method,
       parameters: parameters,
-      defaultText: i18n.$t.FILESWEBCLIENT.ERROR_FILES_MOVE_PLURAL,
+      defaultErrorText: i18n.$t.FILESWEBCLIENT.ERROR_FILES_MOVE_PLURAL,
     })
       .then((result) => {
         if (result) {
@@ -100,7 +100,7 @@ export default {
       moduleName: 'Files',
       methodName: 'CreateFolder',
       parameters: parameters,
-      defaultText: i18n.$t.FILESWEBCLIENT.ERROR_INVALID_FOLDER_NAME,
+      defaultErrorText: i18n.$t.FILESWEBCLIENT.ERROR_INVALID_FOLDER_NAME,
     })
       .then((result) => {
         if (result) {
