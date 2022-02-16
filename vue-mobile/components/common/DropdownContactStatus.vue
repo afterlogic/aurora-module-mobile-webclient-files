@@ -7,25 +7,24 @@
       dropdown-icon="none"
       :ripple="false"
       ref="dropdown"
+      class="dropdown-status"
+      :menu-offset="menuOffset"
   >
     <template v-slot:label>
-      <plus-icon
-          class="text-center items-center justify-center"
-          style="fill: #d0d0d0"
-      />
+      <slot name="label" />
     </template>
     <q-list>
-      <q-item clickable v-close-popup @click="selectUser(1)">
+      <q-item clickable v-close-popup @click="action(1, currentUser)">
         <q-item-section>
           <q-item-label>{{ statuses[1] }}</q-item-label>
         </q-item-section>
       </q-item>
-      <q-item clickable v-close-popup @click="selectUser(2)">
+      <q-item clickable v-close-popup @click="action(2, currentUser)">
         <q-item-section>
           <q-item-label>{{ statuses[2] }}</q-item-label>
         </q-item-section>
       </q-item>
-      <q-item clickable v-close-popup @click="selectUser(3)">
+      <q-item clickable v-close-popup @click="action(3, currentUser)">
         <q-item-section>
           <q-item-label>{{ statuses[3] }}</q-item-label>
         </q-item-section>
@@ -38,8 +37,9 @@ import PlusIcon from "src/components/common/icons/PlusIcon";
 export default {
   name: "DropdownContactStatus",
   props: {
-    selectUser: { type: Function, require: true },
-    currentUser: { type: Object, default: null }
+    action: { type: Function, require: true },
+    currentUser: { type: Object, default: null },
+    menuOffset: { type: Array, default: [0, 0] }
   },
   components: {
     PlusIcon
@@ -54,6 +54,11 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+.dropdown-status .q-btn-dropdown__arrow {
+  display: none;
+}
+.dropdown-status .contact-status {
+  text-transform: none !important;
+}
 </style>

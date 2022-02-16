@@ -17,11 +17,18 @@
           />
         </div>
         <div class="flex col-2 justify-center items-center dropdown-plus">
-          <dropdown-contact-status :current-user="currentUser" :select-user="selectUser" />
+          <dropdown-contact-status :current-user="currentUser" :action="selectUser">
+            <template v-slot:label>
+              <plus-icon
+                  class="text-center items-center justify-center"
+                  style="fill: #d0d0d0"
+              />
+            </template>
+          </dropdown-contact-status>
         </div>
       </div>
       <div
-        style="height: 150px; overflow: hidden; overflow-y: scroll"
+        style="height: 150px; overflow-y: scroll"
         class="flex q-ma-md users-list"
       >
         <div
@@ -30,24 +37,28 @@
         >
           No shares yet
         </div>
-        <div style="width: 250px" v-if="contactsList.length">
+        <div class="full-width" v-if="contactsList.length">
           <div
-            class="q-ma-sm flex full-width no-wrap justify-between row"
+            class="q-ma-sm flex row no-wrap"
             v-for="contact in contactsList"
             :key="contact.value"
           >
-            <div class="q-mx-sm col-8">
-              <p style="overflow: hidden" class="full-width">
+            <div style="overflow: hidden" class="flex col-7 items-center">
+              <p class="full-width">
                 {{ contact.email }}
               </p>
             </div>
-            <div class="q-mx-sm col-2">
-              <span class="contact-status text-primary">{{
-                statuses[contact.status]
-              }}</span>
+            <div class="flex items-start col-4">
+              <dropdown-contact-status :menu-offset="[85, 0]" :current-user="contact" :action="changeStatus">
+                <template v-slot:label>
+                  <span class="contact-status text-primary">{{
+                      statuses[contact.status]
+                    }}</span>
+                </template>
+              </dropdown-contact-status>
             </div>
-            <div class="col-2 text-center" @click="removeContact(contact)">
-              <q-icon class="q-pl-xs" color="grey-5" name="close" />
+            <div class="flex col-1 items-center" @click="removeContact(contact)">
+              <q-icon color="grey-5" name="close" />
             </div>
           </div>
         </div>
@@ -138,10 +149,6 @@ export default {
     ...mapActions('contactsmobile', ['asyncGetContacts']),
     ...mapActions('filesmobile', ['asyncUpdateShare', 'changeItemProperty']),
     selectUser(status) {
-      let arr = [0, 20, 21]
-      for (let el of arr) {
-        console.log(el)
-      }
       if (this.currentUser) {
         this.currentUser.status = status
         this.contactsList.push(this.currentUser)
@@ -210,7 +217,6 @@ export default {
       this.saving = true
       const parameters = getParametersForShare(this.contactsList, this.file)
       const result = await this.asyncUpdateShare(parameters)
-      console.log(result, 'result')
       if (result) {
         this.openDialog = false
         this.$emit('closeDialog')
@@ -218,8 +224,10 @@ export default {
       this.saving = false
     },
     onContinueTyping() {
-      console.log(this.$refs.dropdown, 'this.$refs.dropdown')
       this.$refs.dropdown.show()
+    },
+    changeStatus(status, contact) {
+      contact.status = status
     },
     cancel() {
       this.$emit('closeDialog')
