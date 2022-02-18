@@ -20,6 +20,7 @@ import CreateButtonsDialogs from './dialogs/CreateButtonsDialogs'
 import CreateShareableLinkDialog from './dialogs/CreateShareableLinkDialog'
 import ShareWithTeammatesDialog from './dialogs/ShareWithTeammatesDialog'
 import FileUploader from './dialogs/FileUploader'
+import ShareLeaveDialog from "./dialogs/ShareLeaveDialog";
 
 export default {
   name: 'DialogsList',
@@ -32,6 +33,7 @@ export default {
     CreateShareableLinkDialog,
     ShareWithTeammatesDialog,
     FileUploader,
+    ShareLeaveDialog
   },
   data() {
     return {

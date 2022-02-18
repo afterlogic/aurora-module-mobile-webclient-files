@@ -83,6 +83,14 @@ export const fileActions = {
     icon: 'SharingIcon',
     isShowAction: isShowAction,
   },
+  shareLeave: {
+    method: null,
+    name: 'shareLeave',
+    component: 'ShareLeaveDialog',
+    displayName: 'Leave share ',
+    icon: 'LeaveSharingIcon',
+    isShowAction: isShowAction,
+  },
   download: {
     method: (store) => {
       const file = store.getters['filesmobile/currentFile']

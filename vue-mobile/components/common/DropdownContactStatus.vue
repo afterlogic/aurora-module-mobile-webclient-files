@@ -6,9 +6,9 @@
       dense
       dropdown-icon="none"
       :ripple="false"
-      ref="dropdown"
       class="dropdown-status"
       :menu-offset="menuOffset"
+      ref="dropdown"
   >
     <template v-slot:label>
       <slot name="label" />
@@ -39,7 +39,7 @@ export default {
   props: {
     action: { type: Function, require: true },
     currentUser: { type: Object, default: null },
-    menuOffset: { type: Array, default: [0, 0] }
+    menuOffset: { type: Array, default: [0, 0] },
   },
   components: {
     PlusIcon

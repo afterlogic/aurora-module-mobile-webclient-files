@@ -1,33 +1,35 @@
 <template>
-  <q-dialog v-model="showDialog">
-    <q-card v-if="user" class="q-dialog-size q-pt-md" style="min-width: 300px">
-      <q-item>
-        <span>
+  <app-dialog v-model="showDialog" :cancel-dialog="closeDialog" :show-cross="false">
+    <template v-slot:head>
+      <q-item class="inscription">
+          <span>
           Last entered teammate
           <span class="text-bold">{{ user.email }}</span>
           was not added to the list. Proceed without them?
         </span>
       </q-item>
-      <q-card-actions align="right">
-        <button-dialog
-            :action="onContinueExecution"
-            :label="$t('COREWEBCLIENT.ACTION_OK')"
-        />
-        <button-dialog
-            :label="$t('COREWEBCLIENT.ACTION_CLOSE')"
-            :action="closeDialog"
-        />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
+    </template>
+    <template v-slot:actions>
+      <button-dialog
+          :action="onContinueExecution"
+          :label="$t('COREWEBCLIENT.ACTION_OK')"
+      />
+      <button-dialog
+          :label="$t('COREWEBCLIENT.ACTION_CLOSE')"
+          :action="closeDialog"
+      />
+    </template>
+  </app-dialog>
 </template>
 
 <script>
+import AppDialog from "components/common/AppDialog";
 import ButtonDialog from 'src/components/common/ButtonDialog'
 export default {
   name: "NotAddedUserDialog",
   components: {
-    ButtonDialog
+    ButtonDialog,
+    AppDialog
   },
   data: () => ({
     showDialog: false,
@@ -51,5 +53,8 @@ export default {
 </script>
 
 <style scoped>
-
+.inscription {
+  font-size: 18px;
+  line-height: 20px;
+}
 </style>

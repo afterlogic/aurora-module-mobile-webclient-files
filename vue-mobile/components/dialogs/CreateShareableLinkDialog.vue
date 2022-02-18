@@ -77,12 +77,13 @@ import { mapActions } from 'vuex'
 
 import notification from 'src/utils/notification'
 
+import AppDialog from "components/common/AppDialog";
 import AppDialogInput from 'src/components/common/AppDialogInput'
 import ButtonDialog from 'src/components/common/ButtonDialog'
 
 export default {
   name: 'CreateShareableLinkDialog',
-  components: { ButtonDialog, AppDialogInput },
+  components: { ButtonDialog, AppDialogInput, AppDialog },
   props: {
     file: { type: Object, default: null },
     dialog: { type: Boolean, default: false },

@@ -12,6 +12,7 @@ import RenameIcon from "../icons/file-actions/RenameIcon";
 import SecureLinkIcon from "../icons/file-actions/SecureLinkIcon";
 import SharingIcon from "../icons/file-actions/SharingIcon";
 import DownloadIcon from "../icons/file-actions/DownloadIcon";
+import LeaveSharingIcon from "../icons/file-actions/LeaveSharingIcon";
 
 export default {
   name: 'IconAction',
@@ -25,7 +26,8 @@ export default {
     RenameIcon,
     DeleteIcon,
     SharingIcon,
-    DownloadIcon
+    DownloadIcon,
+    LeaveSharingIcon
   },
 }
 </script>

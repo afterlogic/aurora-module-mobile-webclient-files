@@ -1,34 +1,31 @@
 <template>
-  <q-dialog v-model="openDialog">
-    <q-card class="q-dialog-size q-px-sm">
-      <q-card-section>
+  <app-dialog v-model="openDialog" :cancel-dialog="closeDialog">
+    <template v-slot:head>
+      <q-item>
         <span>{{ title }}</span>
-      </q-card-section>
-      <q-card-actions align="right">
-        <button-dialog
+      </q-item>
+    </template>
+    <template v-slot:actions>
+      <button-dialog
           :saving="saving"
           :action="deleteItems"
           :label="$t('COREWEBCLIENT.ACTION_DELETE')"
-        />
-        <button-dialog
-          :saving="saving"
-          :action="closeDialog"
-          :label="$t('COREWEBCLIENT.ACTION_CLOSE')"
-        />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
+      />
+    </template>
+  </app-dialog>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
+import AppDialog from "components/common/AppDialog";
 import ButtonDialog from 'src/components/common/ButtonDialog'
 
 export default {
   name: 'DeleteItemsDialog',
   components: {
     ButtonDialog,
+    AppDialog
   },
   props: {
     file: {

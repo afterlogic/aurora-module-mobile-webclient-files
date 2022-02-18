@@ -1,45 +1,41 @@
 <template>
-  <q-dialog v-model="openDialog">
-    <q-card class="q-dialog-size q-pt-md q-px-sm" style="min-width: 300px">
+  <app-dialog v-model="openDialog" :cancel-dialog="cancelDialog">
+    <template v-slot:head>
       <div style="font-size: 15px" class="q-px-md text-bold text-primary text">
         <span>{{ $t('MAILWEBCLIENT.ACTION_ADD_NEW_FOLDER') }}</span>
       </div>
       <q-item>
         <app-input
-          placeholder="Enter folder name"
-          outlined
-          autofocus
-          dense
-          v-model="folderName"
-          style="width: 250px"
-          @keyup.enter="createFolder"
+            placeholder="Enter folder name"
+            outlined
+            autofocus
+            dense
+            v-model="folderName"
+            style="width: 100%"
+            @keyup.enter="createFolder"
         />
       </q-item>
-      <q-card-actions align="right">
-        <button-dialog
+    </template>
+    <template v-slot:actions>
+      <button-dialog
           :saving="saving"
           :action="createFolder"
           :label="$t('COREWEBCLIENT.ACTION_CREATE')"
-        />
-        <button-dialog
-          :saving="saving"
-          :action="cancelDialog"
-          :label="$t('COREWEBCLIENT.ACTION_CLOSE')"
-        />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
+      />
+    </template>
+  </app-dialog>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 
+import AppDialog from "components/common/AppDialog";
 import AppInput from 'src/components/common/AppInput'
 import ButtonDialog from 'src/components/common/ButtonDialog'
 
 export default {
   name: 'CreateFolderDialog',
-  components: { AppInput, ButtonDialog },
+  components: { AppInput, ButtonDialog, AppDialog },
   props: {
     file: { type: Object, default: null },
     dialog: { type: Boolean, default: false },

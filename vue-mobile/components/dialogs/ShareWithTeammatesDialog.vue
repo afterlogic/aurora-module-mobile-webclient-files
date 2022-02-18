@@ -49,7 +49,7 @@
               </p>
             </div>
             <div class="flex items-start col-4">
-              <dropdown-contact-status :menu-offset="[85, 0]" :current-user="contact" :action="changeStatus">
+              <dropdown-contact-status ref="dropdown" :menu-offset="[85, 0]" :current-user="contact" :action="changeStatus">
                 <template v-slot:label>
                   <span class="contact-status text-primary">{{
                       statuses[contact.status]
@@ -224,7 +224,9 @@ export default {
       this.saving = false
     },
     onContinueTyping() {
-      this.$refs.dropdown.show()
+      if (this.contactsList.length) {
+        this.$refs.dropdown.$refs.dropdown.show()
+      }
     },
     changeStatus(status, contact) {
       contact.status = status
