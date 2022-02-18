@@ -1,5 +1,5 @@
 <template>
-  <main-layout title="File info">
+  <main-layout>
     <q-scroll-area :thumb-style="{ width: '5px' }" class="file__info">
       <div v-if="currentFile">
         <div class="flex items-center justify-center">
@@ -87,6 +87,13 @@ export default {
       return text.getFriendlySize(this.currentFile.size)
     },
   },
+  watch: {
+    currentFile(file) {
+      if (!file) {
+        this.$router.push('/files')
+      }
+    }
+  }
 }
 </script>
 

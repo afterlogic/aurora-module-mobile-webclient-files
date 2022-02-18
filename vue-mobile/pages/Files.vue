@@ -1,5 +1,5 @@
 <template>
-  <main-layout title="Files">
+  <main-layout>
     <template v-slot:drawer>
       <storage-item
         v-for="storage in storageList"
@@ -9,7 +9,7 @@
     </template>
     <q-scroll-area :thumb-style="{width: '5px'}" class="files__list" v-if="!loadingStatus">
       <folder-item
-          v-for="file in foldersList"
+          v-for="file in folderList"
           :key="file"
           :folder="file"
           :isSelected="isSelected"
@@ -27,7 +27,7 @@
           class="file"
       />
       <file-item
-          v-for="file in filesList"
+          v-for="file in fileList"
           :key="file"
           :file="file"
           :isSelected="isSelected"
@@ -89,8 +89,8 @@ export default {
   },
   computed: {
     ...mapGetters('filesmobile', [
-      'filesList',
-      'foldersList',
+      'fileList',
+      'folderList',
       'storageList',
       'selectedFiles',
       'copiedFiles',

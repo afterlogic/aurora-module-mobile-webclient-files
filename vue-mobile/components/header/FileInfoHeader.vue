@@ -13,27 +13,31 @@
     </q-card-actions>
     <div class="col-6 flex justify-end q-pr-sm">
       <icon-action
+          v-if="isShowAction(actions.createShareableLink)"
           class="q-mr-lg"
           icon="SecureLinkIcon"
           @click="onPerformAction(actions.createShareableLink)"
       />
       <icon-action
+          v-if="isShowAction(actions.download)"
           class="q-mr-lg"
           icon="DownloadIcon"
           @click="onPerformAction(actions.download)"
       />
       <icon-action
+          v-if="isShowAction(actions.delete)"
           class="q-mr-lg"
           icon="DeleteIcon"
           @click="onPerformAction(actions.delete)"
       />
       <div class="dropdown-more flex justify-center items-center">
-        <q-btn-dropdown :menu-offset="[8, -45]" flat unelevated dense>
+        <q-btn-dropdown v-if="isShowDropdown" :menu-offset="[8, -45]" flat unelevated dense>
           <template v-slot:label>
             <icon-action class="q-mr-md" icon="MoreIcon" />
           </template>
           <q-list>
             <q-item
+              v-if="isShowAction(actions.shareWithTeammates)"
               clickable
               v-close-popup
               @click="onPerformAction(actions.shareWithTeammates)"
@@ -45,13 +49,15 @@
                 }}</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable v-close-popup @click="onCopyMove(actions.copy)">
+            <q-item
+              v-if="isShowAction(actions.copy)" clickable v-close-popup @click="onCopyMove(actions.copy)">
               <icon-action class="q-mr-md" :icon="actions.copy.icon" />
               <q-item-section>
                 <q-item-label>{{ actions.copy.displayName }}</q-item-label>
               </q-item-section>
             </q-item>
             <q-item
+              v-if="isShowAction(actions.rename)"
               clickable
               v-close-popup
               @click="onPerformAction(actions.rename)"
@@ -85,10 +91,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('filesmobile', ['filesList']),
+    ...mapGetters('filesmobile', ['fileList', 'currentFile', 'currentStorage', 'currentPath']),
+    isShowDropdown() {
+      return this.currentStorage.Type !== 'shared'
+    }
   },
   watch: {
-    'filesList.length'() {
+    'fileList.length'(val, oldVal) {
+      console.log(val, oldVal)
       this.onPreviousPath()
     },
   },
@@ -117,6 +127,14 @@ export default {
         action.method(this.$store)
       }
     },
+    isShowAction(action) {
+      return action.isShowAction(
+          action.name,
+          this.currentFile,
+          this.currentStorage.Type,
+          this.currentPath
+      )
+    }
   },
 }
 </script>

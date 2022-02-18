@@ -1,4 +1,4 @@
-export const fileTypes = {
+export const fileFormats = {
   media: [
     'mp3',
     'amr',

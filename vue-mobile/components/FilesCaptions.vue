@@ -31,8 +31,8 @@ export default {
   computed: {
     ...mapGetters('filesmobile', [
       'downloadFiles',
-      'filesList',
-      'foldersList',
+      'fileList',
+      'folderList',
       'searchText',
       'currentStorage',
       'currentPath',
@@ -70,7 +70,7 @@ export default {
       )
     },
     isNoFiles() {
-      return !this.filesList.length && !this.foldersList.length
+      return !this.fileList.length && !this.folderList.length
     },
   },
 }

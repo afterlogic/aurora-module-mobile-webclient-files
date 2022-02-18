@@ -2,8 +2,8 @@ import { getFilteredItems } from '../utils/common'
 
 export default {
   storageList: (state) => state.storageList,
-  filesList: (state) => state.filesList,
-  foldersList: (state) => state.foldersList,
+  fileList: (state) => state.fileList,
+  folderList: (state) => state.folderList,
   filesQuota: (state) => state.filesQuota,
   currentStorage: (state) => state.currentStorage,
   loadingStatus: (state) => state.isLoading,
@@ -20,8 +20,8 @@ export default {
     )
   },
   selectedFiles: (state) => {
-    const files = getFilteredItems(state.filesList, 'isSelected')
-    const folders = getFilteredItems(state.foldersList, 'isSelected')
+    const files = getFilteredItems(state.fileList, 'isSelected')
+    const folders = getFilteredItems(state.folderList, 'isSelected')
     return folders.concat(files)
   },
   dialogComponent: (state) =>

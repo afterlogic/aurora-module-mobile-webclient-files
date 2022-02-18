@@ -3,7 +3,7 @@ import { getApiHost } from 'src/api/helpers'
 
 import filesWebApi from '../files-web-api'
 import {
-  getParseFiles,
+  getParsedFiles,
   getParseFolders,
   getFiles,
   getFolders,
@@ -13,8 +13,8 @@ export default {
   asyncGetStorages: async ({ commit, dispatch }) => {
     const storages = await filesWebApi.getStorages()
     if (types.pArray(storages)) {
-      commit('SET_STORAGE_LIST', storages)
-      commit('SET_CURRENT_STORAGE', storages.length ? storages[0] : {})
+      commit('setStorageList', storages)
+      commit('setCurrentStorage', storages.length ? storages[0] : {})
       if (storages.length) {
         const path = {
           path: '',
@@ -39,25 +39,25 @@ export default {
     }
     const data = await filesWebApi.getFiles(parameters)
     if (types.pArray(data?.Items)) {
-      const files = getParseFiles(data.Items)
+      const files = getParsedFiles(data.Items)
       const folders = getParseFolders(data.Items)
-      commit('SET_FOLDERS_LIST', folders)
-      commit('SET_FILES_LIST', files)
+      commit('setFolderList', folders)
+      commit('setFileList', files)
     }
-    if (types.pObject(data?.Quata)) {
-      commit('SET_FILES_QUOTA', data.Quata)
+    if (types.pObject(data?.Quota)) {
+      commit('setFilesQuota', data.Quota)
     }
     dispatch('changeLoadingStatus', false)
   },
   clearItemLists: ({ commit }) => {
-    commit('SET_FOLDERS_LIST', [])
-    commit('SET_FILES_LIST', [])
+    commit('setFolderList', [])
+    commit('setFileList', [])
   },
   changeCurrentStorage: ({ commit }, storage) => {
-    commit('SET_CURRENT_STORAGE', storage)
+    commit('setCurrentStorage', storage)
   },
   changeLoadingStatus: ({ commit }, status) => {
-    commit('SET_LOADING_STATUS', status)
+    commit('setLoadingStatus', status)
   },
   changeCurrentPaths: (
     { state, commit, getters, dispatch },
@@ -67,8 +67,8 @@ export default {
     let index = currentPaths.findIndex((elem) => {
       return elem?.path === path?.path
     })
-    commit('SET_CURRENT_PATH', { path: path?.path })
-    commit('CHANGE_CURRENT_PATH', { index, path, lastStorage })
+    commit('setCurrentPath', { path: path?.path })
+    commit('changeCurrentPath', { index, path, lastStorage })
   },
   asyncRenameItem: async ({ state }, { file, itemName }) => {
     const parameters = {
@@ -82,13 +82,13 @@ export default {
     return await filesWebApi.renameItem(parameters)
   },
   changeFileName: ({ commit }, fileName) => {
-    commit('SET_FILE_NAME', fileName)
+    commit('setFileName', fileName)
   },
   selectFile: ({ commit }, file) => {
-    commit('SET_CURRENT_FILE', file)
+    commit('setCurrentFile', file)
   },
   changeSelectStatus: ({ commit }) => {
-    commit('SET_SELECT_STATUS')
+    commit('setSelectStatus')
   },
   asyncDeleteItems: async ({ state, commit, getters, dispatch }, { items }) => {
     const currentStorage = getters['currentStorage']
@@ -104,27 +104,26 @@ export default {
   changeItemsLists: ({ commit }, { items }) => {
     const files = getFiles(items)
     const folders = getFolders(items)
-
     if (folders.length) {
-      commit('REMOVE_FOLDERS', folders)
+      commit('removeFolders', folders)
     }
     if (files.length) {
-      commit('REMOVE_FILES', files)
+      commit('removeFiles', files)
     }
   },
   removeSelectedItems: ({ commit }, { items }) => {
-    commit('REMOVE_SELECTED_ITEMS', items)
+    commit('removeSelectedItems', items)
   },
   changeDialogComponent: ({ commit }, dialogComponent) => {
-    commit('SET_DIALOG_COMPONENT', dialogComponent)
+    commit('setDialogComponent', dialogComponent)
   },
   addCopyItems: ({ commit }, { items }) => {
-    commit('SET_COPY_ITEMS', items)
-    commit('SET_ITEMS_COPY_STATUS', { items, status: true })
+    commit('setCopyItems', items)
+    commit('setItemsCopyStatus', { items, status: true })
   },
   removeCopiedFiles: ({ commit }) => {
-    commit('SET_COPY_ITEMS_STATUS', { status: false })
-    commit('REMOVE_COPIED_FILES')
+    commit('setCopyItemsStatus', { status: false })
+    commit('removeCopiedFiles')
   },
   copyItems: async ({ dispatch, getters }) => {
     const parameters = getters['getCopyMoveParameters']
@@ -166,13 +165,13 @@ export default {
     const module = withPassword ? 'OpenPgpFilesWebclient' : 'Files'
     const result = await filesWebApi.createShareableLink(parameters, module)
     if (result) {
-      commit('SET_ITEM_PROPERTY', {
+      commit('setItemProperty', {
         item: currentFile,
         property: 'publicLink',
         value: `${getApiHost()}${result}`,
       })
       if (parameters.Password) {
-        commit('SET_ITEM_PROPERTY', {
+        commit('setItemProperty', {
           item: currentFile,
           property: 'linkPassword',
           value: parameters.Password,
@@ -191,12 +190,12 @@ export default {
     }
     const result = await filesWebApi.deletePublicLink(parameters)
     if (result) {
-      commit('SET_ITEM_PROPERTY', {
+      commit('setItemProperty', {
         item: currentFile,
         property: 'publicLink',
         value: '',
       })
-      commit('SET_ITEM_PROPERTY', {
+      commit('setItemProperty', {
         item: currentFile,
         property: 'linkPassword',
         value: '',
@@ -208,7 +207,7 @@ export default {
     const result = await filesWebApi.updateShare(parameters)
     if (result) {
       const currentFile = getters['currentFile']
-      commit('SET_ITEM_PROPERTY', {
+      commit('setItemProperty', {
         item: currentFile,
         property: 'shares',
         value: parameters.Shares,
@@ -240,29 +239,29 @@ export default {
     return filesWebApi.clearHistory(parameters)
   },
   addDownloadsFiles: ({ state, commit, getters, dispatch }, files) => {
-    commit('SET_DOWNLOADS_FILES', files)
+    commit('setDownloadsFiles', files)
   },
   removeUploadedFiles: ({ commit }) => {
-    commit('REMOVE_UPLOADED_FILES')
+    commit('removeUploadedFiles')
   },
   changeUploadingStatus: ({ commit }, { file, status }) => {
-    commit('SET_ITEM_PROPERTY', {
+    commit('setItemProperty', {
       item: file,
       property: 'isUploading',
       value: status,
     })
   },
   changeItemProperty: ({ commit }, { item, property, value }) => {
-    commit('SET_ITEM_PROPERTY', { item, property, value })
+    commit('setItemProperty', { item, property, value })
   },
   asyncDownloadFile: async ({ getters }) => {
     const file = getters['currentFile']
     await filesWebApi.downloadFile(file)
   },
   changeCurrentHeader: ({ commit }, headerName) => {
-    commit('SET_CURRENT_HEADER_NAME', headerName)
+    commit('setCurrentHeader', headerName)
   },
   changeSearchText: ({ commit }, text) => {
-    commit('SET_SEARCH_TEXT', text)
+    commit('setSearchText', text)
   },
 }

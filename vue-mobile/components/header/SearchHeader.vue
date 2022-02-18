@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-toolbar style="height: 55px; font-size: 16px; padding: 0">
+    <q-toolbar class="search-toolbar">
       <q-card-actions align="left" class="col-3">
         <q-btn
           flat
@@ -12,19 +12,18 @@
           @click="close"
         />
       </q-card-actions>
-      <div class="flex column text-center text-black col-6">
-        <span class="text-bold" style="font-size: 17px; margin-top: 5px"
+      <div class="flex column text-center text-black col-6 search">
+        <span class="text-bold search-title"
           >Search</span
         >
         <span class="text-caption text-blue-grey-12" style="margin-top: -3px">{{
-          currentStorage.DisplayName
+            currentFolder
         }}</span>
       </div>
       <div class="col-3 flex justify-end q-pr-sm" />
     </q-toolbar>
     <q-toolbar
-      class="flex row"
-      style="height: 74px; font-size: 16px; padding: 0"
+      class="flex row search-toolbar-input"
     >
       <q-input
         v-model="text"
@@ -53,7 +52,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('filesmobile', ['currentStorage', 'searchText']),
+    ...mapGetters('filesmobile', ['currentStorage', 'searchText', 'currentPath']),
+    currentFolder() {
+      const paths = this.currentPath.split('/')
+      return paths[paths.length - 1] || this.currentStorage.DisplayName
+    }
   },
   mounted() {
     this.text = this.searchText
@@ -67,7 +70,7 @@ export default {
     ...mapActions('filesmobile', [
       'asyncGetFiles',
       'changeCurrentHeader',
-      'changeSearchText',
+      'changeSearchText'
     ]),
     async search() {
       this.changeSearchText(this.text)
@@ -85,5 +88,19 @@ export default {
 <style>
 .search .q-field__control {
   height: 48px;
+}
+.search-title {
+  font-size: 17px;
+  margin-top: 5px
+}
+.search-toolbar {
+  height: 55px;
+  font-size: 16px;
+  padding: 0
+}
+.search-toolbar-input {
+  height: 74px;
+  font-size: 16px;
+  padding: 0
 }
 </style>

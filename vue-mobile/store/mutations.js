@@ -1,18 +1,18 @@
 export default {
-  SET_STORAGE_LIST: (state, storages) => (state.storageList = storages),
-  SET_FILES_LIST: (state, filesList) => (state.filesList = filesList),
-  SET_FOLDERS_LIST: (state, foldersList) => (state.foldersList = foldersList),
-  SET_FILES_QUOTA: (state, filesQuota) => (state.filesQuota = filesQuota),
-  SET_CURRENT_STORAGE: (state, currentStorage) =>
+  setStorageList: (state, storages) => (state.storageList = storages),
+  setFileList: (state, fileList) => (state.fileList = fileList),
+  setFolderList: (state, folderList) => (state.folderList = folderList),
+  setFilesQuota: (state, filesQuota) => (state.filesQuota = filesQuota),
+  setCurrentStorage: (state, currentStorage) =>
     (state.currentStorage = currentStorage),
-  SET_LOADING_STATUS: (state, status) => (state.isLoading = status),
-  SET_CURRENT_PATH: (state, { path }) => (state.currentPath = path),
-  SET_CURRENT_FILE: (state, file) => (state.currentFile = file),
-  SET_FILE_NAME: (state, fileName) => (state.currentFile.name = fileName),
-  SET_CURRENT_HEADER_NAME: (state, headerName) =>
+  setLoadingStatus: (state, status) => (state.isLoading = status),
+  setCurrentPath: (state, { path }) => (state.currentPath = path),
+  setCurrentFile: (state, file) => (state.currentFile = file),
+  setFileName: (state, fileName) => (state.currentFile.name = fileName),
+  setCurrentHeader: (state, headerName) =>
     (state.currentHeader = headerName),
-  SET_SEARCH_TEXT: (state, text) => (state.searchText = text),
-  CHANGE_CURRENT_PATH: (state, { path, index, lastStorage }) => {
+  setSearchText: (state, text) => (state.searchText = text),
+  changeCurrentPath: (state, { path, index, lastStorage }) => {
     if (!lastStorage) {
       if (index === -1) {
         state.currentPaths.push(path)
@@ -24,62 +24,61 @@ export default {
     }
   },
 
-  REMOVE_FOLDERS: (state, folders) => {
+  removeFolders: (state, folders) => {
     folders.forEach((folder) => {
-      const itemIndex = state.foldersList.findIndex(
+      const itemIndex = state.folderList.findIndex(
         (item) => item.hash === folder.hash
       )
       if (itemIndex !== -1) {
-        state.foldersList.splice(itemIndex, 1)
+        state.folderList.splice(itemIndex, 1)
       }
     })
   },
-  REMOVE_FILES: (state, files) => {
-    console.log(files, 'REMOVE_FILES')
+  removeFiles: (state, files) => {
     files.forEach((file) => {
-      const itemIndex = state.filesList.findIndex(
+      const itemIndex = state.fileList.findIndex(
         (item) => item.hash === file.hash
       )
       if (itemIndex !== -1) {
-        state.filesList.splice(itemIndex, 1)
+        state.fileList.splice(itemIndex, 1)
       }
     })
   },
-  SET_SELECT_STATUS: (state) =>
+  setSelectStatus: (state) =>
     (state.currentFile.isSelected = !state.currentFile.isSelected),
-  REMOVE_SELECTED_ITEMS: (state, items) => {
+  removeSelectedItems: (state, items) => {
     if (items.length) {
       items.forEach((item) => {
         item.isSelected = false
       })
     }
   },
-  SET_DIALOG_COMPONENT: (state, dialogComponent) =>
+  setDialogComponent: (state, dialogComponent) =>
     (state.dialogComponent = dialogComponent),
-  SET_COPY_ITEMS: (state, items) => (state.copyItems = items),
-  SET_ITEMS_COPY_STATUS: (state, { items, status }) => {
+  setCopyItems: (state, items) => (state.copyItems = items),
+  setItemsCopyStatus: (state, { items, status }) => {
     items.forEach((item) => {
       item.isCopied = status
     })
   },
-  SET_COPY_ITEMS_STATUS: (state, { status }) => {
-    state.filesList.forEach((item) => {
+  setCopyItemsStatus: (state, { status }) => {
+    state.fileList.forEach((item) => {
       if (item.isCopied) {
         item.isCopied = status
       }
     })
-    state.foldersList.forEach((item) => {
+    state.folderList.forEach((item) => {
       if (item.isCopied) {
         item.isCopied = status
       }
     })
   },
-  SET_ITEM_PROPERTY: (state, { item, property, value }) =>
+  setItemProperty: (state, { item, property, value }) =>
     (item[property] = value),
-  REMOVE_COPIED_FILES: (state) => (state.copyItems = []),
-  SET_DOWNLOADS_FILES: (state, files) =>
+  removeCopiedFiles: (state) => (state.copyItems = []),
+  setDownloadsFiles: (state, files) =>
     (state.downloadFiles = state.downloadFiles.concat(files)),
-  REMOVE_UPLOADED_FILES: (state) => {
+  removeUploadedFiles: (state) => {
     const downloadableFiles = []
     state.downloadFiles.forEach((file) => {
       if (file.file.__progress !== 1) {
@@ -89,13 +88,3 @@ export default {
     state.downloadFiles = downloadableFiles
   },
 }
-// files.forEach(file => {
-//   const index = state.downloadFiles.findIndex(currentFile => {
-//     return currentFile.name === file.name && currentFile.size === file.size
-//   })
-//   if (index + 1) {
-//     state.downloadFiles[index] = file
-//   } else {
-//     state.downloadFiles.push(file)
-//   }
-// })

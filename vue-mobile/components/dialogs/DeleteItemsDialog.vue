@@ -64,7 +64,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('filesmobile', ['asyncDeleteItems', 'changeItemsLists']),
+    ...mapActions('filesmobile', ['asyncDeleteItems', 'changeItemsLists', 'selectFile']),
     closeDialog() {
       this.$emit('closeDialog')
     },
@@ -91,6 +91,7 @@ export default {
         await this.changeItemsLists({
           items: this.selectedFiles.length ? this.selectedFiles : [this.file],
         })
+        await this.selectFile(null)
         this.$emit('closeDialog')
       }
       this.saving = false

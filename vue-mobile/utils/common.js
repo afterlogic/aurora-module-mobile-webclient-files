@@ -2,9 +2,8 @@ import types from 'src/utils/types'
 import store from 'src/store'
 import { getApiHost } from 'src/api/helpers'
 
-import { fileTypes } from './formats'
+import { fileFormats } from './formats'
 
-const imgFormats = ['jpeg', 'png', 'jpg', 'JPG', 'jpeg']
 
 const getFormatFile = (name) => {
   return name.split('.')[name.split('.').length - 1]
@@ -12,8 +11,8 @@ const getFormatFile = (name) => {
 
 const isImg = (name) => {
   const formatFile = getFormatFile(name)
-  return imgFormats.find((format) => {
-    return format === formatFile
+  return fileFormats.image.find((format) => {
+    return format === formatFile.toLowerCase()
   })
 }
 const isCopied = (hash) => {
@@ -77,7 +76,7 @@ export const parseUploadedFile = (file, path, storage) => {
   }
 }
 
-export const getParseFiles = (items) => {
+export const getParsedFiles = (items) => {
   const files = []
   items.forEach((file) => {
     if (!file.IsFolder) {
@@ -146,9 +145,9 @@ export const getPreviewIconName = (name) => {
   if (!name) return 'FileIcon'
   const format = getFormatFile(name)
   if (!format) return 'FileIcon'
-  for (let type in fileTypes) {
-    const index = fileTypes[type].findIndex(
-      (currentFormat) => currentFormat === format
+  for (let type in fileFormats) {
+    const index = fileFormats[type].findIndex(
+      (currentFormat) => currentFormat === format.toLowerCase()
     )
     if (index + 1) {
       switch (type) {

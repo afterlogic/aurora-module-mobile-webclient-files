@@ -1,8 +1,8 @@
 export default function () {
   return {
     storageList: [],
-    filesList: [],
-    foldersList: [],
+    fileList: [],
+    folderList: [],
     copyItems: [],
     downloadFiles: [],
     filesQuota: {},
