@@ -1,46 +1,48 @@
 <template>
   <main-layout title="File info">
-    <div v-if="currentFile" class="file__info">
-      <div class="flex items-center justify-center">
-        <div v-if="!currentFile.thumbnailUrl" class="file__preview q-my-xl">
-          <file-item-icon
-            v-if="!currentFile.thumbnailUrl"
-            :file-name="currentFile.name"
-            :height="64"
-            :width="64"
-          />
-        </div>
-        <div
-          class="q-my-lg"
-          style="height: 348px"
-          v-if="currentFile.thumbnailUrl"
-        >
+    <q-scroll-area :thumb-style="{ width: '5px' }" class="file__info">
+      <div v-if="currentFile">
+        <div class="flex items-center justify-center">
+          <div v-if="!currentFile.thumbnailUrl" class="file__preview q-my-xl">
+            <file-item-icon
+                v-if="!currentFile.thumbnailUrl"
+                :file-name="currentFile.name"
+                :height="64"
+                :width="64"
+            />
+          </div>
           <div
-            class="img-preview"
-            :style="{
+              class="q-my-lg"
+              style="height: 348px"
+              v-if="currentFile.thumbnailUrl"
+          >
+            <div
+                class="img-preview"
+                :style="{
               background: `url(${filePreview}) no-repeat center`,
-              'background-size': 'cover',
+              'background-size': 'contain',
             }"
-          />
+            />
+          </div>
         </div>
+        <div>
+          <div class="q-mx-md">
+            <input-form readonly :value="currentFile.name" label="File name" />
+          </div>
+          <div class="flex justify-between q-ma-md">
+            <input-form readonly :value="fileSize" label="Size" />
+            <input-form readonly :value="fileDate" label="Created" />
+          </div>
+          <div class="q-ma-md">
+            <input-form readonly :value="filePatch" label="Location" />
+          </div>
+          <div class="q-ma-md">
+            <input-form readonly :value="currentFile.owner" label="Owner" />
+          </div>
+        </div>
+        <div style="height: 50px"/>
       </div>
-      <div>
-        <div class="q-mx-md">
-          <input-form readonly :value="currentFile.name" label="File name" />
-        </div>
-        <div class="flex justify-between q-ma-md">
-          <input-form readonly :value="fileSize" label="Size" />
-          <input-form readonly :value="fileDate" label="Created" />
-        </div>
-        <div class="q-ma-md">
-          <input-form readonly :value="filePatch" label="Location" />
-        </div>
-        <div class="q-ma-md">
-          <input-form readonly :value="currentFile.owner" label="Owner" />
-        </div>
-      </div>
-      <div style="height: 50px"/>
-    </div>
+    </q-scroll-area>
     <dialogs-list />
   </main-layout>
 </template>
@@ -89,6 +91,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.file {
+  &__info {
+    height: calc(100vh - 115px);
+  }
+  &__info .q-scrollarea__content {
+    width: 100vw;
+  }
+}
+
 .file__preview {
   margin-top: 60px;
   margin-bottom: 60px;
