@@ -55,7 +55,8 @@ export default {
     ...mapGetters('filesmobile', ['currentStorage', 'searchText', 'currentPath']),
     currentFolder() {
       const paths = this.currentPath.split('/')
-      return paths[paths.length - 1] || this.currentStorage.DisplayName
+      return paths[paths.length - 1] ? this.currentStorage.DisplayName + this.currentPath
+          : this.currentStorage.DisplayName
     }
   },
   mounted() {
