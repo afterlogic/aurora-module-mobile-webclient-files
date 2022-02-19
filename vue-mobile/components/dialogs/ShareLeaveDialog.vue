@@ -1,7 +1,7 @@
 <template>
   <app-dialog v-model="openDialog" :close="cancelDialog">
     <template v-slot:head>
-      <q-item>
+      <q-item class="dialog__header-text">
       <p>
         Leave share of the <span class="text-bold">{{ currentFile.name }}</span> file?
       </p>
@@ -11,7 +11,7 @@
       <button-dialog
           :saving="saving"
           :action="leaveShare"
-          :label="$t('FILESWEBCLIENT.ACTION_RENAME')"
+          :label="$t('SHAREDFILES.ACTION_LEAVE_SHARE')"
       />
     </template>
   </app-dialog>
@@ -21,7 +21,7 @@
 
 import AppDialog from "components/common/AppDialog";
 import ButtonDialog from "components/common/ButtonDialog";
-import {mapGetters} from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "ShareLeaveDialog",
@@ -37,11 +37,16 @@ export default {
     saving: false
   }),
   methods: {
+    ...mapActions('filesmobile', ['asyncLeaveShare', 'changeItemsLists']),
     leaveShare() {
-
+      const result = this.asyncLeaveShare()
+      if (result) {
+        this.changeItemsLists({ items: [this.currentFile] })
+        this.$emit('closeDialog')
+      }
     },
     cancelDialog() {
-
+      this.$emit('closeDialog')
     }
   }
 }

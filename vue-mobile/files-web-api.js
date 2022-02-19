@@ -207,4 +207,14 @@ export default {
         console.log(err)
       })
   },
+    leaveShare: async (parameters) => {
+      return webApi.sendRequest({
+          moduleName: 'Files',
+          methodName: 'LeaveShare',
+          parameters: parameters,
+      }).then((result) => {
+          if (result) return result
+          return false
+      })
+    }
 }

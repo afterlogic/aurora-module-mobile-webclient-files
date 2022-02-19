@@ -258,6 +258,22 @@ export default {
     const file = getters['currentFile']
     await filesWebApi.downloadFile(file)
   },
+  asyncLeaveShare: async ({ getters }) => {
+    const currentFile = getters['currentFile']
+    const currentStorage = getters['currentStorage']
+    const currentPath = getters['currentPath']
+    const parameters = {
+      Type: currentStorage.Type,
+      Path: currentPath,
+      Items: [{
+        Path: currentFile.path,
+        Name: currentFile.name,
+        IsFolder: currentFile.isFolder
+      }
+      ]
+    }
+    return await filesWebApi.leaveShare(parameters)
+  },
   changeCurrentHeader: ({ commit }, headerName) => {
     commit('setCurrentHeader', headerName)
   },

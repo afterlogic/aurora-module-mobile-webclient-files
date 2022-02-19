@@ -1,19 +1,19 @@
 <template>
-  <q-dialog v-model="openDialog">
-    <div class="q-dialog-size bg-white q-pt-md q-px-sm" style="width: 400px">
-      <div style="font-size: 15px" class="q-px-md text-bold text-black text">
+  <app-dialog v-model="openDialog" :close="cancel" width="calc(100vw - 20px)" >
+    <template v-slot:head>
+      <div class="q-px-md dialog__header-text">
         <span>{{ $t('SHAREDFILES.ACTION_SHARE') }}</span>
       </div>
       <div class="q-pl-md q-mt-md flex full-width row">
         <div class="col-10">
           <q-select
-            use-input
-            model-value=""
-            @filter="filterContacts"
-            dense
-            outlined
-            v-model="currentUser"
-            :options="selectOptions"
+              use-input
+              model-value=""
+              @filter="filterContacts"
+              dense
+              outlined
+              v-model="currentUser"
+              :options="selectOptions"
           />
         </div>
         <div class="flex col-2 justify-center items-center dropdown-plus">
@@ -28,20 +28,20 @@
         </div>
       </div>
       <div
-        style="height: 150px; overflow-y: scroll"
-        class="flex q-ma-md users-list"
+          style="height: 150px; overflow-y: scroll"
+          class="flex q-ma-md users-list"
       >
         <div
-          v-if="!contactsList.length"
-          class="users-list__title q-ma-md text-center full-width"
+            v-if="!contactsList.length"
+            class="users-list__title q-ma-md text-center full-width"
         >
           No shares yet
         </div>
         <div class="full-width" v-if="contactsList.length">
           <div
-            class="q-ma-sm flex row no-wrap"
-            v-for="contact in contactsList"
-            :key="contact.value"
+              class="q-ma-sm flex row no-wrap"
+              v-for="contact in contactsList"
+              :key="contact.value"
           >
             <div style="overflow: hidden" class="flex col-7 items-center">
               <p class="full-width">
@@ -63,31 +63,28 @@
           </div>
         </div>
       </div>
-      <q-card-actions class="q-my-sm" align="right">
-        <button-dialog
+    </template>
+    <template v-slot:actions>
+      <button-dialog
           :saving="saving"
           :action="showHistory"
           :label="$t('SHAREDFILES.ACTION_SHOW_HISTORY')"
-        />
-        <button-dialog
+      />
+      <button-dialog
           :saving="saving"
           :action="save"
           :label="$t('COREWEBCLIENT.ACTION_SAVE')"
-        />
-        <button-dialog
-          :saving="saving"
-          :action="cancel"
-          :label="$t('COREWEBCLIENT.ACTION_CLOSE')"
-        />
-      </q-card-actions>
-    </div>
-    <show-history-dialog ref="showHistoryDialog" />
-    <not-added-user-dialog
-        @onContinueSaving="onContinueSaving"
-        @cancel="onContinueTyping"
-        ref="notAddedUserDialog"
-    />
-  </q-dialog>
+      />
+    </template>
+    <template v-slot:dialogs>
+      <show-history-dialog ref="showHistoryDialog" />
+      <not-added-user-dialog
+          @onContinueSaving="onContinueSaving"
+          @cancel="onContinueTyping"
+          ref="notAddedUserDialog"
+      />
+    </template>
+  </app-dialog>
 </template>
 
 <script>
@@ -98,6 +95,7 @@ import { getContactsSelectOptions } from 'src/utils/contacts/utils'
 
 import { getParametersForShare } from '../../utils/common'
 
+import AppDialog from "components/common/AppDialog";
 import DropdownContactStatus from "../common/DropdownContactStatus";
 import ShowHistoryDialog from './ShowHistoryDialog'
 import ButtonDialog from 'src/components/common/ButtonDialog'
@@ -111,7 +109,8 @@ export default {
     PlusIcon,
     ShowHistoryDialog,
     NotAddedUserDialog,
-    DropdownContactStatus
+    DropdownContactStatus,
+    AppDialog
   },
   created() {
     this.init()
