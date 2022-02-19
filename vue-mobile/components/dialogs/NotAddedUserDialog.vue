@@ -1,7 +1,7 @@
 <template>
-  <app-dialog v-model="showDialog" :cancel-dialog="closeDialog" :show-cross="false">
+  <app-dialog v-model="showDialog" :close="closeDialog" :show-cross="false">
     <template v-slot:head>
-      <q-item class="inscription">
+      <q-item class="dialog__header-text">
           <span>
           Last entered teammate
           <span class="text-bold">{{ user.email }}</span>
@@ -53,8 +53,4 @@ export default {
 </script>
 
 <style scoped>
-.inscription {
-  font-size: 18px;
-  line-height: 20px;
-}
 </style>

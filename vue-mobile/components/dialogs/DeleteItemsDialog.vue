@@ -1,7 +1,7 @@
 <template>
-  <app-dialog v-model="openDialog" :cancel-dialog="closeDialog">
+  <app-dialog v-model="openDialog" :close="closeDialog">
     <template v-slot:head>
-      <q-item>
+      <q-item class="dialog__header-text">
         <span>{{ title }}</span>
       </q-item>
     </template>

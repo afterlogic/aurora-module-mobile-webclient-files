@@ -1,7 +1,7 @@
 <template>
-  <app-dialog v-model="openDialog" :cancel-dialog="cancelDialog">
+  <app-dialog v-model="openDialog" :close="cancelDialog">
     <template v-slot:head>
-      <div style="font-size: 15px" class="q-px-md text-bold text-primary text">
+      <div class="q-px-md dialog__header-text">
         <span>{{ $t('MAILWEBCLIENT.ACTION_ADD_NEW_FOLDER') }}</span>
       </div>
       <q-item>

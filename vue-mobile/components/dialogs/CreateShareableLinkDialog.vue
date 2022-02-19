@@ -1,75 +1,63 @@
 <template>
-  <q-dialog v-model="openDialog">
-    <q-card
-      v-if="!file.publicLink"
-      class="q-dialog-size q-pt-md q-px-sm"
-      style="min-width: 350px"
-    >
-      <div style="font-size: 15px" class="q-px-md text-bold text-black text">
-        <span>{{
-          $t('OPENPGPFILESWEBCLIENT.HEADING_CREATE_PUBLIC_LINK')
-        }}</span>
-      </div>
-      <q-checkbox
-        v-model="withPassword"
-        class="q-ma-sm"
-        label="Protect public link with password"
-        color="primary"
-      />
-      <q-card-actions align="right">
-        <button-dialog
-          :saving="saving"
-          :action="createShareableLink"
-          :label="createBtnLabel"
-        />
-        <button-dialog :saving="saving" :action="cancelDialog" label="Cancel" />
-      </q-card-actions>
-    </q-card>
-    <q-card
-      v-if="file.publicLink"
-      class="q-dialog-size q-pt-md q-px-sm"
-      style="min-width: 350px"
-    >
-      <div class="q-pa-sm">
-        <app-dialog-input
-          :placeholder="$t('FILESWEBCLIENT.LABEL_PUBLIC_LINK')"
-          ref="link"
-          v-model="publicLink"
-          readonly
-          @click.stop="
-            copyText(publicLink, $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK'))
-          "
-        />
-        <app-dialog-input
-          v-if="file.linkPassword"
-          :placeholder="$t('COREWEBCLIENT.LABEL_PASSWORD')"
-          ref="pass"
-          v-model="linkPassword"
-          @click.stop="
-            copyText(linkPassword, $t('COREWEBCLIENT.LABEL_PASSWORD'))
-          "
-          readonly
+  <app-dialog v-model="openDialog" :close="cancelDialog">
+    <template v-slot:head>
+      <div v-if="!file.publicLink">
+        <div style="font-size: 15px" class="q-px-md text-bold text-black text">
+          <span>{{
+              $t('OPENPGPFILESWEBCLIENT.HEADING_CREATE_PUBLIC_LINK')
+            }}</span>
+        </div>
+        <q-checkbox
+            v-model="withPassword"
+            class="q-ma-sm"
+            label="Protect public link with password"
+            color="primary"
         />
       </div>
-      <q-card-actions align="right">
+      <div v-if="file.publicLink">
+        <app-dialog-input
+            :placeholder="$t('FILESWEBCLIENT.LABEL_PUBLIC_LINK')"
+            ref="link"
+            v-model="publicLink"
+            readonly
+            @click.stop="
+              copyText(publicLink, $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK'))
+            "
+        />
+        <app-dialog-input
+            v-if="file.linkPassword"
+            :placeholder="$t('COREWEBCLIENT.LABEL_PASSWORD')"
+            ref="pass"
+            v-model="linkPassword"
+            @click.stop="
+              copyText(linkPassword, $t('COREWEBCLIENT.LABEL_PASSWORD'))
+            "
+            readonly
+        />
+      </div>
+    </template>
+    <template v-slot:actions>
+      <div v-if="!file.publicLink">
         <button-dialog
-          :saving="saving"
-          :action="createShareableLink"
-          :label="$t('OPENPGPFILESWEBCLIENT.ACTION_SEND_EMAIL')"
+            :saving="saving"
+            :action="createShareableLink"
+            :label="createBtnLabel"
+        />
+      </div>
+      <div v-if="file.publicLink">
+        <button-dialog
+            :saving="saving"
+            :action="createShareableLink"
+            :label="$t('OPENPGPFILESWEBCLIENT.ACTION_SEND_EMAIL')"
         />
         <button-dialog
-          :saving="saving"
-          :action="removeLink"
-          :label="$t('FILESWEBCLIENT.ACTION_REMOVE_PUBLIC_LINK')"
+            :saving="saving"
+            :action="removeLink"
+            :label="$t('FILESWEBCLIENT.ACTION_REMOVE_PUBLIC_LINK')"
         />
-        <button-dialog
-          :saving="saving"
-          :action="cancelDialog"
-          :label="$t('COREWEBCLIENT.ACTION_CLOSE')"
-        />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
+      </div>
+    </template>
+  </app-dialog>
 </template>
 
 <script>

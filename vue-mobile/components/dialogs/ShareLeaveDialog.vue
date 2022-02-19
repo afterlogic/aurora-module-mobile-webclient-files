@@ -1,5 +1,5 @@
 <template>
-  <app-dialog v-model="openDialog" :cancelDialog="cancelDialog">
+  <app-dialog v-model="openDialog" :close="cancelDialog">
     <template v-slot:head>
       <q-item>
       <p>

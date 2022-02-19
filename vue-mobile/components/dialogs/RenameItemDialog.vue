@@ -1,40 +1,38 @@
 <template>
-  <q-dialog v-model="openDialog" @escape-key="cancelDialog">
-    <q-card class="q-dialog-size q-pt-md" style="min-width: 300px">
-      <q-item>
+  <app-dialog v-model="openDialog" :close="cancelDialog">
+    <template v-slot:head>
         <app-dialog-input
             :placeholder="placeholder"
             v-model="itemName"
             :autofocus="true"
             outlined
         />
-      </q-item>
-      <q-card-actions align="right">
-        <button-dialog
+    </template>
+    <template v-slot:actions>
+      <button-dialog
           :saving="saving"
           :action="renameItem"
           :label="$t('FILESWEBCLIENT.ACTION_RENAME')"
-        />
-        <button-dialog
-          :saving="saving"
-          :action="cancelDialog"
-          :label="$t('COREWEBCLIENT.ACTION_CLOSE')"
-        />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
+      />
+    </template>
+  </app-dialog>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 
+import AppDialog from "components/common/AppDialog";
 import AppDialogInput from 'components/common/AppDialogInput'
 
 import ButtonDialog from 'src/components/common/ButtonDialog'
 
 export default {
   name: 'RenameItemDialog',
-  components: { ButtonDialog, AppDialogInput },
+  components: {
+    ButtonDialog,
+    AppDialogInput,
+    AppDialog
+  },
   props: {
     file: { type: Object, default: null },
     dialog: { type: Boolean, default: false },
