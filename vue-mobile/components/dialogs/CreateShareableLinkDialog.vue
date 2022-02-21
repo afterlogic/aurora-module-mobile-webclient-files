@@ -2,7 +2,7 @@
   <app-dialog v-model="openDialog" :close="cancelDialog">
     <template v-slot:head>
       <div v-if="!file.publicLink">
-        <div style="font-size: 15px" class="q-px-md text-bold text-black text">
+        <div style="font-size: 15px" class="q-px-md dialog__title-text">
           <span>{{
               $t('OPENPGPFILESWEBCLIENT.HEADING_CREATE_PUBLIC_LINK')
             }}</span>
@@ -15,25 +15,57 @@
         />
       </div>
       <div v-if="file.publicLink">
-        <app-dialog-input
-            :placeholder="$t('FILESWEBCLIENT.LABEL_PUBLIC_LINK')"
-            ref="link"
-            v-model="publicLink"
-            readonly
-            @click.stop="
-              copyText(publicLink, $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK'))
-            "
-        />
-        <app-dialog-input
-            v-if="file.linkPassword"
-            :placeholder="$t('COREWEBCLIENT.LABEL_PASSWORD')"
-            ref="pass"
-            v-model="linkPassword"
-            @click.stop="
-              copyText(linkPassword, $t('COREWEBCLIENT.LABEL_PASSWORD'))
-            "
-            readonly
-        />
+        <div class="q-px-md">
+          <div class="dialog__title-text">
+            <span>{{
+                file.linkPassword ? 'Protected public link' : $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK')
+              }}</span>
+          </div>
+          <div class="q-my-md" @click.stop="copyText(file.publicLink, $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK'))">
+            <div class="q-mb-sm field__title">Link text</div>
+            <div class="flex no-wrap">
+              <div class="flex justify-center items-center q-mr-sm">
+                <copy-icon/>
+              </div>
+              <div class="text__caption flex items-center">
+                <span>{{ file.publicLink }}</span>
+              </div>
+            </div>
+          </div>
+          <div
+              v-if="file.linkPassword"
+              @click.stop="copyText(file.linkPassword, $t('COREWEBCLIENT.LABEL_PASSWORD'))"
+          >
+            <div class="q-mb-sm field__title">{{ $t('COREWEBCLIENT.LABEL_PASSWORD') }}</div>
+            <div class="flex no-wrap">
+              <div class="q-mt-xs q-mr-sm">
+                <copy-icon/>
+              </div>
+              <div class="text__caption flex items-center">
+                <span>{{ file.linkPassword }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+<!--        <app-dialog-input-->
+<!--            :placeholder="$t('FILESWEBCLIENT.LABEL_PUBLIC_LINK')"-->
+<!--            ref="link"-->
+<!--            v-model="publicLink"-->
+<!--            readonly-->
+<!--            @click.stop="-->
+<!--              copyText(publicLink, $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK'))-->
+<!--            "-->
+<!--        />-->
+<!--        <app-dialog-input-->
+<!--            v-if="file.linkPassword"-->
+<!--            :placeholder="$t('COREWEBCLIENT.LABEL_PASSWORD')"-->
+<!--            ref="pass"-->
+<!--            v-model="linkPassword"-->
+<!--            @click.stop="-->
+<!--              copyText(linkPassword, $t('COREWEBCLIENT.LABEL_PASSWORD'))-->
+<!--            "-->
+<!--            readonly-->
+<!--        />-->
       </div>
     </template>
     <template v-slot:actions>
@@ -68,15 +100,17 @@ import notification from 'src/utils/notification'
 import AppDialog from "components/common/AppDialog";
 import AppDialogInput from 'src/components/common/AppDialogInput'
 import ButtonDialog from 'src/components/common/ButtonDialog'
+import CopyIcon from "../icons/CopyIcon";
 
 export default {
   name: 'CreateShareableLinkDialog',
-  components: { ButtonDialog, AppDialogInput, AppDialog },
+  components: { ButtonDialog, AppDialogInput, AppDialog, CopyIcon },
   props: {
     file: { type: Object, default: null },
     dialog: { type: Boolean, default: false },
   },
   mounted() {
+    console.log(this.file, 'file')
     this.publicLink = this.file.publicLink
     this.linkPassword = this.file.linkPassword
   },
@@ -129,4 +163,12 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.field__title {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0.3px;
+}
+</style>

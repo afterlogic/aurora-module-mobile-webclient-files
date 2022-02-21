@@ -1,5 +1,6 @@
 import types from 'src/utils/types'
 import { getApiHost } from 'src/api/helpers'
+import OpenPgp from "../../../OpenPgpMobileWebclient/vue-mobile/openpgp-helper";
 
 import filesWebApi from '../files-web-api'
 import {
@@ -160,7 +161,7 @@ export default {
       IsFolder: currentFile.isFolder,
       RecipientEmail: '',
       PgpEncryptionMode: '',
-      Password: withPassword ? '1234567890' : '',
+      Password: withPassword ? OpenPgp.generatePassword() : '',
     }
     const module = withPassword ? 'OpenPgpFilesWebclient' : 'Files'
     const result = await filesWebApi.createShareableLink(parameters, module)
