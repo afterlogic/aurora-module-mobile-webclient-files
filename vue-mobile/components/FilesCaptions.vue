@@ -47,7 +47,6 @@ export default {
         !this.loadingStatus &&
         this.isNoFiles &&
         !this.searchText &&
-        this.currentStorage.Type !== 'shared' &&
         this.isFolder &&
         !this.downloadFiles.length &&
         this.currentPaths.length !== 1

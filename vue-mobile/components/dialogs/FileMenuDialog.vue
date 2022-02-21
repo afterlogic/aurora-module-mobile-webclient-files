@@ -13,7 +13,7 @@
             v-if="
               fileAction.isShowAction(
                 fileAction.name,
-                file,
+                [ file ],
                 currentStorage.Type,
                 currentPath
               )

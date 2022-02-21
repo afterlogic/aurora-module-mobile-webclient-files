@@ -21,12 +21,11 @@ const isArchiveElement = (path) => {
   return path.split('.')[path.split('.').length - 1] === 'zip'
 }
 
-const isShowAction = (action, file, storage, path) => {
+const isShowAction = (action, items = [], storage, path) => {
   let result = true
-  if (file) {
+  if (items.length) {
     switch (action) {
       case 'copy':
-        if (storage === 'shared') result = false
         if (isArchiveElement(path)) result = false
         break
       case 'createShareableLink':
@@ -35,25 +34,32 @@ const isShowAction = (action, file, storage, path) => {
         break
       case 'shareWithTeammates':
         if (storage === 'corporate') result = false
-        if (storage === 'shared') result = false
+        if (items[0].sharedWithMeAccess !== 3 && items[0].sharedWithMeAccess !== 0) result = false
         if (isArchiveElement(path)) result = false
         break
       case 'download':
-        if (file.isFolder) result = false
+        if (items[0].isFolder) result = false
         break
       case 'rename':
-        if (storage === 'shared') result = false
         if (isArchiveElement(path)) result = false
         break
       case 'delete':
         if (storage === 'shared') result = false
         if (isArchiveElement(path)) result = false
         break
+      case 'shareLeave':
+        const sharedItems = getSharedWithMeItems(items)
+        if (!sharedItems.length) result = false
+        break
       default:
         break
     }
   }
   return result
+}
+
+const getSharedWithMeItems = (items) => {
+  return items.filter( item => item.sharedWithMeAccess !== 0 )
 }
 
 export const fileActions = {

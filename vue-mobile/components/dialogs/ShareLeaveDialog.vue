@@ -30,7 +30,7 @@ export default {
     ButtonDialog
   },
   computed: {
-    ...mapGetters('filesmobile', ['currentFile']),
+    ...mapGetters('filesmobile', ['currentFile', 'selectedFiles']),
   },
   data: () => ({
     openDialog: false,
@@ -41,7 +41,7 @@ export default {
     leaveShare() {
       const result = this.asyncLeaveShare()
       if (result) {
-        this.changeItemsLists({ items: [this.currentFile] })
+        this.changeItemsLists({ items: this.selectedFiles.length ? this.selectedFiles : [this.currentFile] })
         this.$emit('closeDialog')
       }
     },

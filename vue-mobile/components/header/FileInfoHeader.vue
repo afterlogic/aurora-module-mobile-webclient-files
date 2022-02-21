@@ -35,7 +35,7 @@
           <template v-slot:label>
             <icon-action class="q-mr-md" icon="MoreIcon" />
           </template>
-          <q-list>
+          <q-list style="width: 205px; min-height: 55px">
             <q-item
               v-if="isShowAction(actions.shareWithTeammates)"
               clickable
@@ -47,6 +47,19 @@
                 <q-item-label>{{
                   actions.shareWithTeammates.displayName
                 }}</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item
+                v-if="isShowAction(actions.shareLeave)"
+                clickable
+                v-close-popup
+                @click="onPerformAction(actions.shareLeave)"
+            >
+              <icon-action class="q-mr-md" :icon="actions.shareLeave.icon" />
+              <q-item-section>
+                <q-item-label>{{
+                    actions.shareLeave.displayName
+                  }}</q-item-label>
               </q-item-section>
             </q-item>
             <q-item
@@ -93,7 +106,7 @@ export default {
   computed: {
     ...mapGetters('filesmobile', ['fileList', 'currentFile', 'currentStorage', 'currentPath']),
     isShowDropdown() {
-      return this.currentStorage.Type !== 'shared'
+      return this.currentStorage.Type !== 'shared' || this.isShowAction(this.actions.shareLeave)
     }
   },
   watch: {
@@ -130,7 +143,7 @@ export default {
     isShowAction(action) {
       return action.isShowAction(
           action.name,
-          this.currentFile,
+          [this.currentFile],
           this.currentStorage.Type,
           this.currentPath
       )

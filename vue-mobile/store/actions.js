@@ -258,21 +258,39 @@ export default {
     const file = getters['currentFile']
     await filesWebApi.downloadFile(file)
   },
-  asyncLeaveShare: async ({ getters }) => {
-    const currentFile = getters['currentFile']
+  asyncLeaveShare: async ({ getters, dispatch }) => {
+    const selectedItems = getters['selectedFiles']
     const currentStorage = getters['currentStorage']
     const currentPath = getters['currentPath']
-    const parameters = {
-      Type: currentStorage.Type,
-      Path: currentPath,
-      Items: [{
+
+    const items = []
+
+    selectedItems.forEach( item => {
+      if (item.sharedWithMeAccess) {
+        items.push({
+          Path: item.path,
+          Name: item.name,
+          IsFolder: item.isFolder
+        })
+      }
+    } )
+    if (!items.length) {
+      const currentFile = getters['currentFile']
+      items.push({
         Path: currentFile.path,
         Name: currentFile.name,
         IsFolder: currentFile.isFolder
-      }
-      ]
+      })
     }
-    return await filesWebApi.leaveShare(parameters)
+    const parameters = {
+      Type: currentStorage.Type,
+      Path: currentPath,
+      Items: items
+    }
+    const result =  await filesWebApi.leaveShare(parameters)
+    if (result) {
+      dispatch('changeItemsLists', { items })
+    }
   },
   changeCurrentHeader: ({ commit }, headerName) => {
     commit('setCurrentHeader', headerName)

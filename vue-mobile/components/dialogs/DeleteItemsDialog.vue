@@ -70,11 +70,13 @@ export default {
       const items = []
       if (this.selectedFiles.length) {
         this.selectedFiles.forEach((file) => {
-          items.push({
-            Path: file.path,
-            Name: file.name,
-            IsFolder: file.isFolder,
-          })
+          if (file.sharedWithMeAccess === 0) {
+            items.push({
+              Path: file.path,
+              Name: file.name,
+              IsFolder: file.isFolder,
+            })
+          }
         })
       } else {
         items.push({
