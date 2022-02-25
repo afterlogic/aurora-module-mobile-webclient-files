@@ -50,6 +50,9 @@ export default {
   components: {
     IconAction,
   },
+  mounted() {
+    console.log(this.file, 'file')
+  },
   computed: {
     ...mapGetters('filesmobile', ['currentStorage', 'currentPath']),
     actions() {

@@ -62,7 +62,7 @@ const parseFile = (file) => {
     isCopied: isCopied(types.pString(file.Hash)),
     isImg: isImg(types.pString(file.Name)),
     isArchive: !!file?.Actions?.list,
-    sharedWithMeAccess: types.pInt(file?.ExtendedProps?.SharedWithMeAccess)
+    sharedWithMeAccess: types.pInt(file?.ExtendedProps?.SharedWithMeAccess),
   }
 }
 

@@ -150,7 +150,6 @@ export default {
       parameters: parameters,
     })
       .then((result) => {
-        console.log(result, 'result')
         if (result) {
           return result
         }

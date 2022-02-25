@@ -205,7 +205,6 @@ export default {
       )
     },
     async save() {
-      console.log(this.currentUser, 'currentUser')
       if (this.currentUser) {
         this.$refs.notAddedUserDialog.openDialog(this.currentUser)
       } else {

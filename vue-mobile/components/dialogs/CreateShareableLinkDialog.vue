@@ -47,25 +47,6 @@
             </div>
           </div>
         </div>
-<!--        <app-dialog-input-->
-<!--            :placeholder="$t('FILESWEBCLIENT.LABEL_PUBLIC_LINK')"-->
-<!--            ref="link"-->
-<!--            v-model="publicLink"-->
-<!--            readonly-->
-<!--            @click.stop="-->
-<!--              copyText(publicLink, $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK'))-->
-<!--            "-->
-<!--        />-->
-<!--        <app-dialog-input-->
-<!--            v-if="file.linkPassword"-->
-<!--            :placeholder="$t('COREWEBCLIENT.LABEL_PASSWORD')"-->
-<!--            ref="pass"-->
-<!--            v-model="linkPassword"-->
-<!--            @click.stop="-->
-<!--              copyText(linkPassword, $t('COREWEBCLIENT.LABEL_PASSWORD'))-->
-<!--            "-->
-<!--            readonly-->
-<!--        />-->
       </div>
     </template>
     <template v-slot:actions>
@@ -110,7 +91,6 @@ export default {
     dialog: { type: Boolean, default: false },
   },
   mounted() {
-    console.log(this.file, 'file')
     this.publicLink = this.file.publicLink
     this.linkPassword = this.file.linkPassword
   },

@@ -7,11 +7,15 @@ import VueCookies from 'vue-cookies'
 
 import { getApiHost } from 'src/api/helpers'
 import { parseUploadedFile } from '../../utils/common'
+import eventBus from 'src/event-bus'
 
 export default {
   name: 'FileUploader',
   props: {
     dialog: { type: Boolean, default: false },
+  },
+  created() {
+    eventBus.$on('onUploadFiles', this.onUploadFiles)
   },
   computed: {
     ...mapGetters('filesmobile', [
@@ -29,7 +33,15 @@ export default {
           uploaded: this.showReport,
           finish: this.finishUpload,
         }
-        this.$root.uploadFiles(methods)
+        console.log(this.$root._getParentComponent, 'this.$root._getParentComponent')
+        const params = {
+          store: this.$store,
+          methods,
+          storage: this.currentStorage.Type,
+          getParentComponent: this.$root._getParentComponent
+        }
+        eventBus.$emit('OnFileAdded', params)
+
       }
     },
   },
@@ -39,6 +51,10 @@ export default {
       'removeUploadedFiles',
       'asyncGetFiles',
     ]),
+    onUploadFiles(methods) {
+      console.log(this, 'this')
+      this.$root.uploadFiles(methods)
+    },
     addedFiles() {
       if (this.currentStorage.Type !== 'encrypted') {
         let url = getApiHost() + '/?/Api/'
@@ -69,7 +85,7 @@ export default {
         }
       }
     },
-    onFileAdded(files) {
+    onFileAdded(files, uploader) {
       const parsedFiles = files.map((file) => {
         return parseUploadedFile(
           file,
@@ -78,6 +94,14 @@ export default {
         )
       })
       this.addDownloadsFiles(parsedFiles)
+      uploader.upload()
+      // if (encryptionSettings.enableInPersonalStorage && encryptionSettings.enableParanoidEncryption && this.currentStorage.Type === 'personal') {
+      //
+      // } else {
+      //   if (this.currentStorage.Type === 'encrypted') {
+      //     this.uploadEncryptFiles()
+      //   }
+      // }
     },
     showReport(file) {},
     async finishUpload() {
