@@ -33,7 +33,6 @@ export default {
           uploaded: this.showReport,
           finish: this.finishUpload,
         }
-        console.log(this.$root._getParentComponent, 'this.$root._getParentComponent')
         const params = {
           store: this.$store,
           methods,

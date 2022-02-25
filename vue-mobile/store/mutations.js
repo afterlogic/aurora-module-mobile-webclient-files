@@ -87,4 +87,9 @@ export default {
     })
     state.downloadFiles = downloadableFiles
   },
+  setFileUploadProgress: (state, { item, value }) => {
+    if (item.file) {
+      item.file.__progress = value
+    }
+  }
 }

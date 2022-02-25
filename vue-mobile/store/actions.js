@@ -252,6 +252,9 @@ export default {
       value: status,
     })
   },
+  changeFileUploadProgress: ({ commit }, { item, value }) => {
+    commit('setFileUploadProgress', { item, value })
+  },
   changeItemProperty: ({ commit }, { item, property, value }) => {
     commit('setItemProperty', { item, property, value })
   },
