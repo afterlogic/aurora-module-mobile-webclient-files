@@ -47,6 +47,7 @@ const parseFile = (file) => {
     downloadUrl: types.pString(file?.Actions?.download?.url),
     eitUrl: types.pString(file?.Actions?.edit?.url),
     viewUrl: types.pString(file?.Actions?.view?.url),
+    decryptViewUrl: '',
     openUrl: types.pString(file?.Actions?.open?.url),
     paranoidKey: types.pString(file?.ExtendedProps?.ParanoidKey),
     initializationVector: types.pString(

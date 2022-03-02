@@ -22,8 +22,9 @@ const isArchiveElement = (path) => {
 }
 
 const isShowAction = (action, items = [], storage, path) => {
+
   let result = true
-  if (items.length) {
+  if (items.length && storage && items[0]) {
     switch (action) {
       case 'copy':
         if (isArchiveElement(path)) result = false

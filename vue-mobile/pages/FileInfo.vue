@@ -74,6 +74,9 @@ export default {
   computed: {
     ...mapGetters('filesmobile', ['currentFile']),
     filePreview() {
+      if (this.currentFile.decryptViewUrl){
+        return this.currentFile.decryptViewUrl
+      }
       const api = getApiHost()
       return api + this.currentFile.viewUrl
     },

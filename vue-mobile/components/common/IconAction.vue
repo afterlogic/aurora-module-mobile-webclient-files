@@ -1,33 +1,25 @@
 <template>
   <div class="icon-action flex justify-center items-center">
-    <component :is="icon" />
+    <component :is="componentInstance" />
   </div>
 </template>
 
 <script>
-import CopyMoveIcon from "../icons/file-actions/CopyMoveIcon";
-import DeleteIcon from "../icons/file-actions/DeleteIcon";
-import MoreIcon from "../icons/file-actions/MoreIcon";
-import RenameIcon from "../icons/file-actions/RenameIcon";
-import SecureLinkIcon from "../icons/file-actions/SecureLinkIcon";
-import SharingIcon from "../icons/file-actions/SharingIcon";
-import DownloadIcon from "../icons/file-actions/DownloadIcon";
-import LeaveSharingIcon from "../icons/file-actions/LeaveSharingIcon";
+import { defineAsyncComponent } from "vue";
 
 export default {
   name: 'IconAction',
   props: {
     icon: { type: String, required: true },
   },
+  computed: {
+    componentInstance () {
+      const name = this.icon ? this.icon : ''
+      return defineAsyncComponent(() => import(`../icons/file-actions/${name}`))
+    }
+  },
   components: {
-    SecureLinkIcon,
-    CopyMoveIcon,
-    MoreIcon,
-    RenameIcon,
-    DeleteIcon,
-    SharingIcon,
-    DownloadIcon,
-    LeaveSharingIcon
+    IconComponent: defineAsyncComponent(() => import(`../icons/file-actions/SecureLinkIcon`))
   },
 }
 </script>

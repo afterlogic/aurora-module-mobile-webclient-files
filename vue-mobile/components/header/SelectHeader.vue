@@ -102,7 +102,6 @@ export default {
       )
     },
     onPerformAction(action) {
-      console.log(action, 'action')
       if (action.component) {
         this.changeDialogComponent({ component: action.component })
       }

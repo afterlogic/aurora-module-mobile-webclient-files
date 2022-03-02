@@ -1,5 +1,5 @@
 import settings from './settings'
-
+import { defineAsyncComponent } from 'vue'
 export default {
   moduleName: 'FilesMobileWebclient',
 
@@ -34,7 +34,7 @@ export default {
         pageName: 'files',
         pagePath: '/files',
         highlightPaths: ['/files', '/file'],
-        getIconComponent: () => import('./components/icons/FilesFooterIcon'),
+        iconComponent: defineAsyncComponent(() => import('./components/icons/FilesFooterIcon')),
       },
     ]
   },

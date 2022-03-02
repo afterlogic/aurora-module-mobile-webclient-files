@@ -51,7 +51,6 @@ export default {
       'asyncGetFiles',
     ]),
     onUploadFiles(methods) {
-      console.log(this, 'this')
       this.$root.uploadFiles(methods)
     },
     addedFiles() {

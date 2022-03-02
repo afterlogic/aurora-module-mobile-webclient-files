@@ -1,6 +1,6 @@
 <template>
   <q-toolbar style="height: 55px; font-size: 16px; padding: 0">
-    <q-card-actions align="left" class="col-6">
+    <q-card-actions align="left" class="col-2">
       <q-btn
         flat
         size="17px"
@@ -11,7 +11,13 @@
         @click="onPreviousPath"
       />
     </q-card-actions>
-    <div class="col-6 flex justify-end q-pr-sm">
+    <div class="col-10 flex justify-end q-pr-sm">
+      <icon-action
+          v-if="isShowDecryptAction"
+          class="q-mr-lg"
+          icon="SecureLinkIcon"
+          @click="onDecrypt()"
+      />
       <icon-action
           v-if="isShowAction(actions.createShareableLink)"
           class="q-mr-lg"
@@ -90,6 +96,7 @@
 <script>
 import IconAction from "../common/IconAction";
 import { mapActions, mapGetters } from 'vuex'
+import eventBus from 'src/event-bus'
 
 import { fileActions } from '../../utils/file-actions'
 
@@ -107,11 +114,15 @@ export default {
     ...mapGetters('filesmobile', ['fileList', 'currentFile', 'currentStorage', 'currentPath']),
     isShowDropdown() {
       return this.currentStorage.Type !== 'shared' || this.isShowAction(this.actions.shareLeave)
+    },
+    isShowDecryptAction() {
+      console.log(this.currentFile, 'currentFile')
+      if (!this.currentFile) return ''
+      return this.currentFile.paranoidKey
     }
   },
   watch: {
-    'fileList.length'(val, oldVal) {
-      console.log(val, oldVal)
+    'fileList.length'() {
       this.onPreviousPath()
     },
   },
@@ -128,6 +139,11 @@ export default {
     },
     downloadFile() {
       this.asyncDownloadFile()
+    },
+    onDecrypt() {
+      eventBus.$emit('CoreMobileWebclient::viewFile', {
+        getParentComponent: this.$root._getParentComponent
+      })
     },
     onCopyMove(action) {
       this.onPerformAction(action)

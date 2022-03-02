@@ -43,7 +43,6 @@ export default {
   computed: {
     ...mapGetters('filesmobile', ['currentStorage']),
     showMoveAction() {
-      console.log(this.currentStorage.Type, 'this.currentStorage.Type')
       return this.currentStorage.Type !== 'shared'
     }
   },
