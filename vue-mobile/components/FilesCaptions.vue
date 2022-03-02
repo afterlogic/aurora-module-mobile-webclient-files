@@ -38,6 +38,7 @@ export default {
       'currentPath',
       'loadingStatus',
       'currentPaths',
+      'downloadFiles'
     ]),
     isFolder() {
       return !!this.currentPath
@@ -65,7 +66,8 @@ export default {
         this.isNoFiles &&
         this.currentPaths.length === 1 &&
         !this.isFolderEmpty &&
-        !this.isNothingFound
+        !this.isNothingFound &&
+        !this.downloadFiles.length
       )
     },
     isNoFiles() {

@@ -93,13 +93,6 @@ export default {
       })
       this.addDownloadsFiles(parsedFiles)
       uploader.upload()
-      // if (encryptionSettings.enableInPersonalStorage && encryptionSettings.enableParanoidEncryption && this.currentStorage.Type === 'personal') {
-      //
-      // } else {
-      //   if (this.currentStorage.Type === 'encrypted') {
-      //     this.uploadEncryptFiles()
-      //   }
-      // }
     },
     showReport(file) {},
     async finishUpload() {
@@ -107,6 +100,9 @@ export default {
       this.removeUploadedFiles()
     },
   },
+  unmounted() {
+    eventBus.$off('onUploadFiles', this.onUploadFiles)
+  }
 }
 </script>
 
