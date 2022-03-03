@@ -1,9 +1,9 @@
 <template>
   <q-item v-if="isShowFile" clickable>
-    <q-item-section avatar>
+    <q-item-section class="q-ml-lg" avatar>
       <file-item-icon :file="file" />
     </q-item-section>
-    <q-item-section>
+    <q-item-section class="q-mr-sm">
       <q-item-label class="file__name">{{ file.name }}</q-item-label>
       <q-item-label class="file__info">{{ progressPercent }}%</q-item-label>
     </q-item-section>
