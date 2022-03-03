@@ -15,7 +15,7 @@
       <icon-action
           v-if="isShowDecryptAction"
           class="q-mr-lg"
-          icon="SecureLinkIcon"
+          icon="EncryptIcon"
           @click="onDecrypt()"
       />
       <icon-action
