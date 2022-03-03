@@ -67,7 +67,7 @@ export default {
       if (action.component) {
         this.changeDialogComponent({ component: action.component })
       } else if (action.method) {
-        action.method(this.$store)
+        action.method(this)
       }
     },
     closeDialog() {

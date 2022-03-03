@@ -10,7 +10,7 @@
     @touchend.stop="selectFile"
   >
     <q-item-section class="q-ml-lg" avatar>
-      <file-item-icon v-if="file.paranoidKey || !file.isImg" :fileName="file.name" />
+      <file-item-icon v-if="file.paranoidKey || !file.isImg" :file="file" />
       <div v-if="file.isImg && !file.paranoidKey" class="text-primary">
         <div
           class="img-preview"

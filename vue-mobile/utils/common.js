@@ -143,8 +143,10 @@ export const getParametersForShare = (items, file) => {
   }
 }
 
-export const getPreviewIconName = (name) => {
-  if (!name) return 'FileIcon'
+export const getPreviewIconName = (file) => {
+  if (file.paranoidKey) return 'FileLockIcon'
+
+  const name = file.name
   const format = getFormatFile(name)
   if (!format) return 'FileIcon'
   for (let type in fileFormats) {

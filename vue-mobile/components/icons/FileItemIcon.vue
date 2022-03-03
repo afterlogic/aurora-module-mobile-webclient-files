@@ -27,13 +27,13 @@ export default {
     FilePdfIcon,
   },
   props: {
-    fileName: { type: String, required: true },
+    file: { type: Object, required: true },
     width: { type: Number },
     height: { type: Number }
   },
   computed: {
     componentName() {
-      return getPreviewIconName(this.fileName)
+      return getPreviewIconName(this.file)
     },
   },
 }

@@ -3,10 +3,13 @@
     <q-scroll-area :thumb-style="{ width: '5px' }" class="file__info">
       <div v-if="currentFile">
         <div class="flex items-center justify-center">
-          <div v-if="!currentFile.thumbnailUrl" class="file__preview q-my-xl">
+          <div
+              v-if="(currentFile.paranoidKey || !currentFile.thumbnailUrl) && !currentFile.decryptViewUrl"
+              class="file__preview q-my-xl"
+          >
             <file-item-icon
-                v-if="!currentFile.thumbnailUrl"
-                :file-name="currentFile.name"
+                v-if="currentFile.paranoidKey || !currentFile.thumbnailUrl"
+                :file="currentFile"
                 :height="64"
                 :width="64"
             />
@@ -14,7 +17,7 @@
           <div
               class="q-my-lg"
               style="height: 348px"
-              v-if="currentFile.thumbnailUrl"
+              v-if="(currentFile.thumbnailUrl && !currentFile.paranoidKey) || currentFile.decryptViewUrl"
           >
             <div
                 class="img-preview"

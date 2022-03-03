@@ -1,3 +1,6 @@
+import eventBus from 'src/event-bus'
+import store from 'src/store'
+
 const i18n = {
   $t: {
     OPENPGPFILESWEBCLIENT: {
@@ -65,7 +68,7 @@ const getSharedWithMeItems = (items) => {
 
 export const fileActions = {
   copy: {
-    method: async (store) => {
+    method: async () => {
       const currentFile = store.getters['filesmobile/currentFile']
       await store.dispatch('filesmobile/addCopyItems', { items: [currentFile] })
     },
@@ -99,14 +102,22 @@ export const fileActions = {
     isShowAction: isShowAction,
   },
   download: {
-    method: (store) => {
+    method: (vue) => {
+      console.log(vue, 'vue')
       const file = store.getters['filesmobile/currentFile']
       store.dispatch('filesmobile/changeItemProperty', {
         item: file,
         property: 'downloading',
         value: true,
       })
-      store.dispatch('filesmobile/asyncDownloadFile')
+
+      if (file.paranoidKey) {
+        eventBus.$emit('CoreParanoidEncryptionWebclientPlugin::downloadEncryptedFile', {
+          getParentComponent: vue.$root._getParentComponent
+        })
+      } else {
+        store.dispatch('filesmobile/asyncDownloadFile')
+      }
     },
     name: 'download',
     displayName: i18n.$t.COREWEBCLIENT.ACTION_DOWNLOAD_FILE,
