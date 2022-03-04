@@ -245,6 +245,9 @@ export default {
   removeUploadedFiles: ({ commit }) => {
     commit('removeUploadedFiles')
   },
+  removeSelectedUploadedFiles: ({ commit }, files) => {
+    commit('removeSelectedUploadedFiles', files)
+  },
   changeUploadingStatus: ({ commit }, { file, status }) => {
     commit('setItemProperty', {
       item: file,

@@ -87,6 +87,14 @@ export default {
     })
     state.downloadFiles = downloadableFiles
   },
+  removeSelectedUploadedFiles: (state, files) => {
+    files.forEach( file => {
+      const fileIndex = state.downloadFiles.findIndex( downloadFile =>  downloadFile.name === file.name)
+      if (fileIndex + 1) {
+        state.downloadFiles.splice(fileIndex, 1)
+      }
+    })
+  },
   setFileUploadProgress: (state, { item, value }) => {
     if (item.file) {
       item.file.__progress = value

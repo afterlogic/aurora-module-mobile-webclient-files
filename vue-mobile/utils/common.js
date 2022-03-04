@@ -64,6 +64,7 @@ const parseFile = (file) => {
     isImg: isImg(types.pString(file.Name)),
     isArchive: !!file?.Actions?.list,
     sharedWithMeAccess: types.pInt(file?.ExtendedProps?.SharedWithMeAccess),
+    decryptionProgress: false
   }
 }
 

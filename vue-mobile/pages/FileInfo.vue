@@ -4,7 +4,9 @@
       <div v-if="currentFile">
         <div class="flex items-center justify-center">
           <div
-              v-if="(currentFile.paranoidKey || !currentFile.thumbnailUrl) && !currentFile.decryptViewUrl"
+              v-if="(currentFile.paranoidKey || !currentFile.thumbnailUrl) &&
+               !currentFile.decryptViewUrl &&
+               !currentFile.decryptionProgress"
               class="file__preview q-my-xl"
           >
             <file-item-icon
@@ -12,6 +14,24 @@
                 :file="currentFile"
                 :height="64"
                 :width="64"
+            />
+            <div
+                v-if="isShowDecryptAction"
+                class="text-primary q-mt-md view-action flex items-center justify-center"
+                @click="onDecrypt"
+            >
+              <span>Show</span>
+            </div>
+          </div>
+          <div
+              v-if="currentFile.decryptionProgress"
+              class="file__preview q-my-xl"
+          >
+            <q-circular-progress
+                indeterminate
+                size="40px"
+                color="primary"
+                class="q-ma-md"
             />
           </div>
           <div
@@ -55,6 +75,7 @@ import { mapGetters } from 'vuex'
 import date from 'src/utils/date'
 import text from 'src/utils/text'
 import { getApiHost } from 'src/api/helpers'
+import eventBus from 'src/event-bus'
 
 import DialogsList from '../components/DialogsList'
 import MainLayout from 'src/layouts/MainLayout'
@@ -76,6 +97,10 @@ export default {
   },
   computed: {
     ...mapGetters('filesmobile', ['currentFile']),
+    isShowDecryptAction() {
+      if (!this.currentFile) return ''
+      return this.currentFile.paranoidKey
+    },
     filePreview() {
       if (this.currentFile.decryptViewUrl){
         return this.currentFile.decryptViewUrl
@@ -99,6 +124,13 @@ export default {
         this.$router.push('/files')
       }
     }
+  },
+  methods: {
+    onDecrypt() {
+      eventBus.$emit('CoreMobileWebclient::viewFile', {
+        getParentComponent: this.$root._getParentComponent
+      })
+    },
   }
 }
 </script>
@@ -112,7 +144,15 @@ export default {
     width: 100vw;
   }
 }
+.view-action {
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 18px;
 
+  letter-spacing: 0.3px;
+  text-decoration-line: underline;
+
+}
 .file__preview {
   margin-top: 60px;
   margin-bottom: 60px;

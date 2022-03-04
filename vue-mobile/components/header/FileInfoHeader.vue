@@ -13,12 +13,6 @@
     </q-card-actions>
     <div class="col-10 flex justify-end q-pr-sm">
       <icon-action
-          v-if="isShowDecryptAction"
-          class="q-mr-lg"
-          icon="EncryptIcon"
-          @click="onDecrypt()"
-      />
-      <icon-action
           v-if="isShowAction(actions.createShareableLink)"
           class="q-mr-lg"
           icon="SecureLinkIcon"
@@ -96,7 +90,6 @@
 <script>
 import IconAction from "../common/IconAction";
 import { mapActions, mapGetters } from 'vuex'
-import eventBus from 'src/event-bus'
 
 import { fileActions } from '../../utils/file-actions'
 
@@ -115,11 +108,6 @@ export default {
     isShowDropdown() {
       return this.currentStorage.Type !== 'shared' || this.isShowAction(this.actions.shareLeave)
     },
-    isShowDecryptAction() {
-      console.log(this.currentFile, 'currentFile')
-      if (!this.currentFile) return ''
-      return this.currentFile.paranoidKey
-    }
   },
   watch: {
     'fileList.length'() {
@@ -139,11 +127,6 @@ export default {
     },
     downloadFile() {
       this.asyncDownloadFile()
-    },
-    onDecrypt() {
-      eventBus.$emit('CoreMobileWebclient::viewFile', {
-        getParentComponent: this.$root._getParentComponent
-      })
     },
     onCopyMove(action) {
       this.onPerformAction(action)
