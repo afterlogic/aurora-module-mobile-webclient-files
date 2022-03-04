@@ -99,7 +99,7 @@ export default {
     ...mapGetters('filesmobile', ['currentFile']),
     isShowDecryptAction() {
       if (!this.currentFile) return ''
-      return this.currentFile.paranoidKey
+      return this.currentFile.paranoidKey && this.currentFile.thumbnailUrl
     },
     filePreview() {
       if (this.currentFile.decryptViewUrl){
