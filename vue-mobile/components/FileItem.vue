@@ -29,11 +29,14 @@
       }}</q-item-label>
       <q-item-label class="text-secondary file__info" v-if="!file.downloading">
         <div class="flex">
-          <div class="q-mr-xs" v-if="isShared">
-            <q-icon style="margin-bottom: 2px" size="11px" name="share" />
+          <div v-if="file.paranoidKey" class="q-mr-xs">
+            <encrypted-item-icon />
           </div>
-          <div class="q-mr-xs" v-if="file.publicLink">
-            <q-icon style="margin-bottom: 2px" name="link" />
+          <div v-if="isShared" class="q-mr-xs">
+            <shared-item-icon />
+          </div>
+          <div v-if="file.publicLink" class="q-mr-xs">
+            <link-item-icon />
           </div>
           <div>{{ fileSize }}</div>
           <div class="q-mx-xs">|</div>
@@ -81,12 +84,18 @@ import { getShortName } from '../utils/common'
 
 import FileItemIcon from './icons/FileItemIcon'
 import DownloadingProgress from './common/DownloadingProgress'
+import EncryptedItemIcon from "./icons/item/EncryptedItemIcon";
+import LinkItemIcon from "./icons/item/LinkItemIcon";
+import SharedItemIcon from "./icons/item/SharedItemIcon";
 
 export default {
   name: 'FileItem',
   components: {
     FileItemIcon,
     DownloadingProgress,
+    EncryptedItemIcon,
+    LinkItemIcon,
+    SharedItemIcon,
   },
   props: {
     file: { type: Object, default: null },

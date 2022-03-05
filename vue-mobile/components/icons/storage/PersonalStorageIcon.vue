@@ -1,0 +1,22 @@
+<template>
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8 13.5C11.0374 13.5 13.5 11.0374 13.5 8.00002C13.5 4.96263 11.0374 2.5 8 2.5C4.96262 2.5 2.5 4.96263 2.5 8.00002C2.5 11.0374 4.96262 13.5 8 13.5Z" :stroke="color" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+
+</template>
+
+<script>
+export default {
+  name: "PersonalStorageIcon",
+  props: {
+    color: {
+      type: String,
+      default: '#B6B5B5',
+    },
+  },
+}
+</script>
+
+<style scoped>
+
+</style>

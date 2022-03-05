@@ -27,13 +27,11 @@
         :ripple="false"
         :dropdown-icon="currentPaths.length > 1 ? 'arrow_drop_down' : 'none'"
         dense
-        :disable="currentPaths.length <= 1"
-        :style="{
-          'padding-left': '36px',
-          'font-size': '17px',
-          width: '250px',
+        :content-style="{
+          'font-size': '18px',
+          'line-height': '20px'
         }"
-        class="text-bold text-black"
+        class="text-bold text-black files-dropdown"
         no-caps
         flat
         :label="
@@ -58,8 +56,7 @@
         </q-list>
       </q-btn-dropdown>
       <span
-        :style="{ 'margin-top': '-10px' }"
-        class="text-black text-center text-blue-grey-12"
+        class="text-center storage-name"
         >{{ storageName }}</span
       >
     </div>
@@ -90,7 +87,8 @@ export default {
   computed: {
     ...mapGetters('filesmobile', ['currentPaths', 'currentStorage']),
     storageName() {
-      return this.currentStorage.Type
+      let storageType = this.currentStorage.Type
+      return storageType[0].toUpperCase() + storageType.slice(1)
     },
   },
   methods: {
@@ -121,4 +119,20 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.storage-name {
+  margin-top: -5px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 10px;
+  line-height: 10px;
+  color: #969494;
+}
+.files-dropdown {
+  padding-left: 41px;
+  margin-top: -12px;
+  width: 250px;
+  font-size: 18px;
+  line-height: 20px;
+}
+</style>

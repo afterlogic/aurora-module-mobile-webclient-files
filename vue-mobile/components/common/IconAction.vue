@@ -18,9 +18,6 @@ export default {
       return defineAsyncComponent(() => import(`../icons/file-actions/${name}`))
     }
   },
-  components: {
-    IconComponent: defineAsyncComponent(() => import(`../icons/file-actions/SecureLinkIcon`))
-  },
 }
 </script>
 
