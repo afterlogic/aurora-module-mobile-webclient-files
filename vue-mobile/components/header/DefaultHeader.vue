@@ -87,6 +87,7 @@ export default {
   computed: {
     ...mapGetters('filesmobile', ['currentPaths', 'currentStorage']),
     storageName() {
+      if(!this.currentStorage) return ''
       let storageType = this.currentStorage.Type
       return storageType[0].toUpperCase() + storageType.slice(1)
     },
