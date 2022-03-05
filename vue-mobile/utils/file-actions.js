@@ -35,6 +35,7 @@ const isShowAction = (action, items = [], storage, path) => {
       case 'createShareableLink':
         if (storage === 'shared') result = false
         if (isArchiveElement(path)) result = false
+        if (items[0].sharedWithMeAccess !== 0) result = false
         break
       case 'shareWithTeammates':
         if (storage === 'corporate') result = false

@@ -49,7 +49,7 @@
         class="q-ma-md"
       />
     </div>
-    <create-button />
+    <create-button v-if="currentStorage.Type !== 'shared'"/>
     <dialogs-list />
   </main-layout>
 </template>
@@ -98,6 +98,7 @@ export default {
       'currentFile',
       'isArchive',
       'loadingStatus',
+      'currentStorage'
     ]),
     isCopied() {
       return !!this.copiedFiles.length
