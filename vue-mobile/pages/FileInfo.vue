@@ -52,9 +52,10 @@
           <div class="q-mx-md">
             <input-form readonly :value="currentFile.name" label="File name" />
           </div>
-          <div class="flex justify-between q-ma-md">
-            <input-form readonly :value="fileSize" label="Size" />
-            <input-form readonly :value="fileDate" label="Created" />
+          <div class="flex no-wrap justify-between q-ma-md">
+            <input-form readonly :value="fileSize" label="Size" style="width:100%" />
+            <div style="width:60px;"></div>
+            <input-form readonly :value="fileDate" label="Created" style="width:100%" />
           </div>
           <div class="q-ma-md">
             <input-form readonly :value="filePatch" label="Location" />
