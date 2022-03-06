@@ -51,7 +51,15 @@ export default {
           this.dialog = false
         } else {
           this.component = val.component
-          this.dialog = true
+          console.log(this.component, 'this.component')
+          if (this.component === 'CreateShareableLinkDialog') {
+            if (!this.currentFile.paranoidKey) {
+              this.dialog = true
+            }
+            this.dialog = true
+          } else {
+            this.dialog = true
+          }
         }
       }
     },

@@ -305,4 +305,17 @@ export default {
   changeSearchText: ({ commit }, text) => {
     commit('setSearchText', text)
   },
+  getContactSuggestions: async ({}, params) => {
+    return await  filesWebApi.getContactSuggestions(params)
+  },
+  asyncUpdateExtendedProps: async ({}, { type, path, name, paranoidKey }) => {
+    const parameters = {
+      Type: type,
+      Path: path,
+      Name: name,
+      ExtendedProps: {}
+    }
+    parameters.ExtendedProps[paranoidKey.key] = paranoidKey.value
+    return await filesWebApi.updateExtendedProps(parameters)
+  }
 }

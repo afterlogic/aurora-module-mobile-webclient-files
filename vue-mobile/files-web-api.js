@@ -215,5 +215,29 @@ export default {
           if (result) return result
           return false
       })
+    },
+    getContactSuggestions: async (parameters) => {
+      return webApi.sendRequest({
+          moduleName: 'Contacts',
+          methodName: 'GetContactSuggestions',
+          parameters: parameters,
+      }).then( result => {
+          if (result && result.List) return result.List
+          return []
+      }).catch( () => {
+          return []
+      })
+    },
+    updateExtendedProps: async (parameters) => {
+        return webApi.sendRequest({
+            moduleName: 'Files',
+            methodName: 'UpdateExtendedProps',
+            parameters: parameters,
+        }).then((result) => {
+            if (result) {
+                return result
+            }
+            return false
+        })
     }
 }

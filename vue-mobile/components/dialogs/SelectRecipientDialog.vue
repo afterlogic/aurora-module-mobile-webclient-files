@@ -1,0 +1,87 @@
+<template>
+  <app-dialog :close="close">
+    <template v-slot:head>
+      <div class="q-px-md dialog__title-text">
+        <span>
+          {{ $t('OPENPGPFILESWEBCLIENT.HEADING_SEND_ENCRYPTED_FILE') }}
+        </span>
+      </div>
+      <div class="q-px-md" style="margin-top: 32px">
+        <div v-if="isWaitingContacts" class="flex items-center justify-center">
+          <q-circular-progress
+              indeterminate
+              size="40px"
+              color="primary"
+              class="q-ma-md"
+          />
+        </div>
+        <q-scroll-area v-else class="full-width" :thumb-style="{width: '0'}" style="height: 300px">
+          <app-contact-item
+              v-for="contact in contacts"
+              :contact="contact"
+              :key="contact.ETag"
+              @click="selectContact(contact)"
+              class="q-mb-md"
+          />
+        </q-scroll-area>
+      </div>
+    </template>
+  </app-dialog>
+</template>
+<script>
+import AppDialog from "components/common/AppDialog";
+import AppContactItem from "components/common/AppContactItem";
+import KeyIcon from "components/common/icons/KeyIcon";
+
+export default {
+  name: "SelectRecipientDialog",
+  components: {
+    KeyIcon,
+    AppDialog,
+    AppContactItem
+  },
+  props: {
+    onGetContacts: { type: Function, default: null }
+  },
+  async mounted() {
+    this.isWaitingContacts = true
+    this.contacts = await this.onGetContacts({
+      Search:"",
+      Storage:"all",
+      SortField:3,
+      SortOrder:1,
+      WithGroups:false,
+      WithoutTeamContactsDuplicates:true
+    })
+    this.isWaitingContacts = false
+  },
+  data: () => ({
+    contacts: [],
+    isWaitingContacts: false
+  }),
+  methods: {
+    selectContact(contact) {
+      this.$emit('selectContact', contact)
+    },
+    close() {
+      this.$emit('close')
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.contact {
+  &__name {
+    font-size: 14px;
+    line-height: 16px;
+    letter-spacing: 0.3px;
+    color: #000000;
+  }
+  &__email {
+    font-size: 12px;
+    line-height: 10px;
+    color: #969494;
+  }
+}
+</style>
