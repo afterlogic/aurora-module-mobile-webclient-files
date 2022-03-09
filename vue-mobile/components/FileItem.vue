@@ -28,19 +28,19 @@
         fileName
       }}</q-item-label>
       <q-item-label class="text-secondary file__info" v-if="!file.downloading">
-        <div class="flex">
-          <div v-if="file.paranoidKey" class="q-mr-xs">
+        <div class="flex items-center text-center">
+          <div v-if="file.paranoidKey" class="q-mr-xs flex justify-center">
             <encrypted-item-icon />
           </div>
-          <div v-if="isShared" class="q-mr-xs">
+          <div v-if="isShared" class="q-mr-xs flex justify-center">
             <shared-item-icon />
           </div>
-          <div v-if="file.publicLink" class="q-mr-xs">
+          <div v-if="file.publicLink" class="q-mr-xs flex justify-center">
             <link-item-icon />
           </div>
-          <div>{{ fileSize }}</div>
+          <div class="items-center justify-center text-center">{{ fileSize }}</div>
           <div class="q-mx-xs">|</div>
-          <div>{{ fileDate }}</div>
+          <div class="">{{ fileDate }}</div>
         </div>
       </q-item-label>
       <q-item-label v-if="file.downloading">
@@ -134,7 +134,7 @@ export default {
       return date.getDate(this.file.lastModified)
     },
     isShared() {
-      return !!this.file.shares.length
+      return !!this.file.shares.length || this.file.sharedWithMeAccess
     },
   },
   methods: {

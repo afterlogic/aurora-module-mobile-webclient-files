@@ -14,7 +14,9 @@
     </q-item-section>
     <q-item-section>
       <q-item-label class="file__name">{{ folderName }}</q-item-label>
-      <q-item-label></q-item-label>
+      <q-item-label class="flex items-center">
+        <shared-item-icon v-if="isShared" />
+      </q-item-label>
     </q-item-section>
     <q-item-section class="q-mr-sm" avatar side>
       <q-btn
@@ -48,11 +50,13 @@ import { mapGetters, mapActions } from 'vuex'
 import { getShortName } from '../utils/common'
 
 import FolderIcon from './icons/FolderIcon'
+import SharedItemIcon from "./icons/item/SharedItemIcon";
 
 export default {
   name: 'FolderItem',
   components: {
     FolderIcon,
+    SharedItemIcon
   },
   props: {
     folder: { type: Object, default: null },
@@ -69,6 +73,9 @@ export default {
       }
       return ''
     },
+    isShared() {
+      return !!this.folder.shares.length || this.folder.sharedWithMeAccess
+    }
   },
   data() {
     return {

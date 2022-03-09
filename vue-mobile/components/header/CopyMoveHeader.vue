@@ -28,7 +28,7 @@
     <div class="text-center text-black text-bold col-6">
       <span>Move files/folders</span>
     </div>
-    <div class="col-3 flex justify-end q-pr-sm">
+    <div class="col-3 flex justify-end q-mr-md">
       <q-btn
         flat
         size="15px"
@@ -38,7 +38,20 @@
         icon="create_new_folder"
         @click="createFolder"
       />
-      <q-btn flat size="15px" color="black" round dense icon="list" />
+      <div class="dropdown-more flex justify-center items-center">
+        <q-btn-dropdown v-close-popup :menu-offset="[8, -45]" flat unelevated dense>
+          <template v-slot:label>
+            <icon-action class="q-mr-md" icon="SelectStorageIcon" />
+          </template>
+          <q-list v-close-popup style="width: 205px; min-height: 55px">
+            <storage-item
+                v-for="storage in storageList"
+                :key="storage"
+                :storage="storage"
+            />
+          </q-list>
+        </q-btn-dropdown>
+      </div>
     </div>
   </q-toolbar>
 </template>
@@ -46,10 +59,17 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
+import StorageItem from "../StorageItem";
+import IconAction from "../common/IconAction";
+
 export default {
   name: 'CopyMoveHeader',
+  components: {
+    StorageItem,
+    IconAction
+  },
   computed: {
-    ...mapGetters('filesmobile', ['copiedFiles', 'currentPaths']),
+    ...mapGetters('filesmobile', ['copiedFiles', 'currentPaths', 'storageList']),
   },
   methods: {
     ...mapActions('filesmobile', [
@@ -75,4 +95,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style>
+.dropdown-more .q-btn-dropdown__arrow {
+  display: none;
+}
+</style>

@@ -49,7 +49,7 @@
         class="q-ma-md"
       />
     </div>
-    <create-button v-if="currentStorage.Type !== 'shared'"/>
+    <create-button v-if="isShowCreateButtons"/>
     <dialogs-list />
   </main-layout>
 </template>
@@ -103,6 +103,9 @@ export default {
     isCopied() {
       return !!this.copiedFiles.length
     },
+    isShowCreateButtons() {
+      return this.currentStorage.Type !== 'shared' && !this.copiedFiles.length
+    }
   },
   watch: {
     selectedFiles(items) {
