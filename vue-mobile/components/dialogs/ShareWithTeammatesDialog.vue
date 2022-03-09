@@ -145,7 +145,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('contactsmobile', ['asyncGetContacts']),
+    ...mapActions('contactsmobile', ['asyncGetContactsSuggestions']),
     ...mapActions('filesmobile', ['asyncUpdateShare', 'changeItemProperty']),
     selectUser(status) {
       if (this.currentUser) {
@@ -178,7 +178,7 @@ export default {
         WithGroups: false,
         WithoutTeamContactsDuplicates: true,
       }
-      const contacts = await this.asyncGetContacts(parameters)
+      const contacts = await this.asyncGetContactsSuggestions(parameters)
       this.selectOptions = getContactsSelectOptions(contacts?.List, this.contactsList)
       this.defaultSelectOptions = _.cloneDeep(this.selectOptions)
       if (this.contactsList.length) {
