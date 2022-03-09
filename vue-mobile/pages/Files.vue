@@ -124,7 +124,7 @@ export default {
     ]),
     async init() {
       this.changeLoadingStatus(true)
-      if (!this.currentFile) {
+      if (!this.storageList?.length) {
         await this.asyncGetStorages()
       }
       await this.asyncGetFiles()
