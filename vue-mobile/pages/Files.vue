@@ -93,13 +93,14 @@ export default {
       'currentFile',
       'isArchive',
       'loadingStatus',
-      'currentStorage'
+      'currentStorage',
+      'currentHeader'
     ]),
     isCopied() {
       return !!this.copiedFiles.length
     },
     isShowCreateButtons() {
-      return this.currentStorage.Type !== 'shared' && !this.copiedFiles.length
+      return this.currentStorage.Type !== 'shared' && !this.copiedFiles.length && this.currentHeader !== 'SearchHeader'
     }
   },
   watch: {

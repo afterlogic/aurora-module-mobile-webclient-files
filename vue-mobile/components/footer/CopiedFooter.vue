@@ -41,9 +41,9 @@ export default {
     AppButton,
   },
   computed: {
-    ...mapGetters('filesmobile', ['currentStorage']),
+    ...mapGetters('filesmobile', ['currentStorage', 'copiedFiles']),
     showMoveAction() {
-      return this.currentStorage.Type !== 'shared'
+      return this.currentStorage.Type !== 'shared' && this.copiedFiles[0].type !== 'shared'
     }
   },
   methods: {

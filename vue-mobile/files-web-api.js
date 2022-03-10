@@ -1,18 +1,8 @@
 import webApi from 'src/api/web-api'
 import _ from 'lodash'
 
-const i18n = {
-  $t: {
-    OPENPGPFILESWEBCLIENT: {},
-    SHAREDFILES: {},
-    COREWEBCLIENT: {},
-    FILESWEBCLIENT: {
-      ERROR_FILES_MOVE_PLURAL:
-        'File moving has failed.|Files moving has failed.',
-      ERROR_INVALID_FOLDER_NAME: 'Invalid folder name',
-    },
-  },
-}
+import { i18n } from "src/boot/i18n";
+
 export default {
   getFiles: async (parameters) => {
     return webApi.sendRequest({
@@ -83,7 +73,7 @@ export default {
       moduleName: 'Files',
       methodName: method,
       parameters: parameters,
-      defaultErrorText: i18n.$t.FILESWEBCLIENT.ERROR_FILES_MOVE_PLURAL,
+      defaultErrorText: i18n.global.tc('FILESWEBCLIENT.ERROR_FILES_MOVE_PLURAL', parameters.Files.length ),
     })
       .then((result) => {
         if (result) {
@@ -100,7 +90,7 @@ export default {
       moduleName: 'Files',
       methodName: 'CreateFolder',
       parameters: parameters,
-      defaultErrorText: i18n.$t.FILESWEBCLIENT.ERROR_INVALID_FOLDER_NAME,
+      defaultErrorText: i18n.global.t('FILESWEBCLIENT.ERROR_INVALID_FOLDER_NAME'),
     })
       .then((result) => {
         if (result) {
