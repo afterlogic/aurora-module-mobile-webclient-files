@@ -7,6 +7,9 @@
         :storage="storage"
       />
     </template>
+    <div v-if="loadingStatus" class="full-width">
+      <q-linear-progress indeterminate track-color="grey-1" color="primary"/>
+    </div>
     <q-scroll-area :thumb-style="{width: '5px'}" class="files__list" v-if="!loadingStatus">
       <folder-item
           v-for="file in folderList"
@@ -41,14 +44,6 @@
       <files-captions v-if="!loadingStatus" />
       <div style="height: 70px" class="full-width" />
     </q-scroll-area>
-    <div class="q-mt-xl flex items-center justify-center" v-if="loadingStatus">
-      <q-circular-progress
-        indeterminate
-        size="40px"
-        color="primary"
-        class="q-ma-md"
-      />
-    </div>
     <create-button v-if="isShowCreateButtons"/>
     <dialogs-list />
   </main-layout>

@@ -4,9 +4,14 @@
       <div v-if="currentFile">
         <div class="flex items-center justify-center">
           <div
+              class="file__preview full-width"
+              style="height: 1em"
+          >
+            <q-linear-progress v-if="currentFile.decryptionProgress" indeterminate track-color="grey-1" color="primary"/>
+          </div>
+          <div
               v-if="(currentFile.paranoidKey || !currentFile.thumbnailUrl) &&
-               !currentFile.decryptViewUrl &&
-               !currentFile.decryptionProgress"
+               !currentFile.decryptViewUrl"
               class="file__preview q-my-xl"
           >
             <file-item-icon
@@ -24,20 +29,10 @@
             </div>
           </div>
           <div
-              v-if="currentFile.decryptionProgress"
-              class="file__preview q-my-xl"
-          >
-            <q-circular-progress
-                indeterminate
-                size="40px"
-                color="primary"
-                class="q-ma-md"
-            />
-          </div>
-          <div
               class="q-my-lg"
               style="height: 348px"
-              v-if="(currentFile.thumbnailUrl && !currentFile.paranoidKey) || currentFile.decryptViewUrl"
+              v-if="(currentFile.thumbnailUrl && !currentFile.paranoidKey) ||
+               currentFile.decryptViewUrl"
           >
             <div
                 class="img-preview"
@@ -154,10 +149,7 @@ export default {
   text-decoration-line: underline;
 
 }
-.file__preview {
-  margin-top: 60px;
-  margin-bottom: 60px;
-}
+
 .img-preview {
   height: 348px;
   min-width: 348px;
