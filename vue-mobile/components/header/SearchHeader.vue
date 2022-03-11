@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-toolbar class="search-toolbar">
-      <q-card-actions align="left" class="col-3">
+      <q-card-actions align="left" class="col-2">
         <q-btn
           flat
           size="15px"
@@ -12,15 +12,15 @@
           @click="close"
         />
       </q-card-actions>
-      <div class="flex column text-center text-black col-6 search">
+      <div class="flex column text-center text-black col-8 search">
         <span class="text-bold search-title"
           >Search</span
         >
-        <span class="text-caption text-blue-grey-12" style="margin-top: -3px">{{
+        <span class="text__caption" style="margin-top: -3px">{{
             currentFolder
         }}</span>
       </div>
-      <div class="col-3 flex justify-end q-pr-sm" />
+      <div class="col-2 flex justify-end q-pr-sm" />
     </q-toolbar>
     <q-toolbar
       class="flex row search-toolbar-input"
@@ -55,11 +55,14 @@ export default {
     ...mapGetters('filesmobile', ['currentStorage', 'searchText', 'currentPath']),
     currentFolder() {
       const paths = this.currentPath.split('/')
-      if (paths.length > 4) {
-        return `${this.currentStorage.DisplayName}/.../${paths[paths.length - 2]}/${paths[paths.length - 1]}`
+      if (this.currentPath.length > 20) {
+        if (paths[paths.length - 1].length > 15) {
+          let lastFolder = paths[paths.length - 1]
+          return `${this.currentStorage.DisplayName}/.../...${lastFolder.slice(lastFolder.length - 15, lastFolder.length)}`
+        }
+        return `${this.currentStorage.DisplayName}/.../${paths[paths.length - 1]}`
       }
-      return paths[paths.length - 1] ? this.currentStorage.DisplayName + this.currentPath
-          : this.currentStorage.DisplayName
+      return `${this.currentStorage.DisplayName}${this.currentPath}`
     }
   },
   mounted() {

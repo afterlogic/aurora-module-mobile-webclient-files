@@ -24,7 +24,7 @@
           <q-item-label>{{ statuses[2] }}</q-item-label>
         </q-item-section>
       </q-item>
-      <q-item clickable v-close-popup @click="action(3, currentUser)">
+      <q-item v-if="!currentFile.paranoidKey" clickable v-close-popup @click="action(3, currentUser)">
         <q-item-section>
           <q-item-label>{{ statuses[3] }}</q-item-label>
         </q-item-section>
@@ -34,6 +34,7 @@
 </template>
 <script>
 import PlusIcon from "src/components/common/icons/PlusIcon";
+import {mapGetters} from "vuex";
 export default {
   name: "DropdownContactStatus",
   props: {
@@ -44,13 +45,19 @@ export default {
   components: {
     PlusIcon
   },
-  data: () => ({
-    statuses: {
-      1: 'read',
-      2: 'read/write',
-      3: 'r/w/r',
+  computed: {
+    ...mapGetters('filesmobile', ['currentFile']),
+    statuses() {
+      const statuses = {
+        1: 'read',
+        2: 'read/write'
+      }
+      if (!this.currentFile.paranoidKey) {
+        statuses[3] = 'r/w/r'
+      }
+      return statuses
     },
-  })
+  }
 }
 </script>
 

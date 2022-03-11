@@ -90,6 +90,7 @@
 <script>
 import _ from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
+import eventBus from 'src/event-bus'
 
 import { getContactsSelectOptions } from 'src/utils/contacts/utils'
 
@@ -129,15 +130,20 @@ export default {
       contactsList: [],
       selectOptions: [],
       defaultSelectOptions: [],
-      statuses: {
-        1: 'read',
-        2: 'read/write',
-        3: 'r/w/r',
-      },
     }
   },
   computed: {
     ...mapGetters('filesmobile', ['currentStorage']),
+    statuses() {
+      const statuses = {
+        1: 'read',
+        2: 'read/write'
+      }
+      if (!this.file.paranoidKey) {
+        statuses[3] = 'r/w/r'
+      }
+      return statuses
+    },
   },
   watch: {
     dialog(val) {
@@ -208,16 +214,27 @@ export default {
       if (this.currentUser) {
         this.$refs.notAddedUserDialog.openDialog(this.currentUser)
       } else {
-        await this.onContinueSaving()
+        if (this.file.paranoidKey) {
+          // eventBus.$emit('FilesMobileWebclient::ShareEncryptFile', {
+          //   contactsList: this.contactsList,
+          //   onContinueSaving: this.onContinueSaving,
+          //   getParentComponent: this.$root._getParentComponent
+          // })
+          await this.onContinueSaving(true)
+        } else {
+          await this.onContinueSaving(true)
+        }
       }
     },
-    async onContinueSaving() {
-      this.saving = true
-      const parameters = getParametersForShare(this.contactsList, this.file)
-      const result = await this.asyncUpdateShare(parameters)
-      if (result) {
-        this.openDialog = false
-        this.$emit('closeDialog')
+    async onContinueSaving(res) {
+      if (res) {
+        this.saving = true
+        const parameters = getParametersForShare(this.contactsList, this.file)
+        const result = await this.asyncUpdateShare(parameters)
+        if (result) {
+          this.openDialog = false
+          this.$emit('closeDialog')
+        }
       }
       this.saving = false
     },

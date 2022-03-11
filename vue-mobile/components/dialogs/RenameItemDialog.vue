@@ -5,6 +5,7 @@
             :placeholder="placeholder"
             v-model="itemName"
             :autofocus="true"
+            @keyup.enter="renameItem"
             outlined
         />
     </template>
