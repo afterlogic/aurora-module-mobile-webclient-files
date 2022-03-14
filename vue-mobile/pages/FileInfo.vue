@@ -30,16 +30,14 @@
           </div>
           <div
               class="q-my-lg"
-              style="height: 348px"
+              style="height: 348px; width: 348px"
               v-if="(currentFile.thumbnailUrl && !currentFile.paranoidKey) ||
                currentFile.decryptViewUrl"
           >
-            <div
-                class="img-preview"
-                :style="{
-              background: `url(${filePreview}) no-repeat center`,
-              'background-size': 'contain',
-            }"
+            <q-img
+                :src="filePreview"
+                :ratio="1"
+                fit="scale-down"
             />
           </div>
         </div>
