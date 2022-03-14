@@ -152,6 +152,6 @@ export default {
 
 .img-preview {
   height: 348px;
-  min-width: 348px;
+  max-width: 348px;
 }
 </style>
