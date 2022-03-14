@@ -167,6 +167,33 @@ export default {
   methods: {
     ...mapActions('contactsmobile', ['asyncGetContactsSuggestions']),
     ...mapActions('filesmobile', ['asyncUpdateShare', 'changeItemProperty']),
+    hasChanges() {
+      const oldContactsList = this.file.shares.map((contact) => {
+        return {
+          email: contact.PublicId,
+          status: contact.Access,
+        }
+      })
+
+      if (oldContactsList.length !== this.contactsList.length) return true
+
+      if (oldContactsList.length >= this.contactsList.length) {
+        return this.compareArrays(oldContactsList, this.contactsList)
+      }
+
+      if (oldContactsList.length < this.contactsList.length) {
+        return this.compareArrays(this.contactsList, oldContactsList)
+      }
+    },
+    compareArrays(firstArray, secondArray) {
+      for (let elemFirstArray of firstArray) {
+        const index = secondArray.findIndex( elemSecondArray => {
+          return elemSecondArray.email === elemFirstArray.email && elemSecondArray.status === elemFirstArray.status
+        })
+        if (index === -1) return true
+      }
+      return false
+    },
     selectUser(status) {
       if (this.currentUser) {
         this.currentUser.status = status
@@ -261,7 +288,7 @@ export default {
       contact.status = status
     },
     cancel() {
-      this.$emit('closeDialog')
+      this.$emit('closeDialog', this.hasChanges)
     },
   },
 }

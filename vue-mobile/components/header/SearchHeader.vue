@@ -1,26 +1,35 @@
 <template>
   <div>
     <q-toolbar class="search-toolbar">
-      <q-card-actions align="left" class="col-2">
-        <q-btn
-          flat
-          size="15px"
-          color="black"
-          round
-          dense
-          icon="close"
-          @click="close"
-        />
-      </q-card-actions>
-      <div class="flex column text-center text-black col-8 search">
-        <span class="text-bold search-title"
-          >Search</span
-        >
-        <span class="text__caption" style="margin-top: -3px">{{
-            currentFolder
-        }}</span>
+      <div class="col-2">
+        <q-card-actions align="left">
+          <q-btn
+              flat
+              size="15px"
+              color="black"
+              round
+              dense
+              icon="close"
+              @click="close"
+          />
+        </q-card-actions>
       </div>
-      <div class="col-2 flex justify-end q-pr-sm" />
+      <div class="flex text-center text-black col-8 search" style="overflow: hidden">
+        <div class="full-width">
+          <span class="text-bold search-title"
+          >Search</span
+          >
+        </div>
+        <div class="text__caption flex no-wrap">
+          <span>{{ currentStorage.DisplayName }}</span>
+          <div class="flex items-end">
+            <span style="overflow: hidden; text-align: right; text-overflow: ellipsis">{{
+                currentFolder
+              }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-2" />
     </q-toolbar>
     <q-toolbar
       class="flex row search-toolbar-input"
@@ -54,15 +63,18 @@ export default {
   computed: {
     ...mapGetters('filesmobile', ['currentStorage', 'searchText', 'currentPath']),
     currentFolder() {
+      // const paths = this.currentPath.split('/')
+      // if (this.currentPath.length > 20) {
+      //   if (paths[paths.length - 1].length > 15) {
+      //     let lastFolder = paths[paths.length - 1]
+      //     return `${this.currentStorage.DisplayName}/.../...${lastFolder.slice(lastFolder.length - 15, lastFolder.length)}`
+      //   }
+      //   return `${this.currentStorage.DisplayName}/.../${paths[paths.length - 1]}`
+      // }
+      // return `${this.currentStorage.DisplayName}${this.currentPath}`
       const paths = this.currentPath.split('/')
-      if (this.currentPath.length > 20) {
-        if (paths[paths.length - 1].length > 15) {
-          let lastFolder = paths[paths.length - 1]
-          return `${this.currentStorage.DisplayName}/.../...${lastFolder.slice(lastFolder.length - 15, lastFolder.length)}`
-        }
-        return `${this.currentStorage.DisplayName}/.../${paths[paths.length - 1]}`
-      }
-      return `${this.currentStorage.DisplayName}${this.currentPath}`
+      if (paths.length < 1) return ''
+      return this.currentPath
     }
   },
   mounted() {

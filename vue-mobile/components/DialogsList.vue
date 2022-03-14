@@ -11,6 +11,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import _ from 'lodash'
 
 import FileMenuDialog from './dialogs/FileMenuDialog'
 import RenameItemDialog from './dialogs/RenameItemDialog'
@@ -78,8 +79,17 @@ export default {
         action.method(this)
       }
     },
-    closeDialog() {
-      this.dialog = false
+    closeDialog(hasChanges) {
+      if (_.isFunction(hasChanges)) {
+        if (hasChanges()) {
+          this.$root.unsavedChangesDialog(() => this.dialog = false)
+        } else {
+          this.dialog = false
+        }
+      } else {
+        this.dialog = false
+      }
+
     },
   },
 }
