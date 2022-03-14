@@ -17,7 +17,7 @@
           />
         </div>
         <div class="flex col-2 justify-center items-center dropdown-plus">
-          <dropdown-contact-status :current-user="currentUser" :action="selectUser">
+          <dropdown-contact-status :current-user="currentUser" :action="selectUser" :statuses="dropdownStatuses">
             <template v-slot:label>
               <plus-icon
                   class="text-center items-center justify-center"
@@ -49,7 +49,12 @@
               </p>
             </div>
             <div class="flex items-start col-4">
-              <dropdown-contact-status ref="dropdown" :menu-offset="[85, 0]" :current-user="contact" :action="changeStatus">
+              <dropdown-contact-status
+                  ref="dropdown" :menu-offset="[85, 0]"
+                  :current-user="contact"
+                  :action="changeStatus"
+                  :statuses="statuses"
+              >
                 <template v-slot:label>
                   <span class="contact-status text-primary">{{
                       statuses[contact.status]
@@ -90,7 +95,6 @@
 <script>
 import _ from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
-import eventBus from 'src/event-bus'
 
 import { getContactsSelectOptions } from 'src/utils/contacts/utils'
 
@@ -139,8 +143,18 @@ export default {
         1: 'read',
         2: 'read/write'
       }
-      if (!this.file.paranoidKey) {
-        statuses[3] = 'r/w/r'
+      if (!this.file?.paranoidKey) {
+        statuses[3] = 'r/w/reshare'
+      }
+      return statuses
+    },
+    dropdownStatuses() {
+      const statuses = {
+        1: 'read',
+        2: 'read/write'
+      }
+      if (!this.file?.paranoidKey) {
+        statuses[3] = 'read/write/reshare'
       }
       return statuses
     },

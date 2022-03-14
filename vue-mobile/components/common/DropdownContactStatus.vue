@@ -41,22 +41,13 @@ export default {
     action: { type: Function, require: true },
     currentUser: { type: Object, default: null },
     menuOffset: { type: Array, default: [0, 0] },
+    statuses: { type: Object, default: null }
   },
   components: {
     PlusIcon
   },
   computed: {
     ...mapGetters('filesmobile', ['currentFile']),
-    statuses() {
-      const statuses = {
-        1: 'read',
-        2: 'read/write'
-      }
-      if (!this.currentFile.paranoidKey) {
-        statuses[3] = 'r/w/r'
-      }
-      return statuses
-    },
   }
 }
 </script>

@@ -4,8 +4,8 @@
         <app-dialog-input
             :placeholder="placeholder"
             v-model="itemName"
-            :autofocus="true"
-            @keyup.enter="renameItem"
+            autofocus
+            @keyup.enter.stop="renameItem"
             outlined
         />
     </template>
