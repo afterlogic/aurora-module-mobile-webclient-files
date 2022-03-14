@@ -38,7 +38,7 @@
                 class="img-preview"
                 :style="{
               background: `url(${filePreview}) no-repeat center`,
-              'background-size': 'auto',
+              'background-size': 'contain',
             }"
             />
           </div>
