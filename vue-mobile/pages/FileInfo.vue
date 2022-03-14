@@ -37,6 +37,7 @@
             <q-img
                 :src="filePreview"
                 :ratio="1"
+                no-spinner
                 fit="scale-down"
             />
           </div>
