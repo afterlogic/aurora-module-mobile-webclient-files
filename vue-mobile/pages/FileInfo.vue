@@ -30,7 +30,7 @@
           </div>
           <div
               class="q-my-lg"
-              style="height: 348px; width: 348px"
+              style="height: 100%; width: 100%"
               v-if="(currentFile.thumbnailUrl && !currentFile.paranoidKey) ||
                currentFile.decryptViewUrl"
           >
