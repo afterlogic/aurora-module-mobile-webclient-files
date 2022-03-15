@@ -17,7 +17,12 @@
           />
         </div>
         <div class="flex col-2 justify-center items-center dropdown-plus">
-          <dropdown-contact-status :current-user="currentUser" :action="selectUser" :statuses="dropdownStatuses">
+          <dropdown-contact-status
+              ref="dropdown"
+              :current-user="currentUser"
+              :action="selectUser"
+              :statuses="dropdownStatuses"
+          >
             <template v-slot:label>
               <plus-icon
                   class="text-center items-center justify-center"
@@ -50,7 +55,7 @@
             </div>
             <div class="flex items-start col-4">
               <dropdown-contact-status
-                  ref="dropdown" :menu-offset="[85, 0]"
+                  :menu-offset="[85, 0]"
                   :current-user="contact"
                   :action="changeStatus"
                   :statuses="statuses"
@@ -280,9 +285,7 @@ export default {
       this.saving = false
     },
     onContinueTyping() {
-      if (this.contactsList.length) {
-        this.$refs.dropdown.$refs.dropdown.show()
-      }
+      this.$refs.dropdown.$refs.dropdown.show()
     },
     changeStatus(status, contact) {
       contact.status = status

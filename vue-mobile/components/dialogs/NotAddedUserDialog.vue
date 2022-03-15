@@ -1,5 +1,5 @@
 <template>
-  <app-dialog v-model="showDialog" :close="closeDialog" :show-cross="false">
+  <app-dialog v-model="showDialog" :close="closeDialog">
     <template v-slot:head>
       <q-item class="dialog__header-text">
           <span>
@@ -13,10 +13,6 @@
       <button-dialog
           :action="onContinueExecution"
           :label="$t('COREWEBCLIENT.ACTION_OK')"
-      />
-      <button-dialog
-          :label="$t('COREWEBCLIENT.ACTION_CLOSE')"
-          :action="closeDialog"
       />
     </template>
   </app-dialog>
@@ -37,7 +33,7 @@ export default {
   }),
   methods: {
     onContinueExecution() {
-      this.$emit('onContinueSaving')
+      this.$emit('onContinueSaving', true)
       this.showDialog = false
     },
     openDialog(user) {
