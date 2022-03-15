@@ -5,7 +5,7 @@
         <span>{{ $t('SHAREDFILES.ACTION_SHARE') }}</span>
       </div>
       <div class="q-pl-lg q-pr-sm q-mt-md flex full-width row">
-        <div class="col-10">
+        <div class="col-10 select-contact">
           <q-select
               use-input
               model-value=""
@@ -14,6 +14,7 @@
               outlined
               v-model="currentUser"
               :options="selectOptions"
+
           />
         </div>
         <div class="flex col-2 justify-center items-center dropdown-plus">
@@ -313,5 +314,24 @@ export default {
 }
 .contact-status {
   border-bottom: 1px dotted;
+}
+
+.q-field__inner .relative-position .col .self-stretch {
+  margin: 8px;
+}
+
+.q-field--filled .q-field__control:before {
+  border: 2px solid;
+  border-radius: 6px;
+}
+.q-field--filled .q-field__control:after {
+  transform-origin: center;
+  transform: none;
+  transition: none;
+  height: 0 !important;
+}
+.q-select__dialog label {
+  margin: 8px;
+  border-radius: 6px;
 }
 </style>
