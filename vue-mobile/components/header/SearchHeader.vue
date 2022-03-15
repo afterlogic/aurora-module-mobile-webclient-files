@@ -21,9 +21,13 @@
           >
         </div>
         <div class="text__caption flex no-wrap justify-center full-width">
-          <span>{{ currentStorage.DisplayName }}/</span>
+          <span>{{ currentStorage.DisplayName }}{{currentPath.length ? '/' : ''}}</span>
           <div class="flex" style="direction: rtl; overflow: hidden;">
-            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{currentFolder}}</span>
+            <span
+                style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;margin-left: -0.5em;"
+            >
+              l{{currentFolder}}
+            </span>
           </div>
         </div>
       </div>
