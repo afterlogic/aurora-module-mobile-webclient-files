@@ -1,9 +1,9 @@
 <template>
   <app-dialog v-model="openDialog" :close="closeDialog">
     <template v-slot:head>
-      <q-item class="dialog__header-text">
+      <div class="dialog__title-text q-ma-lg">
         <span>{{ title }}</span>
-      </q-item>
+      </div>
     </template>
     <template v-slot:actions>
       <button-dialog

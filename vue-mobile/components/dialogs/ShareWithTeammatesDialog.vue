@@ -1,10 +1,10 @@
 <template>
   <app-dialog v-model="openDialog" :close="cancel" width="calc(100vw - 20px)" >
     <template v-slot:head>
-      <div class="q-px-md dialog__header-text">
+      <div class="q-px-lg dialog__header-text">
         <span>{{ $t('SHAREDFILES.ACTION_SHARE') }}</span>
       </div>
-      <div class="q-pl-md q-mt-md flex full-width row">
+      <div class="q-pl-lg q-pr-sm q-mt-md flex full-width row">
         <div class="col-10">
           <q-select
               use-input
@@ -34,7 +34,7 @@
       </div>
       <div
           style="height: 150px; overflow-y: scroll"
-          class="flex q-ma-md users-list"
+          class="flex q-ma-md users-list q-mx-lg"
       >
         <div
             v-if="!contactsList.length"
@@ -76,11 +76,13 @@
     </template>
     <template v-slot:actions>
       <button-dialog
+          class="q-ma-sm"
           :saving="saving"
           :action="showHistory"
           :label="$t('SHAREDFILES.ACTION_SHOW_HISTORY')"
       />
       <button-dialog
+          class="q-ma-sm"
           :saving="saving"
           :action="save"
           :label="$t('COREWEBCLIENT.ACTION_SAVE')"

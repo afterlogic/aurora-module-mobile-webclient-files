@@ -1,10 +1,10 @@
 <template>
   <app-dialog v-model="openDialog" :close="cancelDialog">
     <template v-slot:head>
-      <div class="q-px-md dialog__header-text">
+      <div class="q-px-lg dialog__title-text">
         <span>{{ $t('MAILWEBCLIENT.ACTION_ADD_NEW_FOLDER') }}</span>
       </div>
-      <q-item>
+      <q-item class="q-px-lg">
         <app-input
             placeholder="Enter folder name"
             outlined

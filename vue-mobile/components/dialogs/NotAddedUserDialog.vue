@@ -1,16 +1,17 @@
 <template>
   <app-dialog v-model="showDialog" :close="closeDialog">
     <template v-slot:head>
-      <q-item class="dialog__header-text">
+      <div class="dialog__header-text q-mx-lg q-mt-lg">
           <span>
           Last entered teammate
           <span class="text-bold">{{ user.email }}</span>
           was not added to the list. Proceed without them?
         </span>
-      </q-item>
+      </div>
     </template>
     <template v-slot:actions>
       <button-dialog
+          class="q-ma-sm"
           :action="onContinueExecution"
           label="Proceed"
       />

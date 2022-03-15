@@ -3,26 +3,26 @@
     <template v-slot:head>
       <div v-if="file && (!file.paranoidKey || file.publicLink)">
         <div v-if="!file.publicLink">
-          <div style="font-size: 15px" class="q-px-md dialog__title-text">
+          <div style="font-size: 15px" class="q-px-lg dialog__title-text">
             <span>{{
                 $t('OPENPGPFILESWEBCLIENT.HEADING_CREATE_PUBLIC_LINK')
               }}</span>
             </div>
-          <q-checkbox
+          <app-checkbox
+              class="q-pl-lg q-py-lg q-pr-md"
               v-model="withPassword"
-              class="q-ma-sm"
+              leftLabel
               label="Protect public link with password"
-              color="primary"
           />
         </div>
         <div v-if="file.publicLink">
-          <div class="q-px-md">
+          <div class="q-px-lg">
             <div class="dialog__title-text">
             <span>{{
                 file.linkPassword ? 'Protected public link' : $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK')
               }}</span>
             </div>
-            <div class="q-my-md" @click.stop="copyText(file.publicLink, $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK'))">
+            <div class="q-mb-md q-mt-lg" @click.stop="copyText(file.publicLink, $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK'))">
               <div class="q-mb-sm field__title">Link text</div>
               <div class="flex no-wrap">
                 <div class="flex justify-center items-center q-mr-sm">
@@ -59,24 +59,24 @@
       </div>
     </template>
     <template v-slot:actions>
-      <div v-if="file && (!file.paranoidKey || file.publicLink)">
-        <div v-if="!file.publicLink">
+      <div v-if="file && (!file.paranoidKey || file.publicLink)" class="full-width q-mx-md q-mt-md">
+        <div v-if="!file.publicLink" class="flex justify-end q-pr-sm">
           <button-dialog
               :saving="saving"
               :action="createShareableLink"
               :label="createBtnLabel"
           />
         </div>
-        <div v-if="file.publicLink">
-          <button-dialog
-              :saving="saving"
-              :action="createShareableLink"
-              :label="$t('OPENPGPFILESWEBCLIENT.ACTION_SEND_EMAIL')"
-          />
+        <div v-if="file.publicLink" class="full-width flex justify-between q-px-sm">
           <button-dialog
               :saving="saving"
               :action="removeLink"
               :label="$t('FILESWEBCLIENT.ACTION_REMOVE_PUBLIC_LINK')"
+          />
+          <button-dialog
+              :saving="saving"
+              :action="createShareableLink"
+              :label="$t('OPENPGPFILESWEBCLIENT.ACTION_SEND_EMAIL')"
           />
         </div>
       </div>
@@ -99,11 +99,12 @@ import notification from 'src/utils/notification'
 import AppDialog from "components/common/AppDialog";
 import AppDialogInput from 'src/components/common/AppDialogInput'
 import ButtonDialog from 'src/components/common/ButtonDialog'
+import AppCheckbox from "src/components/common/AppCheckbox";
 import CopyIcon from "../icons/CopyIcon";
 
 export default {
   name: 'CreateShareableLinkDialog',
-  components: { ButtonDialog, AppDialogInput, AppDialog, CopyIcon },
+  components: { ButtonDialog, AppDialogInput, AppDialog, CopyIcon, AppCheckbox },
   props: {
     file: { type: Object, default: null },
     dialog: { type: Boolean, default: false },
