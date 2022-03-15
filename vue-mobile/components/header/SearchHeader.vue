@@ -14,18 +14,16 @@
           />
         </q-card-actions>
       </div>
-      <div class="flex text-center text-black col-8 search" style="overflow: hidden">
+      <div class="flex text-center items-center text-black col-8 search" style="overflow: hidden">
         <div class="full-width">
           <span class="text-bold search-title"
           >Search</span
           >
         </div>
-        <div class="text__caption flex no-wrap">
-          <span>{{ currentStorage.DisplayName }}</span>
-          <div class="flex items-end">
-            <span style="overflow: hidden; text-align: right; text-overflow: ellipsis">{{
-                currentFolder
-              }}</span>
+        <div class="text__caption flex no-wrap justify-center full-width">
+          <span>{{ currentStorage.DisplayName }}/</span>
+          <div class="flex" style="direction: rtl; overflow: hidden;">
+            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{currentFolder}}</span>
           </div>
         </div>
       </div>
