@@ -12,7 +12,7 @@
     <template v-slot:actions>
       <button-dialog
           :action="onContinueExecution"
-          :label="$t('COREWEBCLIENT.ACTION_OK')"
+          label="Proceed"
       />
     </template>
   </app-dialog>
