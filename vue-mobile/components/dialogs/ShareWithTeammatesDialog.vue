@@ -323,6 +323,7 @@ export default {
 .q-field--filled .q-field__control:before {
   border: 2px solid;
   border-radius: 6px;
+  background: #ffffff;
 }
 .q-field--filled .q-field__control:after {
   transform-origin: center;
@@ -333,5 +334,15 @@ export default {
 .q-select__dialog label {
   margin: 8px;
   border-radius: 6px;
+  background: #ffffff;
+}
+.q-field--filled.q-field--highlighted .q-field__control:before {
+  background: #ffffff !important;
+}
+.q-field--filled .q-field__control:before {
+  background: #ffffff !important;
+}
+.q-field--filled .q-field__control {
+  background: #ffffff !important;
 }
 </style>
