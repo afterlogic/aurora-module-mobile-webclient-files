@@ -10,7 +10,7 @@
     <div v-if="loadingStatus" class="full-width">
       <q-linear-progress indeterminate track-color="grey-1" color="primary"/>
     </div>
-    <q-scroll-area :thumb-style="{width: '5px'}" class="files__list" v-if="!loadingStatus">
+    <q-scroll-area :thumb-style="{ width: '5px' }" :class="fileListHeight" v-if="!loadingStatus">
       <folder-item
           v-for="file in folderList"
           :key="file"
@@ -101,6 +101,10 @@ export default {
     },
     isShowCreateButtons() {
       return this.currentStorage.Type !== 'shared' && !this.copiedFiles.length && this.currentHeader !== 'SearchHeader'
+    },
+    fileListHeight() {
+      if (this.currentHeader === 'SearchHeader') return 'files__list-search'
+      return 'files__list-default'
     }
   },
   watch: {
@@ -177,8 +181,11 @@ export default {
     line-height: 10px;
   }
 }
-.files__list {
+.files__list-default {
   height: calc(100vh - 115px);
+}
+.files__list-search {
+  height: calc(100vh - 129px - 60px);
 }
 .files__list .q-scrollarea__content {
   width: 100vw;
