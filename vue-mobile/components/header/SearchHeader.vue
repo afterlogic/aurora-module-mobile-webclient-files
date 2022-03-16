@@ -20,7 +20,7 @@
           >Search</span
           >
         </div>
-        <div class="text__caption flex no-wrap justify-center full-width">
+        <div class="search-path flex no-wrap justify-center full-width">
           <span>{{ currentStorage.DisplayName }}{{currentPath.length ? '/' : ''}}</span>
           <div class="flex" style="direction: rtl; overflow: hidden;">
             <span
@@ -111,13 +111,22 @@ export default {
   height: 48px;
 }
 .search-title {
-  font-size: 17px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 20px;
   margin-top: 5px
 }
 .search-toolbar {
   height: 55px;
   font-size: 16px;
   padding: 0
+}
+.search-path {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 10px;
+  color: #B6B5B5;
 }
 .search-toolbar-input {
   height: 74px;

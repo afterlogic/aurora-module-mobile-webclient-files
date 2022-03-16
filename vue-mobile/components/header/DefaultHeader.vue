@@ -54,7 +54,7 @@
         </q-list>
       </q-btn-dropdown>
       <span
-        class="text-center storage-name"
+        class="header-storage__name"
         >{{ storageName }}</span
       >
     </div>
@@ -119,18 +119,19 @@ export default {
 </script>
 
 <style>
-.storage-name {
-  margin-top: -5px;
+.header-storage__name {
+  position: absolute;
+  top: 35px;
+  left: calc(50% - 25px);
   font-style: normal;
-  font-weight: normal;
-  font-size: 10px;
+  font-weight: 400;
+  font-size: 12px;
   line-height: 10px;
   color: #969494;
 }
 .files-dropdown {
   padding-left: 41px;
-  margin-top: -12px;
-  width: 250px;
+  margin-top: -8px;
   font-size: 18px;
   line-height: 20px;
 }
