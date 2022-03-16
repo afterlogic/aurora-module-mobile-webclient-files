@@ -1,7 +1,7 @@
 <template>
   <app-dialog v-model="openDialog" :close="cancel" width="calc(100vw - 20px)" >
     <template v-slot:head>
-      <div class="q-px-lg dialog__header-text">
+      <div class="q-px-lg q-pb-md dialog__title-text">
         <span>{{ $t('SHAREDFILES.ACTION_SHARE') }}</span>
       </div>
       <div class="q-pl-lg q-pr-sm q-mt-md flex full-width row">

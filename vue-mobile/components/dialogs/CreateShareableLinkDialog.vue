@@ -3,7 +3,7 @@
     <template v-slot:head>
       <div v-if="file && (!file.paranoidKey || file.publicLink)">
         <div v-if="!file.publicLink">
-          <div style="font-size: 15px" class="q-px-lg dialog__title-text">
+          <div class="q-px-lg dialog__title-text">
             <span>{{
                 $t('OPENPGPFILESWEBCLIENT.HEADING_CREATE_PUBLIC_LINK')
               }}</span>
@@ -18,9 +18,9 @@
         <div v-if="file.publicLink">
           <div class="q-px-lg">
             <div class="dialog__title-text">
-            <span>{{
-                file.linkPassword ? 'Protected public link' : $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK')
-              }}</span>
+              <span>{{
+                  file.linkPassword ? 'Protected public link' : $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK')
+                }}</span>
             </div>
             <div class="q-mb-md q-mt-lg" @click.stop="copyText(file.publicLink, $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK'))">
               <div class="q-mb-sm field__title">Link text</div>
@@ -59,7 +59,7 @@
       </div>
     </template>
     <template v-slot:actions>
-      <div v-if="file && (!file.paranoidKey || file.publicLink)" class="full-width q-mx-md q-mt-md">
+      <div v-if="file && (!file.paranoidKey || file.publicLink)" class="full-width q-mx-lg q-mb-sm">
         <div v-if="!file.publicLink" class="flex justify-end q-pr-sm">
           <button-dialog
               :saving="saving"

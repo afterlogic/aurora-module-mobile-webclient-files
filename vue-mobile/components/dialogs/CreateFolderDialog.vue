@@ -1,7 +1,7 @@
 <template>
   <app-dialog v-model="openDialog" :close="cancelDialog">
     <template v-slot:head>
-      <div class="q-px-lg dialog__title-text">
+      <div class="q-px-lg q-pb-sm dialog__title-text">
         <span>{{ $t('MAILWEBCLIENT.ACTION_ADD_NEW_FOLDER') }}</span>
       </div>
       <q-item class="q-px-lg">
@@ -18,6 +18,7 @@
     </template>
     <template v-slot:actions>
       <button-dialog
+          class="q-ma-sm"
           :saving="saving"
           :action="createFolder"
           :label="$t('COREWEBCLIENT.ACTION_CREATE')"

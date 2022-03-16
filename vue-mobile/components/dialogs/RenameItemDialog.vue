@@ -1,16 +1,22 @@
 <template>
   <app-dialog v-model="openDialog" :close="cancelDialog">
     <template v-slot:head>
-        <app-dialog-input
-            :placeholder="placeholder"
-            v-model="itemName"
-            autofocus
-            @keyup.enter.stop="renameItem"
-            outlined
-        />
+      <div class="q-px-lg q-pb-sm dialog__title-text">
+            <span>{{
+                placeholder
+              }}</span>
+      </div>
+      <app-dialog-input
+          class="q-mx-lg"
+          v-model="itemName"
+          autofocus
+          @keyup.enter.stop="renameItem"
+          outlined
+      />
     </template>
     <template v-slot:actions>
       <button-dialog
+          class="q-mb-sm q-mr-sm"
           :saving="saving"
           :action="renameItem"
           :label="$t('FILESWEBCLIENT.ACTION_RENAME')"

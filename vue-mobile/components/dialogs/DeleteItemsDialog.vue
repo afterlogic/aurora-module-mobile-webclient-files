@@ -7,6 +7,7 @@
     </template>
     <template v-slot:actions>
       <button-dialog
+          class="q-mr-sm q-mb-sm"
           :saving="saving"
           :action="deleteItems"
           :label="$t('COREWEBCLIENT.ACTION_DELETE')"
