@@ -104,7 +104,7 @@
 import _ from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
 
-import { getContactsSelectOptions } from 'src/utils/contacts/utils'
+import { getContactsSelectOptions, getAllContactsSelectOptions } from 'src/utils/contacts/utils'
 
 import { getParametersForShare } from '../../utils/common'
 
@@ -114,6 +114,7 @@ import ShowHistoryDialog from './ShowHistoryDialog'
 import ButtonDialog from 'src/components/common/ButtonDialog'
 import PlusIcon from 'src/components/common/icons/PlusIcon'
 import NotAddedUserDialog from "./NotAddedUserDialog";
+import store from "../../../../CoreMobileWebclient/vue-mobile/src/store";
 
 export default {
   name: 'ShareWithTeammatesDialog',
@@ -142,6 +143,7 @@ export default {
       contactsList: [],
       selectOptions: [],
       defaultSelectOptions: [],
+      allContactsSelectOptions: []
     }
   },
   computed: {
@@ -176,6 +178,7 @@ export default {
     ...mapActions('contactsmobile', ['asyncGetContactsSuggestions']),
     ...mapActions('filesmobile', ['asyncUpdateShare', 'changeItemProperty']),
     hasChanges() {
+      if (this.currentUser) return true
       const oldContactsList = this.file.shares.map((contact) => {
         return {
           email: contact.PublicId,
@@ -206,9 +209,12 @@ export default {
       if (this.currentUser) {
         this.currentUser.status = status
         this.contactsList.push(this.currentUser)
-        this.removeFindContact(this.currentUser)
+
+        this.$nextTick(() => {
+          this.removeFindContact(this.currentUser)
+          this.currentUser = null
+        })
       }
-      this.currentUser = null
     },
     removeFindContact(currentUser) {
       const userIndex = this.selectOptions.findIndex(
@@ -235,6 +241,7 @@ export default {
       }
       const contacts = await this.asyncGetContactsSuggestions(parameters)
       this.selectOptions = getContactsSelectOptions(contacts?.List, this.contactsList)
+      this.allContactsSelectOptions = getAllContactsSelectOptions(contacts?.List)
       this.defaultSelectOptions = _.cloneDeep(this.selectOptions)
       if (this.contactsList.length) {
         this.contactsList.forEach((contact) => this.removeFindContact(contact))
@@ -242,8 +249,15 @@ export default {
     },
     filterContacts(search, update) {
       update(async () => {
-        this.selectOptions = this.defaultSelectOptions.filter(
-          (option) => option.email.indexOf(search) + 1
+        this.selectOptions = this.allContactsSelectOptions.filter(
+          (option) => {
+            const currentUserEmail = this.$store.getters['core/userPublicId']
+            const indexSearch = option.email.indexOf(search) + 1
+            const indexSelectedContact = this.contactsList.findIndex((contact) => {
+              return contact.email === option.email
+            }) + 1
+            return indexSearch && !indexSelectedContact && currentUserEmail !== option.email
+          }
         )
       })
     },
@@ -252,6 +266,7 @@ export default {
         (user) => user.email === contact.email
       )
       if (userIndex !== -1) this.contactsList.splice(userIndex, 1)
+      this.selectOptions = getContactsSelectOptions(this.allContactsSelectOptions, this.contactsList)
     },
     showHistory() {
       this.$refs.showHistoryDialog.openDialog(
