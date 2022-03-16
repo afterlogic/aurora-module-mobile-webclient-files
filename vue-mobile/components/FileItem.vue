@@ -28,7 +28,7 @@
         fileName
       }}</q-item-label>
       <q-item-label class="text-secondary file__info" v-if="!file.downloading">
-        <div class="flex items-center text-center">
+        <div class="flex no-wrap items-center text-center">
           <div v-if="file.paranoidKey" class="q-mr-xs flex justify-center">
             <encrypted-item-icon />
           </div>
@@ -38,9 +38,9 @@
           <div v-if="file.publicLink" class="q-mr-xs flex justify-center">
             <link-item-icon />
           </div>
-          <div class="items-center justify-center text-center">{{ fileSize }}</div>
-          <div class="q-mx-xs">|</div>
-          <div class="">{{ fileDate }}</div>
+          <div class="items-center justify-center text-center text-no-wrap">{{ fileSize }}</div>
+          <div class="q-mx-xs text-no-wrap">|</div>
+          <div class=" text-no-wrap" style="overflow: hidden">{{ fileDate }}</div>
         </div>
       </q-item-label>
       <q-item-label v-if="file.downloading">

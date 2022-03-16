@@ -165,6 +165,7 @@ export default {
   height: 60px !important;
   border-bottom: 1px solid #F6F6F6;
   padding: 0;
+  width: 100vw;
   &__name {
     font-style: normal;
     font-weight: normal;

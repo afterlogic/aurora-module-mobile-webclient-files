@@ -38,7 +38,7 @@
         "
       >
         <q-list>
-          <div class="q-mt-sm" v-for="(path, index) in currentPaths" :key="path.path">
+          <div v-for="(path, index) in currentPaths" :key="path.path">
             <q-item
               clickable
               dense
