@@ -23,15 +23,12 @@
     <div class="flex column">
       <q-btn-dropdown
         model-value
+        :menu-offset="[8,-6]"
         v-model="isOpen"
         :ripple="false"
         :dropdown-icon="currentPaths.length > 1 ? 'arrow_drop_down' : 'none'"
         dense
-        :content-style="{
-          'font-size': '18px',
-          'line-height': '20px'
-        }"
-        class="text-bold text-black files-dropdown"
+        class="text-black files-dropdown"
         no-caps
         flat
         :label="
@@ -41,16 +38,17 @@
         "
       >
         <q-list>
-          <div v-for="(path, index) in currentPaths" :key="path.path">
+          <div class="q-mt-sm" v-for="(path, index) in currentPaths" :key="path.path">
             <q-item
               clickable
+              dense
               v-close-popup
               @click="openPath(path)"
               v-if="currentPaths.length - 1 !== index"
             >
-              <q-item-section>
-                <q-item-label>{{ getShortName(path.name, 20) }}</q-item-label>
-              </q-item-section>
+              <div class="files-dropdown__item flex items-center">
+                <span>{{ getShortName(path.name, 20) }}</span>
+              </div>
             </q-item>
           </div>
         </q-list>
@@ -120,7 +118,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .storage-name {
   margin-top: -5px;
   font-style: normal;
@@ -135,5 +133,16 @@ export default {
   width: 250px;
   font-size: 18px;
   line-height: 20px;
+}
+.files-dropdown span .block {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 20px;
+}
+.files-dropdown__item {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px !important;
 }
 </style>
