@@ -4,33 +4,15 @@
 
 <script>
 import PlusBtnIcon from 'components/common/icons/PlusBtnIcon'
-import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: 'CreateButton',
   components: {
     PlusBtnIcon,
   },
   props: {
-    icon: { type: String, default: '' },
-  },
-  computed: {
-    ...mapGetters('filesmobile', ['dialogComponent']),
-    classes() {
-      if (this.dialogComponent.component === 'CreateButtonsDialogs') {
-        return 'z-index-max rotate'
-      }
-      return 'z-index-min'
-    },
-  },
-  methods: {
-    ...mapActions('filesmobile', ['changeDialogComponent']),
-    showDialog() {
-      if (this.dialogComponent.component === 'CreateButtonsDialogs') {
-        this.changeDialogComponent({ component: '' })
-      } else {
-        this.changeDialogComponent({ component: 'CreateButtonsDialogs' })
-      }
-    },
+    classes: { type: String, default: 'z-index-min' },
+    showDialog: { type: Function, default: () => null }
   },
 }
 </script>

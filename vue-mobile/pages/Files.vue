@@ -44,7 +44,7 @@
       <files-captions v-if="!loadingStatus" />
       <div style="height: 70px" class="full-width" />
     </q-scroll-area>
-    <create-button v-if="isShowCreateButtons"/>
+    <app-create-button :classes="classes" :show-dialog="showCreateButtonsDialog" v-if="isShowCreateButtons"/>
     <dialogs-list />
   </main-layout>
 </template>
@@ -59,7 +59,7 @@ import StorageItem from '../components/StorageItem'
 import DialogsList from '../components/DialogsList'
 import DownloadFileItem from '../components/DownloadFileItem'
 import FilesCaptions from '../components/FilesCaptions'
-import CreateButton from '../components/common/CreateButton'
+import AppCreateButton from "src/components/common/AppCreateButton";
 
 export default {
   name: 'Files',
@@ -69,7 +69,7 @@ export default {
     FileItem,
     StorageItem,
     DialogsList,
-    CreateButton,
+    AppCreateButton,
     DownloadFileItem,
     FilesCaptions,
   },
@@ -94,8 +94,15 @@ export default {
       'isArchive',
       'loadingStatus',
       'currentStorage',
-      'currentHeader'
+      'currentHeader',
+      'dialogComponent'
     ]),
+    classes() {
+      if (this.dialogComponent?.component === 'CreateButtonsDialogs') {
+        return 'z-index-max rotate'
+      }
+      return 'z-index-min'
+    },
     isCopied() {
       return !!this.copiedFiles.length
     },
@@ -132,6 +139,13 @@ export default {
       }
       await this.asyncGetFiles()
       this.changeLoadingStatus(false)
+    },
+    showCreateButtonsDialog() {
+      if (this.dialogComponent.component === 'CreateButtonsDialogs') {
+        this.changeDialogComponent({ component: '' })
+      } else {
+        this.changeDialogComponent({ component: 'CreateButtonsDialogs' })
+      }
     },
     showDialog({ file, component }) {
       this.selectFile(file)
@@ -183,10 +197,10 @@ export default {
   }
 }
 .files__list-default {
-  height: calc(100vh - 115px);
+  height: 100%;
 }
 .files__list-search {
-  height: calc(100vh - 129px - 60px);
+  height: 100%;
 }
 .files__list .q-scrollarea__content {
   width: 100vw;
