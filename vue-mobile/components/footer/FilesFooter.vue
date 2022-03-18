@@ -1,8 +1,6 @@
 <template>
-  <q-footer elevated class="bg-white">
-    <copied-footer v-if="isCopiedFiles"></copied-footer>
-    <default-footer v-else></default-footer>
-  </q-footer>
+  <copied-footer v-if="isCopiedFiles"></copied-footer>
+  <default-footer v-else></default-footer>
 </template>
 
 <script>

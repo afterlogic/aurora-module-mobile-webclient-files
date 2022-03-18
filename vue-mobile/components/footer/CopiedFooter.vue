@@ -1,33 +1,35 @@
 <template>
-  <q-toolbar style="height: 60px" class="full-width">
-    <div class="full-width flex no-wrap justify-between">
-      <app-button
-        size="15px"
-        flat
-        class="q-px-md items-start"
-        color="black"
-        label="Cancel"
-        @click="cancel"
-      />
-      <app-button
-        size="15px"
-        flat
-        :class="showMoveAction ? 'q-px-sm' : 'q-px-md items-end'"
-        color="black"
-        label="Copy"
-        @click="copy"
-      />
-      <app-button
-        v-if="showMoveAction"
-        size="15px"
-        flat
-        class="q-px-md items-end"
-        color="black"
-        label="Move"
-        @click="move"
-      />
-    </div>
-  </q-toolbar>
+  <q-footer elevated class="bg-white">
+    <q-toolbar style="height: 60px" class="full-width">
+      <div class="full-width flex no-wrap justify-between">
+        <app-button
+            size="15px"
+            flat
+            class="q-px-md items-start"
+            color="black"
+            label="Cancel"
+            @click="cancel"
+        />
+        <app-button
+            size="15px"
+            flat
+            :class="showMoveAction ? 'q-px-sm' : 'q-px-md items-end'"
+            color="black"
+            label="Copy"
+            @click="copy"
+        />
+        <app-button
+            v-if="showMoveAction"
+            size="15px"
+            flat
+            class="q-px-md items-end"
+            color="black"
+            label="Move"
+            @click="move"
+        />
+      </div>
+    </q-toolbar>
+  </q-footer>
 </template>
 
 <script>
