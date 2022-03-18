@@ -151,10 +151,10 @@ export default {
 <style lang="scss" scoped>
 .file {
   &__info {
-    height: calc(100vh - 115px);
+    height: 100%;
   }
   &__info .q-scrollarea__content {
-    width: 100vw;
+    width: 100%;
   }
 }
 .view-action {
