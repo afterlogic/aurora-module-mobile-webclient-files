@@ -26,7 +26,7 @@
             <span
                 style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;margin-left: -0.6em;"
             >
-              l{{currentFolder}}
+              i{{currentFolder}}
             </span>
           </div>
         </div>

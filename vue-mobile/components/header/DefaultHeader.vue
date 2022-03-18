@@ -20,10 +20,10 @@
       icon="chevron_left"
       @click="onPreviousPath"
     />
-    <div class="flex column">
+    <div class="flex column q-px-lg" style="flex-grow: 1">
       <q-btn-dropdown
         model-value
-        :menu-offset="[8,-6]"
+        :menu-offset="[8,-8]"
         v-model="isOpen"
         :ripple="false"
         :dropdown-icon="currentPaths.length > 1 ? 'arrow_drop_down' : 'none'"
