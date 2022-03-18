@@ -44,7 +44,16 @@
         </div>
         <div>
           <div class="q-mx-md">
-            <input-form readonly :value="currentFile.name" label="File name" />
+            <div class="flex" style="border-bottom: 1px solid #C6C6C6;">
+              <div style="flex-grow: 1">
+                <input-form :border="false" readonly :value="currentFile.name" label="File name" />
+              </div>
+              <div class="flex items-end q-mb-xs">
+                <encrypted-item-icon v-if="currentFile.paranoidKey" class="q-mx-xs"/>
+                <shared-item-icon v-if="isShared" class="q-mx-xs"/>
+                <link-item-icon v-if="currentFile.publicLink" class="q-mx-xs"/>
+              </div>
+            </div>
           </div>
           <div class="flex no-wrap justify-between q-ma-md">
             <input-form readonly :value="fileSize" label="Size" style="width:100%" />
@@ -76,6 +85,9 @@ import DialogsList from '../components/DialogsList'
 import MainLayout from 'src/layouts/MainLayout'
 import FileItemIcon from '../components/icons/FileItemIcon'
 import InputForm from '../components/common/InputForm'
+import EncryptedItemIcon from "../components/icons/item/EncryptedItemIcon";
+import LinkItemIcon from "../components/icons/item/LinkItemIcon";
+import SharedItemIcon from "../components/icons/item/SharedItemIcon";
 
 export default {
   name: 'FileInfo',
@@ -84,6 +96,9 @@ export default {
     FileItemIcon,
     InputForm,
     DialogsList,
+    EncryptedItemIcon,
+    LinkItemIcon,
+    SharedItemIcon
   },
   mounted() {
     if (!this.currentFile) {
@@ -111,6 +126,9 @@ export default {
     },
     fileSize() {
       return text.getFriendlySize(this.currentFile.size)
+    },
+    isShared() {
+      return !!this.currentFile.shares.length || this.currentFile.sharedWithMeAccess
     },
   },
   watch: {

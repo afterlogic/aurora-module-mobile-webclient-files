@@ -1,5 +1,5 @@
 <template>
-  <q-input class="form-input" borderless :model-value="value" :label="label" stack-label dense />
+  <q-input class="form-input" :class="{'form-input-border': border}" borderless :model-value="value" :label="label" stack-label dense />
 </template>
 
 <script>
@@ -14,6 +14,10 @@ export default {
       type: String,
       default: '',
     },
+    border: {
+      type: Boolean,
+      default: () => true
+    }
   },
 }
 </script>
@@ -25,6 +29,8 @@ export default {
   font-size: 14px;
   line-height: 16px;
   letter-spacing: 0.3px;
+}
+.form-input-border input {
   border-bottom: 1px solid #C6C6C6;
 }
 </style>

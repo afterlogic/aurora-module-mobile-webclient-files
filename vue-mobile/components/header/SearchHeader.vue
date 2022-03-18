@@ -24,7 +24,7 @@
           <span>{{ currentStorage.DisplayName }}{{currentPath.length ? '/' : ''}}</span>
           <div class="flex" style="direction: rtl; overflow: hidden;">
             <span
-                style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;margin-left: -0.5em;"
+                style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;margin-left: -0.6em;"
             >
               l{{currentFolder}}
             </span>

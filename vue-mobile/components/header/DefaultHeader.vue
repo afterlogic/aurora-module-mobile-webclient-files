@@ -86,8 +86,7 @@ export default {
     ...mapGetters('filesmobile', ['currentPaths', 'currentStorage']),
     storageName() {
       if(!this.currentStorage) return ''
-      let storageType = this.currentStorage.Type
-      return storageType[0].toUpperCase() + storageType.slice(1)
+      return this.currentStorage.DisplayName
     },
   },
   methods: {
@@ -122,7 +121,8 @@ export default {
 .header-storage__name {
   position: absolute;
   top: 35px;
-  left: calc(50% - 25px);
+  left: calc(50%);
+  transform: translate(-50%, 0);
   font-style: normal;
   font-weight: 400;
   font-size: 12px;
