@@ -19,6 +19,7 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
+import eventBus from "src/event-bus";
 
 import StorageIcon from './icons/StorageIcon'
 
@@ -45,14 +46,15 @@ export default {
       'asyncGetFiles',
       'changeCurrentPaths'
     ]),
-    selectStorage() {
+    async selectStorage() {
       this.changeCurrentStorage(this.storage)
       const path = {
         path: '',
         name: this.storage.DisplayName,
       }
       this.changeCurrentPaths({ path, lastStorage: true })
-      this.getFiles()
+      eventBus.$emit('closeDrawer')
+      await this.getFiles()
     },
     async getFiles() {
       await this.asyncGetFiles()

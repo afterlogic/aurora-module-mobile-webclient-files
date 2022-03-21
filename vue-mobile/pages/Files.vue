@@ -1,10 +1,19 @@
 <template>
   <main-layout>
     <template v-slot:drawer>
+      <q-item class="user-info flex column q-mb-xs">
+        <div v-if="userName" class="user-name q-mx-md q-mb-xs">
+          {{ userName }}
+        </div>
+        <div :class="`q-mx-md ${!userName ? 'user-name q-mb-xs' : 'user-email'}`">
+          {{ userEmail }}
+        </div>
+      </q-item>
+      <q-separator />
       <storage-item
-        v-for="storage in storageList"
-        :key="storage"
-        :storage="storage"
+          v-for="storage in storageList"
+          :key="storage"
+          :storage="storage"
       />
     </template>
     <div v-if="loadingStatus" class="full-width">
@@ -97,6 +106,14 @@ export default {
       'currentHeader',
       'dialogComponent'
     ]),
+    ...mapGetters('core', ['userData', 'userPublicId']),
+    userName() {
+      if (this.userData) return this.userData.Name
+      return ''
+    },
+    userEmail() {
+      return this.userPublicId
+    },
     classes() {
       if (this.dialogComponent?.component === 'CreateButtonsDialogs') {
         return 'z-index-max rotate'
@@ -204,5 +221,20 @@ export default {
 }
 .files__list .q-scrollarea__content {
   width: 100vw;
+}
+.user-email {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 25px;
+  color: rgba(0, 0, 0, 0.6);
+}
+.user-name {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 20px;
+  color: #000000;
+}
+.user-info {
+  padding-top: 36px;
 }
 </style>
