@@ -56,13 +56,15 @@ export default {
   methods: {
     ...mapActions('filesmobile', ['asyncCreateFolder', 'asyncGetFiles']),
     async createFolder() {
-      this.saving = true
-      const result = await this.asyncCreateFolder({ name: this.folderName })
-      if (result) {
-        this.$emit('closeDialog')
-        await this.asyncGetFiles()
+      if (!this.saving) {
+        console.log('createFolder')
+        this.saving = true
+        const result = await this.asyncCreateFolder({ name: this.folderName })
+        if (result) {
+          this.$emit('closeDialog')
+          await this.asyncGetFiles()
+        }
       }
-      this.saving = false
     },
     cancelDialog() {
       this.$emit('closeDialog')

@@ -65,17 +65,18 @@ export default {
     ...mapActions('filesmobile', ['asyncRenameItem', 'changeFileName']),
     async renameItem() {
       if (this.itemName.length) {
-        this.saving = true
-        const result = await this.asyncRenameItem({
-          file: this.file,
-          itemName: this.itemName,
-        })
-        if (result) {
-          await this.changeFileName(this.itemName)
-          this.openDialog = false
-          this.$emit('closeDialog')
+        if (!this.saving) {
+          this.saving = true
+          const result = await this.asyncRenameItem({
+            file: this.file,
+            itemName: this.itemName,
+          })
+          if (result) {
+            await this.changeFileName(this.itemName)
+            this.openDialog = false
+            this.$emit('closeDialog')
+          }
         }
-        this.saving = false
       }
     },
     cancelDialog() {
