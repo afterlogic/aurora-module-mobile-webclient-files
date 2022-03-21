@@ -87,6 +87,7 @@ export default {
       'changeCurrentPaths',
       'asyncGetFiles',
       'changeCurrentHeader',
+      'changeSearchText'
     ]),
     async openFolder() {
       if (!this.isSelected && !this.folder.isCopied && !this.isMoved) {
@@ -95,6 +96,7 @@ export default {
           path: this.folder.fullPath,
           name: this.folder.name,
         }
+        await this.changeSearchText('')
         this.changeCurrentHeader('')
         await this.changeCurrentPaths({ path, lastStorage: false })
         await this.asyncGetFiles()
