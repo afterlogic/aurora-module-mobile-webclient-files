@@ -15,7 +15,22 @@
               v-model="currentUser"
               :options="selectOptions"
 
-          />
+          >
+            <template v-slot:option="scope">
+              <q-item v-bind="scope.itemProps">
+                <q-item-section class="non-selectable">
+                  <q-item-label class="flex">
+                    <div v-if="isGroup(scope)" class="q-mr-sm">
+                      <q-icon size="16px" name="tag" color="grey" />
+                    </div>
+                    <span class="q-mr-sm">
+                      {{ scope.opt.label }}
+                    </span>
+                  </q-item-label>
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
         </div>
         <div class="flex col-2 justify-center items-center dropdown-plus">
           <dropdown-contact-status
@@ -114,7 +129,6 @@ import ShowHistoryDialog from './ShowHistoryDialog'
 import ButtonDialog from 'src/components/common/ButtonDialog'
 import PlusIcon from 'src/components/common/icons/PlusIcon'
 import NotAddedUserDialog from "./NotAddedUserDialog";
-import store from "../../../../CoreMobileWebclient/vue-mobile/src/store";
 
 export default {
   name: 'ShareWithTeammatesDialog',
@@ -150,8 +164,9 @@ export default {
     ...mapGetters('filesmobile', ['currentStorage']),
     statuses() {
       const statuses = {
-        1: 'read',
-        2: 'read/write'
+        2: 'read',
+        1: 'read/write',
+        0: 'no access'
       }
       if (!this.file?.paranoidKey) {
         statuses[3] = 'r/w/reshare'
@@ -160,8 +175,9 @@ export default {
     },
     dropdownStatuses() {
       const statuses = {
-        1: 'read',
-        2: 'read/write'
+        2: 'read',
+        1: 'read/write',
+        0: 'no access',
       }
       if (!this.file?.paranoidKey) {
         statuses[3] = 'read/write/reshare'
@@ -177,6 +193,9 @@ export default {
   methods: {
     ...mapActions('contactsmobile', ['asyncGetContactsSuggestions']),
     ...mapActions('filesmobile', ['asyncUpdateShare', 'changeItemProperty']),
+    isGroup(scope) {
+      return scope.opt?.isGroup
+    },
     hasChanges() {
       if (this.currentUser) return true
       const oldContactsList = this.file.shares.map((contact) => {
@@ -240,6 +259,7 @@ export default {
         WithoutTeamContactsDuplicates: true,
       }
       const contacts = await this.asyncGetContactsSuggestions(parameters)
+
       this.selectOptions = getContactsSelectOptions(contacts?.List, this.contactsList)
       this.allContactsSelectOptions = getAllContactsSelectOptions(contacts?.List)
       this.defaultSelectOptions = _.cloneDeep(this.selectOptions)

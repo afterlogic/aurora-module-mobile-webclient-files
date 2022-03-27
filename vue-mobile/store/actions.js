@@ -1,7 +1,7 @@
 import types from 'src/utils/types'
 import { getApiHost } from 'src/api/helpers'
 import OpenPgp from "../../../OpenPgpMobileWebclient/vue-mobile/openpgp-helper";
-
+import _ from 'lodash'
 import filesWebApi from '../files-web-api'
 import {
   getParsedFiles,
@@ -39,11 +39,14 @@ export default {
       PathRequired: false,
     }
     const data = await filesWebApi.getFiles(parameters)
-    if (types.pArray(data?.Items)) {
+    if (_.isArray(data?.Items)) {
       const files = getParsedFiles(data.Items)
       const folders = getParseFolders(data.Items)
       commit('setFolderList', folders)
       commit('setFileList', files)
+    } else {
+      commit('setFolderList', [])
+      commit('setFileList', [])
     }
     if (types.pObject(data?.Quota)) {
       commit('setFilesQuota', data.Quota)

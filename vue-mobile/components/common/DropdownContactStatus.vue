@@ -29,6 +29,11 @@
           <q-item-label>{{ statuses[3] }}</q-item-label>
         </q-item-section>
       </q-item>
+      <q-item clickable v-close-popup @click="action(0, currentUser)">
+        <q-item-section>
+          <q-item-label>{{ statuses[0] }}</q-item-label>
+        </q-item-section>
+      </q-item>
     </q-list>
   </q-btn-dropdown>
 </template>

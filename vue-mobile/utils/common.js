@@ -130,9 +130,19 @@ export const getFilteredItems = (items, key) => {
 }
 export const getParametersForShare = (items, file) => {
   const shares = items.map((item) => {
-    return {
-      PublicId: item.email,
-      Access: item.status,
+    if (item.isGroup) {
+      return {
+        PublicId: item.email,
+        Access: item.status,
+        IsAll: item.isAll,
+        IsGroup:true,
+        GroupId: item.groupId
+      }
+    } else {
+      return {
+        PublicId: item.email,
+        Access: item.status,
+      }
     }
   })
   return {
