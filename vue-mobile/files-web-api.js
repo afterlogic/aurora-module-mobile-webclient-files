@@ -229,5 +229,18 @@ export default {
             }
             return false
         })
-    }
+    },
+    getExtendedProps: async (parameters) => {
+        return webApi.sendRequest({
+            moduleName: 'Files',
+            methodName: 'GetExtendedProps',
+            parameters: parameters,
+        }).then((result) => {
+            console.log(result, 'result')
+            if (result) {
+                return result
+            }
+            return false
+        })
+    },
 }

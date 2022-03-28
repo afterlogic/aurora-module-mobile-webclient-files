@@ -83,7 +83,7 @@
                 </template>
               </dropdown-contact-status>
             </div>
-            <div class="flex col-1 items-center" @click="removeContact(contact)">
+            <div v-if="!loading" class="flex col-1 items-center" @click="removeContact(contact)">
               <q-icon color="grey-5" name="close" />
             </div>
           </div>
@@ -157,7 +157,9 @@ export default {
       contactsList: [],
       selectOptions: [],
       defaultSelectOptions: [],
-      allContactsSelectOptions: []
+      allContactsSelectOptions: [],
+      shares: [],
+      loading: false
     }
   },
   computed: {
@@ -192,7 +194,7 @@ export default {
   },
   methods: {
     ...mapActions('contactsmobile', ['asyncGetContactsSuggestions']),
-    ...mapActions('filesmobile', ['asyncUpdateShare', 'changeItemProperty']),
+    ...mapActions('filesmobile', ['asyncUpdateShare', 'changeItemProperty', 'asyncGetExtendedPropsShares']),
     isGroup(scope) {
       return scope.opt?.isGroup
     },
@@ -218,8 +220,22 @@ export default {
     compareArrays(firstArray, secondArray) {
       for (let elemFirstArray of firstArray) {
         const index = secondArray.findIndex( elemSecondArray => {
-          return elemSecondArray.email === elemFirstArray.email && elemSecondArray.status === elemFirstArray.status
+          if (elemSecondArray.IsGroup || elemSecondArray.isGroup) {
+            return elemSecondArray.email === elemFirstArray.email && elemSecondArray.status === elemFirstArray.status
+          } else {
+            return elemSecondArray.email === elemFirstArray.email && elemSecondArray.status === elemFirstArray.status
+          }
         })
+        if (index === -1) return true
+      }
+      return false
+    },
+    compareShares(firstArray, secondArray) {
+      for (let elemFirstArray of firstArray) {
+        const index = secondArray.findIndex( elemSecondArray => {
+          return elemSecondArray.PublicId === elemFirstArray.PublicId && elemSecondArray.Access === elemFirstArray.Access
+        })
+        console.log(index, 'index')
         if (index === -1) return true
       }
       return false
@@ -243,24 +259,19 @@ export default {
     },
     async init() {
       if (this.file.shares.length) {
-        this.contactsList = this.file.shares.map((contact) => {
-          if (contact.IsGroup) {
-            return {
-              publicId: contact.PublicId,
-              status: contact.Access,
-              isAll: contact.IsAll,
-              isGroup:true,
-              groupId: contact.GroupId,
-              email: contact.PublicId,
-            }
-          } else {
-            return {
-              email: contact.PublicId,
-              status: contact.Access,
-            }
-          }
-        })
+        this.setContactList(this.file.shares)
       }
+
+      this.loading = true
+      const shares = await this.asyncGetExtendedPropsShares({
+        Type: this.file.type,
+        Path: this.file.path,
+        Name: this.file.name
+      })
+      this.shares = _.cloneDeep(shares)
+      this.setContactList(shares)
+      this.loading = false
+
       const parameters = {
         Search: '',
         Storage: 'team',
@@ -278,6 +289,25 @@ export default {
       if (this.contactsList.length) {
         this.contactsList.forEach((contact) => this.removeFindContact(contact))
       }
+    },
+    setContactList(shares) {
+      this.contactsList = shares.map((contact) => {
+        if (contact.IsGroup) {
+          return {
+            publicId: contact.PublicId,
+            status: contact.Access,
+            isAll: contact.IsAll,
+            isGroup:true,
+            groupId: contact.GroupId,
+            email: contact.PublicId,
+          }
+        } else {
+          return {
+            email: contact.PublicId,
+            status: contact.Access,
+          }
+        }
+      })
     },
     filterContacts(search, update) {
       update(async () => {
@@ -324,6 +354,22 @@ export default {
     },
     async onContinueSaving(res) {
       if (res) {
+
+        const shares = await this.asyncGetExtendedPropsShares({
+          Type: this.file.type,
+          Path: this.file.path,
+          Name: this.file.name
+        })
+
+        if (shares.length !== this.shares.length) {
+          this.showWarning()
+          return
+        }
+        if (this.compareShares(this.shares, shares)) {
+          this.showWarning()
+          return
+        }
+
         this.saving = true
         const parameters = getParametersForShare(this.contactsList, this.file)
         const result = await this.asyncUpdateShare(parameters)
@@ -333,6 +379,9 @@ export default {
         }
       }
       this.saving = false
+    },
+    showWarning() {
+      console.log('warning')
     },
     onContinueTyping() {
       this.$refs.dropdown.$refs.dropdown.show()

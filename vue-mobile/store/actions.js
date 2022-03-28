@@ -320,5 +320,12 @@ export default {
     }
     parameters.ExtendedProps[paranoidKey.key] = paranoidKey.value
     return await filesWebApi.updateExtendedProps(parameters)
+  },
+  asyncGetExtendedPropsShares: async ({}, params) => {
+    const result = await filesWebApi.getExtendedProps(params)
+    if (_.isArray(result?.Shares)) {
+      return result?.Shares
+    }
+    return false
   }
 }
