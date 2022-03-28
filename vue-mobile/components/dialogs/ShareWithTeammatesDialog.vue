@@ -256,6 +256,7 @@ export default {
         SortField: 3,
         SortOrder: 1,
         WithGroups: false,
+        WithUserGroups: true,
         WithoutTeamContactsDuplicates: true,
       }
       const contacts = await this.asyncGetContactsSuggestions(parameters)
