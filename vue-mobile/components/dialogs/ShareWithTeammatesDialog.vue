@@ -244,9 +244,20 @@ export default {
     async init() {
       if (this.file.shares.length) {
         this.contactsList = this.file.shares.map((contact) => {
-          return {
-            email: contact.PublicId,
-            status: contact.Access,
+          if (contact.IsGroup) {
+            return {
+              publicId: contact.PublicId,
+              status: contact.Access,
+              isAll: contact.IsAll,
+              isGroup:true,
+              groupId: contact.GroupId,
+              email: contact.PublicId,
+            }
+          } else {
+            return {
+              email: contact.PublicId,
+              status: contact.Access,
+            }
           }
         })
       }
