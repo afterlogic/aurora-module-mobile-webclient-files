@@ -21,7 +21,8 @@
                 <q-item-section class="non-selectable">
                   <q-item-label class="flex">
                     <div v-if="isGroup(scope)" class="q-mr-sm">
-                      <q-icon size="16px" name="tag" color="grey" />
+                      <team-icon v-if="scope.opt.isAll" width="16" height="16" />
+                      <corporate-icon v-if="!scope.opt.isAll" width="16" height="16" />
                     </div>
                     <span class="q-mr-sm">
                       {{ scope.opt.label }}
@@ -131,10 +132,14 @@ import ButtonDialog from 'src/components/common/ButtonDialog'
 import PlusIcon from 'src/components/common/icons/PlusIcon'
 import NotAddedUserDialog from "./NotAddedUserDialog";
 import ShareWarningDialog from "./ShareWarningDialog";
+import CorporateIcon from "../icons/group/CorporateIcon";
+import TeamIcon from "../icons/group/TeamIcon";
 
 export default {
   name: 'ShareWithTeammatesDialog',
   components: {
+    CorporateIcon,
+    TeamIcon,
     ButtonDialog,
     PlusIcon,
     ShowHistoryDialog,
