@@ -111,6 +111,7 @@
           @cancel="onContinueTyping"
           ref="notAddedUserDialog"
       />
+      <share-warning-dialog ref="shareWarningDialog"/>
     </template>
   </app-dialog>
 </template>
@@ -129,6 +130,7 @@ import ShowHistoryDialog from './ShowHistoryDialog'
 import ButtonDialog from 'src/components/common/ButtonDialog'
 import PlusIcon from 'src/components/common/icons/PlusIcon'
 import NotAddedUserDialog from "./NotAddedUserDialog";
+import ShareWarningDialog from "./ShareWarningDialog";
 
 export default {
   name: 'ShareWithTeammatesDialog',
@@ -138,7 +140,8 @@ export default {
     ShowHistoryDialog,
     NotAddedUserDialog,
     DropdownContactStatus,
-    AppDialog
+    AppDialog,
+    ShareWarningDialog
   },
   created() {
     this.init()
@@ -235,7 +238,6 @@ export default {
         const index = secondArray.findIndex( elemSecondArray => {
           return elemSecondArray.PublicId === elemFirstArray.PublicId && elemSecondArray.Access === elemFirstArray.Access
         })
-        console.log(index, 'index')
         if (index === -1) return true
       }
       return false
@@ -362,11 +364,11 @@ export default {
         })
 
         if (shares.length !== this.shares.length) {
-          this.showWarning()
+          this.showWarning(shares)
           return
         }
         if (this.compareShares(this.shares, shares)) {
-          this.showWarning()
+          this.showWarning(shares)
           return
         }
 
@@ -380,8 +382,10 @@ export default {
       }
       this.saving = false
     },
-    showWarning() {
-      console.log('warning')
+    showWarning(shares) {
+      this.$refs.shareWarningDialog.openDialog()
+      this.shares = _.cloneDeep(shares)
+      this.setContactList(shares)
     },
     onContinueTyping() {
       this.$refs.dropdown.$refs.dropdown.show()
