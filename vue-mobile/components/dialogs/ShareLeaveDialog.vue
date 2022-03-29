@@ -37,11 +37,12 @@ export default {
     saving: false
   }),
   methods: {
-    ...mapActions('filesmobile', ['asyncLeaveShare', 'changeItemsLists']),
+    ...mapActions('filesmobile', ['asyncLeaveShare', 'changeItemsLists', 'selectFile']),
     leaveShare() {
       const result = this.asyncLeaveShare()
       if (result) {
         this.changeItemsLists({ items: this.selectedFiles.length ? this.selectedFiles : [this.currentFile] })
+        this.selectFile(null)
         this.$emit('closeDialog')
       }
     },

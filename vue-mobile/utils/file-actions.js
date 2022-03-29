@@ -104,7 +104,6 @@ export const fileActions = {
   },
   download: {
     method: (vue) => {
-      console.log(vue, 'vue')
       const file = store.getters['filesmobile/currentFile']
       store.dispatch('filesmobile/changeItemProperty', {
         item: file,
