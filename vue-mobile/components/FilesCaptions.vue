@@ -1,5 +1,5 @@
 <template>
-  <div class="caption flex items-center justify-center">
+  <div class="caption full-height flex items-center justify-center">
     <div class="flex column caption__box" v-if="isStorageEmpty">
       <div class="q-mb-md">
         <box-icon />
@@ -83,9 +83,6 @@ export default {
   line-height: 16px;
   text-align: center;
   color: #969494;
-  &__box {
-    margin-top: 266px;
-  }
   &__inscription {
     margin-top: 50px;
   }

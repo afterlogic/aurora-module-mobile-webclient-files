@@ -19,7 +19,11 @@
     <div v-if="loadingStatus" class="full-width">
       <q-linear-progress indeterminate track-color="grey-1" color="primary"/>
     </div>
-    <q-scroll-area :thumb-style="{ width: '5px' }" :class="fileListHeight" v-if="!loadingStatus">
+    <q-scroll-area
+        :thumb-style="{ width: '5px' }"
+        :class="fileListHeight"
+        v-if="!loadingStatus && (folderList.length || downloadFiles.length || fileList.length)"
+    >
       <folder-item
           v-for="file in folderList"
           :key="file"
@@ -50,9 +54,10 @@
           @showDialog="showDialog"
           class="file"
       />
-      <files-captions v-if="!loadingStatus" />
+
       <div style="height: 70px" class="full-width" />
     </q-scroll-area>
+    <files-captions v-if="!loadingStatus && !folderList.length && !downloadFiles.length && !fileList.length"/>
     <app-create-button :classes="classes" :show-dialog="showCreateButtonsDialog" v-if="isShowCreateButtons"/>
     <dialogs-list />
   </main-layout>
