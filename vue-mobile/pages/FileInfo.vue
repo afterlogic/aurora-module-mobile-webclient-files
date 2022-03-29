@@ -1,11 +1,11 @@
 <template>
   <main-layout>
-    <share-with-me-info-icon v-if="currentFile.sharedWithMeAccess" class="absolute" style="right: 0"/>
-    <q-scroll-area :thumb-style="{ width: '5px' }" class="file__info">
+    <share-with-me-info-icon v-if="currentFile?.sharedWithMeAccess" class="absolute" style="right: 0"/>
+    <q-scroll-area :thumb-style="{ width: '5px' }" class="file-info__info">
       <div v-if="currentFile">
         <div class="flex items-center justify-center">
           <div
-              class="file__preview full-width"
+              class="file-info__preview full-width"
               style="height: 1em"
           >
             <q-linear-progress v-if="currentFile.decryptionProgress" indeterminate track-color="grey-1" color="primary"/>
@@ -13,7 +13,7 @@
           <div
               v-if="(currentFile.paranoidKey || !currentFile.thumbnailUrl) &&
                !currentFile.decryptViewUrl"
-              class="file__preview q-my-xl"
+              class="file-info__preview q-my-xl"
           >
             <file-item-icon
                 v-if="currentFile.paranoidKey || !currentFile.thumbnailUrl"
@@ -36,6 +36,7 @@
                currentFile.decryptViewUrl"
           >
             <q-img
+                class="file-info__img"
                 :src="filePreview"
                 :ratio="1"
                 no-spinner
@@ -123,7 +124,7 @@ export default {
       return api + this.currentFile.viewUrl
     },
     filePatch() {
-     return this.currentFile.path || '/'
+      return this.currentFile.path || '/'
     },
     fileDate() {
       return date.getDate(this.currentFile.lastModified)
@@ -152,13 +153,34 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.file {
+<style lang="scss">
+.file-info {
   &__info {
     height: 100%;
   }
   &__info .q-scrollarea__content {
     width: 100%;
+  }
+  &__img .absolute-full {
+    position: relative;
+  }
+  &__img div:first-child {
+    display: none;
+  }
+  &__img .q-img__container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-height: 400px;
+    min-height: 250px;
+    max-width: 100%;
+  }
+  &__img .q-img__container img {
+    object-position: unset !important;
+    object-fit: unset !important;
+    width: auto;
+    height: auto;
+    max-width: 100%;
   }
 }
 .view-action {
@@ -171,8 +193,5 @@ export default {
 
 }
 
-.img-preview {
-  height: 348px;
-  max-width: 348px;
-}
 </style>
+
