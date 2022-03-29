@@ -9,6 +9,7 @@
     @touchend="openFolder"
     @touchmove.stop="touchMove"
   >
+    <share-with-me-item-icon v-if="folder.sharedWithMeAccess" class="absolute" style="left: 48px; top: 8px"/>
     <q-item-section class="q-ml-lg" avatar>
       <folder-icon color="secondary"></folder-icon>
     </q-item-section>
@@ -51,12 +52,14 @@ import { getShortName } from '../utils/common'
 
 import FolderIcon from './icons/FolderIcon'
 import SharedItemIcon from "./icons/item/SharedItemIcon";
+import ShareWithMeItemIcon from "./icons/ShareWithMeItemIcon";
 
 export default {
   name: 'FolderItem',
   components: {
     FolderIcon,
-    SharedItemIcon
+    SharedItemIcon,
+    ShareWithMeItemIcon
   },
   props: {
     folder: { type: Object, default: null },

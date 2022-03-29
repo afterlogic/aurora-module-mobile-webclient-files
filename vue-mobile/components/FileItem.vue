@@ -9,6 +9,7 @@
     @touchmove.stop="touchMove"
     @touchend.stop="selectFile"
   >
+    <share-with-me-item-icon v-if="file.sharedWithMeAccess" class="absolute" style="left: 48px; top: 6px"/>
     <q-item-section class="q-ml-lg" avatar>
       <file-item-icon v-if="file.paranoidKey || !file.isImg" :file="file" />
       <div v-if="file.isImg && !file.paranoidKey" class="text-primary">
@@ -87,10 +88,12 @@ import DownloadingProgress from './common/DownloadingProgress'
 import EncryptedItemIcon from "./icons/item/EncryptedItemIcon";
 import LinkItemIcon from "./icons/item/LinkItemIcon";
 import SharedItemIcon from "./icons/item/SharedItemIcon";
+import ShareWithMeItemIcon from "./icons/ShareWithMeItemIcon";
 
 export default {
   name: 'FileItem',
   components: {
+    ShareWithMeItemIcon,
     FileItemIcon,
     DownloadingProgress,
     EncryptedItemIcon,

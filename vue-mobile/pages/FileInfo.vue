@@ -1,5 +1,6 @@
 <template>
   <main-layout>
+    <share-with-me-info-icon v-if="currentFile.sharedWithMeAccess" class="absolute" style="right: 0"/>
     <q-scroll-area :thumb-style="{ width: '5px' }" class="file__info">
       <div v-if="currentFile">
         <div class="flex items-center justify-center">
@@ -88,6 +89,7 @@ import InputForm from '../components/common/InputForm'
 import EncryptedItemIcon from "../components/icons/item/EncryptedItemIcon";
 import LinkItemIcon from "../components/icons/item/LinkItemIcon";
 import SharedItemIcon from "../components/icons/item/SharedItemIcon";
+import ShareWithMeInfoIcon from "../components/icons/ShareWithMeInfoIcon";
 
 export default {
   name: 'FileInfo',
@@ -98,9 +100,11 @@ export default {
     DialogsList,
     EncryptedItemIcon,
     LinkItemIcon,
-    SharedItemIcon
+    SharedItemIcon,
+    ShareWithMeInfoIcon
   },
   mounted() {
+    console.log(this.currentFile, 'currentFile')
     if (!this.currentFile) {
       this.$router.push('/files')
     }
