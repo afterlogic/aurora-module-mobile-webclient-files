@@ -1,5 +1,5 @@
 <template>
-  <app-dialog v-model="openDialog" :close="cancel" width="calc(100vw - 20px)" >
+  <app-dialog :close="cancel" width="calc(100vw - 20px)" >
     <template v-slot:head>
       <div class="q-px-lg q-pb-md dialog__title-text">
         <span>{{ $t('SHAREDFILES.ACTION_SHARE') }}</span>
@@ -148,12 +148,12 @@ export default {
     AppDialog,
     ShareWarningDialog
   },
-  created() {
+  mounted() {
     this.init()
   },
   props: {
     file: { type: Object, default: null },
-    dialog: { type: Boolean, default: false },
+    dialog: false,
   },
   data() {
     return {
@@ -169,6 +169,13 @@ export default {
       shares: [],
       loading: false
     }
+  },
+  watch: {
+    dialog(val) {
+      if (val) {
+        this.init()
+      }
+    },
   },
   computed: {
     ...mapGetters('filesmobile', ['currentStorage']),
@@ -193,11 +200,6 @@ export default {
         statuses[3] = 'read/write/reshare'
       }
       return statuses
-    },
-  },
-  watch: {
-    dialog(val) {
-      this.openDialog = val
     },
   },
   methods: {

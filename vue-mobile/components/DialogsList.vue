@@ -3,6 +3,7 @@
     :is="component"
     :file="currentFile"
     v-model="dialog"
+    :dialog="dialog"
     @closeDialog="closeDialog"
     @dialogAction="dialogAction"
   />
@@ -52,7 +53,6 @@ export default {
           this.dialog = false
         } else {
           this.component = val.component
-          console.log(this.component, 'this.component')
           if (this.component === 'CreateShareableLinkDialog') {
             if (!this.currentFile.paranoidKey) {
               this.dialog = true
