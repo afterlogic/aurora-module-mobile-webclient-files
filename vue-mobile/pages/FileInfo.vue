@@ -35,13 +35,16 @@
               v-if="(currentFile.thumbnailUrl && !currentFile.paranoidKey) ||
                currentFile.decryptViewUrl"
           >
-            <q-img
+            <div style="display:flex; justify-content:center; align-items:center; min-height: 250px;">
+              <img :src="filePreview" style="max-height: 400px; max-width: 100%;" />
+            </div>
+            <!--<q-img
                 class="file-info__img"
                 :src="filePreview"
-                :ratio="1"
                 no-spinner
                 fit="scale-down"
-            />
+                style="max-height: 400px;max-width: 100%;min-height: 250px;"
+            />-->
           </div>
         </div>
         <div>
@@ -161,7 +164,7 @@ export default {
   &__info .q-scrollarea__content {
     width: 100%;
   }
-  &__img .absolute-full {
+  /*&__img .absolute-full {
     position: relative;
   }
   &__img div:first-child {
@@ -181,7 +184,7 @@ export default {
     width: auto;
     height: auto;
     max-width: 100%;
-  }
+  }*/
 }
 .view-action {
   font-weight: normal;
@@ -192,6 +195,4 @@ export default {
   text-decoration-line: underline;
 
 }
-
 </style>
-
