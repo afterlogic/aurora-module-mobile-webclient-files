@@ -1,6 +1,6 @@
 <template>
   <main-layout>
-    <share-with-me-info-icon v-if="currentFile?.sharedWithMeAccess" class="absolute" style="right: 0"/>
+    <share-with-me-info-icon v-if="currentFile?.sharedWithMeAccess" class="absolute" style="right: 0; z-index: 1000"/>
     <q-scroll-area :thumb-style="{ width: '5px' }" class="file-info__info">
       <div v-if="currentFile">
         <div class="flex items-center justify-center">
