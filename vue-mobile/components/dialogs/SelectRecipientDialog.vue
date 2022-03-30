@@ -7,6 +7,18 @@
         </span>
       </div>
       <div class="q-px-md" style="margin-top: 32px">
+        <q-input
+            v-model="searchText"
+            :style="{ height: '36px' }"
+            :input-style="{ height: '36px' }"
+            placeholder="Search"
+            autofocus
+            borderless
+            outlined
+            dense
+            class="q-mb-lg contact-search"
+            debounce="400"
+        />
         <div v-if="isWaitingContacts" class="flex items-center justify-center">
           <q-circular-progress
               indeterminate
@@ -16,13 +28,15 @@
           />
         </div>
         <q-scroll-area v-else class="full-width" :thumb-style="{width: '0'}" style="height: 300px">
-          <app-contact-item
-              v-for="contact in contacts"
-              :contact="contact"
-              :key="contact.ETag"
-              @click="selectContact(contact)"
-              class="q-mb-md"
-          />
+          <div>
+            <app-contact-item
+                v-for="contact in contacts"
+                :contact="contact"
+                :key="contact.ETag"
+                @click="selectContact(contact)"
+                class="q-mb-md"
+            />
+          </div>
         </q-scroll-area>
       </div>
     </template>
@@ -43,6 +57,18 @@ export default {
   props: {
     onGetContacts: { type: Function, default: null }
   },
+  watch: {
+    async searchText(searchText) {
+      this.contacts = await this.onGetContacts({
+        Search: searchText,
+        Storage:"all",
+        SortField:3,
+        SortOrder:1,
+        WithGroups:false,
+        WithoutTeamContactsDuplicates:true
+      })
+    }
+  },
   async mounted() {
     this.isWaitingContacts = true
     this.contacts = await this.onGetContacts({
@@ -57,7 +83,8 @@ export default {
   },
   data: () => ({
     contacts: [],
-    isWaitingContacts: false
+    isWaitingContacts: false,
+    searchText: ''
   }),
   methods: {
     selectContact(contact) {

@@ -1,13 +1,27 @@
 <template>
-  <app-dialog :close="cancelDialog">
-    <template v-slot:head>
+  <app-dialog :style="{display : !showSelectRecipientDialog ? '' : 'none'}" :close="cancelDialog">
+    <template v-slot:title>
       <div v-if="file && (!file.paranoidKey || file.publicLink)">
         <div v-if="!file.publicLink">
-          <div class="q-px-lg dialog__title-text">
             <span>{{
                 $t('OPENPGPFILESWEBCLIENT.HEADING_CREATE_PUBLIC_LINK')
               }}</span>
-            </div>
+        </div>
+        <div v-if="file.publicLink">
+              <span>{{
+                  file.linkPassword ? 'Protected public link' : $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK')
+                }}</span>
+        </div>
+      </div>
+      <div v-else class="q-mb-lg">
+        <span>
+          {{ $t('OPENPGPFILESWEBCLIENT.HEADING_SEND_ENCRYPTED_FILE') }}
+        </span>
+      </div>
+    </template>
+    <template v-slot:head>
+      <div v-if="file && (!file.paranoidKey || file.publicLink)">
+        <div v-if="!file.publicLink">
           <app-checkbox
               class="q-pl-lg q-py-lg q-pr-md"
               v-model="withPassword"
@@ -17,10 +31,11 @@
         </div>
         <div v-if="file.publicLink">
           <div class="q-px-lg">
-            <div class="dialog__title-text">
-              <span>{{
-                  file.linkPassword ? 'Protected public link' : $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK')
-                }}</span>
+            <div v-if="recipient" @click="selectRecipient" class="q-mt-lg">
+              <div class="q-mb-sm recipient">
+                <span>{{ $t('OPENPGPFILESWEBCLIENT.LABEL_RECIPIENT') }}:</span>
+              </div>
+              <app-contact-item :contact="recipient"/>
             </div>
             <div class="q-mb-md q-mt-lg" @click.stop="copyText(file.publicLink, $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK'))">
               <div class="q-mb-sm field__title">Link text</div>
@@ -47,6 +62,11 @@
                 </div>
               </div>
             </div>
+            <div v-if="file.linkPassword" class="q-my-md">
+                <span class="inscription">
+                  {{$t('OPENPGPFILESWEBCLIENT.HINT_STORE_PASSWORD')}}
+                </span>
+            </div>
           </div>
         </div>
       </div>
@@ -67,16 +87,18 @@
               :label="createBtnLabel"
           />
         </div>
-        <div v-if="file.publicLink" class="full-width flex justify-between q-px-sm">
+        <div v-if="file.publicLink" :class="`full-width flex ${!isShowRemoveLinkAction ? 'justify-end' : 'justify-between'} q-px-sm`">
           <button-dialog
+              v-if="isShowRemoveLinkAction"
               :saving="saving"
               :action="removeLink"
               :label="$t('FILESWEBCLIENT.ACTION_REMOVE_PUBLIC_LINK')"
           />
           <button-dialog
+              :disabled="recipient.empty"
               :saving="saving"
-              :action="createShareableLink"
-              :label="$t('OPENPGPFILESWEBCLIENT.ACTION_SEND_EMAIL')"
+              :action="sendViaMessage"
+              :label="sendLinkLabel"
           />
         </div>
       </div>
@@ -86,6 +108,14 @@
             :is="resultingComponents.actions"
         />
       </div>
+    </template>
+    <template v-slot:dialogs>
+      <select-recipient-dialog
+          v-model="showSelectRecipientDialog"
+          :onGetContacts="getContacts"
+          @close="closeSelectRecipientDialog"
+          @selectContact="selectContact"
+      />
     </template>
   </app-dialog>
 </template>
@@ -101,10 +131,12 @@ import AppDialogInput from 'src/components/common/AppDialogInput'
 import ButtonDialog from 'src/components/common/ButtonDialog'
 import AppCheckbox from "src/components/common/AppCheckbox";
 import CopyIcon from "../icons/CopyIcon";
+import AppContactItem from "src/components/common/AppContactItem";
+import SelectRecipientDialog from "./SelectRecipientDialog";
 
 export default {
   name: 'CreateShareableLinkDialog',
-  components: { ButtonDialog, AppDialogInput, AppDialog, CopyIcon, AppCheckbox },
+  components: { ButtonDialog, AppDialogInput, AppDialog, CopyIcon, AppCheckbox, AppContactItem, SelectRecipientDialog },
   props: {
     file: { type: Object, default: null },
     dialog: { type: Boolean, default: false },
@@ -112,8 +144,11 @@ export default {
   mounted() {
     this.publicLink = this.file.publicLink
     this.linkPassword = this.file.linkPassword
-
+    this.sendLinkLabel = this.$t('OPENPGPFILESWEBCLIENT.ACTION_SEND_EMAIL')
     if (this.file.paranoidKey) {
+      eventBus.$on('FilesMobile::SetRecipient', this.setRecipient)
+      eventBus.$on('FilesMobile::ShowRemoveAction', this.setShowRemoveAction)
+      eventBus.$on('FilesMobile::SetSendLinkLabel', this.setSendLinkLabel)
       eventBus.$emit('FilesMobile::GetEncryptedShareableLinkDialog', this.setComponents)
     }
 
@@ -131,7 +166,11 @@ export default {
     saving: false,
     publicLink: '',
     linkPassword: '',
-    resultingComponents: null
+    resultingComponents: null,
+    recipient: { FullName: 'Not Selected', empty: true },
+    isShowRemoveLinkAction: true,
+    showSelectRecipientDialog: false,
+    sendLinkLabel: ''
   }),
   watch: {
     dialog(val) {
@@ -142,17 +181,38 @@ export default {
     ...mapActions('filesmobile', [
       'asyncCreateShareableLink',
       'asyncDeletePublicLink',
+      'changeItemProperty',
+      'getContactSuggestions'
     ]),
+    async getContacts(params) {
+      return await this.getContactSuggestions(params)
+    },
+    sendViaMessage() {
+      console.log('coming soon')
+    },
+    selectContact(contact) {
+      this.recipient = contact
+      this.showSelectRecipientDialog = false
+    },
     async createShareableLink() {
       await this.asyncCreateShareableLink({ withPassword: this.withPassword })
       this.publicLink = this.file.publicLink
       this.linkPassword = this.file.linkPassword
+    },
+    selectRecipient() {
+      this.showSelectRecipientDialog = true
+    },
+    closeSelectRecipientDialog() {
+      this.showSelectRecipientDialog = false
     },
     async removeLink() {
       this.saving = true
       const result = await this.asyncDeletePublicLink()
       this.saving = false
       if (result) this.$emit('closeDialog')
+    },
+    setRecipient(recipient) {
+      this.recipient = recipient
     },
     copyText(text, valueName) {
       navigator.clipboard.writeText(text).then(() => {
@@ -164,10 +224,26 @@ export default {
     setComponents(components) {
       this.resultingComponents = components
     },
+    setShowRemoveAction(value) {
+      this.isShowRemoveLinkAction = value
+    },
+    setSendLinkLabel(label) {
+      this.sendLinkLabel = label
+    },
     cancelDialog() {
+      this.changeItemProperty({
+        item: this.file,
+        property: 'linkPassword',
+        value: ''
+      })
       this.$emit('closeDialog')
     },
   },
+  unmounted() {
+    eventBus.$off('FilesMobile::SetRecipient', this.setRecipient)
+    eventBus.$off('FilesMobile::ShowRemoveAction', this.setShowRemoveAction)
+    eventBus.$off('FilesMobile::SetSendLinkLabel', this.setSendLinkLabel)
+  }
 }
 </script>
 
@@ -178,5 +254,19 @@ export default {
   font-size: 14px;
   line-height: 16px;
   letter-spacing: 0.3px;
+}
+.recipient {
+  margin-top: 32px;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0.3px;
+  color: #4B4A4A;
+}
+.inscription {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14px;
+  color: #B6B5B5;
 }
 </style>

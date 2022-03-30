@@ -108,7 +108,6 @@ export default {
     ShareWithMeInfoIcon
   },
   mounted() {
-    console.log(this.currentFile, 'currentFile')
     if (!this.currentFile) {
       this.$router.push('/files')
     }
