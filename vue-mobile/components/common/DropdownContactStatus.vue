@@ -14,22 +14,22 @@
       <slot name="label" />
     </template>
     <q-list>
-      <q-item clickable v-close-popup @click="action(1, currentUser)">
-        <q-item-section>
-          <q-item-label>{{ statuses[1] }}</q-item-label>
-        </q-item-section>
-      </q-item>
-      <q-item clickable v-close-popup @click="action(2, currentUser)">
+      <q-item clickable dense v-close-popup @click="action(2, currentUser)">
         <q-item-section>
           <q-item-label>{{ statuses[2] }}</q-item-label>
         </q-item-section>
       </q-item>
-      <q-item v-if="!currentFile.paranoidKey" clickable v-close-popup @click="action(3, currentUser)">
+      <q-item clickable dense v-close-popup @click="action(1, currentUser)">
+        <q-item-section>
+          <q-item-label>{{ statuses[1] }}</q-item-label>
+        </q-item-section>
+      </q-item>
+      <q-item v-if="!currentFile.paranoidKey" dense clickable v-close-popup @click="action(3, currentUser)">
         <q-item-section>
           <q-item-label>{{ statuses[3] }}</q-item-label>
         </q-item-section>
       </q-item>
-      <q-item clickable v-close-popup @click="action(0, currentUser)">
+      <q-item clickable dense v-close-popup @click="action(0, currentUser)">
         <q-item-section>
           <q-item-label>{{ statuses[0] }}</q-item-label>
         </q-item-section>
