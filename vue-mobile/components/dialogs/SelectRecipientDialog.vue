@@ -1,24 +1,26 @@
 <template>
-  <app-dialog :close="close">
-    <template v-slot:head>
-      <div class="q-px-md dialog__title-text">
+  <app-dialog :close="close" width="calc(100vw - 45px)">
+    <template v-slot:title>
+      <div>
         <span>
           {{ $t('OPENPGPFILESWEBCLIENT.HEADING_SEND_ENCRYPTED_FILE') }}
         </span>
       </div>
-      <div class="q-px-md" style="margin-top: 32px">
-        <q-input
-            v-model="searchText"
-            :style="{ height: '36px' }"
-            :input-style="{ height: '36px' }"
-            placeholder="Search"
-            autofocus
-            borderless
-            outlined
-            dense
-            class="q-mb-lg contact-search"
-            debounce="400"
-        />
+      <q-input
+          v-model="searchText"
+          :style="{ height: '36px' }"
+          :input-style="{ height: '36px' }"
+          placeholder="Search"
+          autofocus
+          borderless
+          outlined
+          dense
+          class="q-mt-lg contact-search"
+          debounce="400"
+      />
+    </template>
+    <template v-slot:head>
+      <div class="q-px-lg" style="margin-top: 32px">
         <div v-if="isWaitingContacts" class="flex items-center justify-center">
           <q-circular-progress
               indeterminate

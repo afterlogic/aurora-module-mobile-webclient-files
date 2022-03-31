@@ -1,5 +1,5 @@
 <template>
-  <app-dialog :style="{display : !showSelectRecipientDialog ? '' : 'none'}" :close="cancelDialog">
+  <app-dialog :style="{display : !showSelectRecipientDialog ? '' : 'none'}" head-max-height="60vh" :close="cancelDialog">
     <template v-slot:title>
       <div v-if="file && (!file.paranoidKey || file.publicLink)">
         <div v-if="!file.publicLink">
@@ -87,18 +87,18 @@
               :label="createBtnLabel"
           />
         </div>
-        <div v-if="file.publicLink" :class="`full-width flex ${!isShowRemoveLinkAction ? 'justify-end' : 'justify-between'} q-px-sm`">
+        <div v-if="file.publicLink" :class="`full-width flex ${isCreatingLink ? 'justify-end' : 'justify-between'} q-px-sm`">
           <button-dialog
-              v-if="isShowRemoveLinkAction"
+              v-if="!isCreatingLink"
               :saving="saving"
               :action="removeLink"
               :label="$t('FILESWEBCLIENT.ACTION_REMOVE_PUBLIC_LINK')"
           />
           <button-dialog
-              :disabled="recipient.empty"
+              :disabled="recipient.empty || (isCreatingLink && !recipient?.HasPgpPublicKey && file.linkPassword)"
               :saving="saving"
               :action="sendViaMessage"
-              :label="sendLinkLabel"
+              :label="isCreatingLink ? sendLabel : $t('OPENPGPFILESWEBCLIENT.ACTION_SEND_EMAIL')"
           />
         </div>
       </div>
@@ -142,16 +142,7 @@ export default {
     dialog: { type: Boolean, default: false },
   },
   mounted() {
-    this.publicLink = this.file.publicLink
-    this.linkPassword = this.file.linkPassword
-    this.sendLinkLabel = this.$t('OPENPGPFILESWEBCLIENT.ACTION_SEND_EMAIL')
-    if (this.file.paranoidKey) {
-      eventBus.$on('FilesMobile::SetRecipient', this.setRecipient)
-      eventBus.$on('FilesMobile::ShowRemoveAction', this.setShowRemoveAction)
-      eventBus.$on('FilesMobile::SetSendLinkLabel', this.setSendLinkLabel)
-      eventBus.$emit('FilesMobile::GetEncryptedShareableLinkDialog', this.setComponents)
-    }
-
+    this.init()
   },
   computed: {
     createBtnLabel() {
@@ -159,6 +150,12 @@ export default {
         ? 'Create protected link'
         : 'Create shareable link'
     },
+    sendLabel() {
+      if (this.recipient.HasPgpPublicKey && this.file.linkPassword) {
+        return this.$root.$t('OPENPGPFILESWEBCLIENT.ACTION_SEND_ENCRYPTED_EMAIL')
+      }
+      return this.$root.$t('OPENPGPFILESWEBCLIENT.ACTION_SEND_EMAIL')
+    }
   },
   data: () => ({
     withPassword: false,
@@ -168,12 +165,16 @@ export default {
     linkPassword: '',
     resultingComponents: null,
     recipient: { FullName: 'Not Selected', empty: true },
-    isShowRemoveLinkAction: true,
+    isCreatingLink: false,
     showSelectRecipientDialog: false,
-    sendLinkLabel: ''
+    sendLinkLabel: '',
+    isRecipientDisabled: false
   }),
   watch: {
     dialog(val) {
+      if (val) {
+        this.init()
+      }
       this.openDialog = val
     },
   },
@@ -184,6 +185,21 @@ export default {
       'changeItemProperty',
       'getContactSuggestions'
     ]),
+    init() {
+      this.publicLink = this.file.publicLink
+      this.linkPassword = this.file.linkPassword
+      this.sendLinkLabel = this.$t('OPENPGPFILESWEBCLIENT.ACTION_SEND_EMAIL')
+      if (!this.recipient?.empty) {
+        this.recipient = { FullName: 'Not Selected', empty: true }
+      }
+      this.isCreatingLink = false
+      if (this.file.paranoidKey) {
+        eventBus.$on('FilesMobile::SetRecipient', this.setRecipient)
+        eventBus.$on('FilesMobile::IsCreatingLink', this.setIsCreatingLink)
+        eventBus.$on('FilesMobile::IsRecipientDisabled', this.setIsRecipientDisabled)
+        eventBus.$emit('FilesMobile::GetEncryptedShareableLinkDialog', this.setComponents)
+      }
+    },
     async getContacts(params) {
       return await this.getContactSuggestions(params)
     },
@@ -200,7 +216,9 @@ export default {
       this.linkPassword = this.file.linkPassword
     },
     selectRecipient() {
-      this.showSelectRecipientDialog = true
+      if (!this.isRecipientDisabled) {
+        this.showSelectRecipientDialog = true
+      }
     },
     closeSelectRecipientDialog() {
       this.showSelectRecipientDialog = false
@@ -224,11 +242,11 @@ export default {
     setComponents(components) {
       this.resultingComponents = components
     },
-    setShowRemoveAction(value) {
-      this.isShowRemoveLinkAction = value
+    setIsCreatingLink(value) {
+      this.isCreatingLink = value
     },
-    setSendLinkLabel(label) {
-      this.sendLinkLabel = label
+    setIsRecipientDisabled() {
+      this.isRecipientDisabled = true
     },
     cancelDialog() {
       this.changeItemProperty({
@@ -241,8 +259,8 @@ export default {
   },
   unmounted() {
     eventBus.$off('FilesMobile::SetRecipient', this.setRecipient)
-    eventBus.$off('FilesMobile::ShowRemoveAction', this.setShowRemoveAction)
-    eventBus.$off('FilesMobile::SetSendLinkLabel', this.setSendLinkLabel)
+    eventBus.$off('FilesMobile::IsCreatingLink', this.setIsCreatingLink)
+    eventBus.$off('FilesMobile::IsRecipientDisabled', this.setIsRecipientDisabled)
   }
 }
 </script>
