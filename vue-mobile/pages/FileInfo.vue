@@ -1,7 +1,7 @@
 <template>
   <main-layout>
-    <share-with-me-info-icon v-if="currentFile?.sharedWithMeAccess" class="absolute" style="right: 0; position: fixed; z-index: 1000"/>
-    <q-scroll-area :thumb-style="{ width: '5px' }" class="file-info__info">
+    <share-with-me-info-icon v-if="currentFile?.sharedWithMeAccess" class="absolute" style="right: 0; position: fixed; z-index: 1"/>
+    <q-scroll-area :thumb-style="{ width: '5px', 'z-index': 2 }" class="file-info__info">
       <div v-if="currentFile">
         <div class="flex items-center justify-center">
           <div
