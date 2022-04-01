@@ -1,6 +1,6 @@
 <template>
   <app-dialog v-model="showDialog" :showCross="false" :close="closeDialog">
-    <template v-slot:head>
+    <template v-slot:content>
       <div class="dialog__header-text q-mx-lg">
         <span>
           {{$t('SHAREDFILES.WARNING_SHARES_CHANGED_BY_OTHER_USER')}}

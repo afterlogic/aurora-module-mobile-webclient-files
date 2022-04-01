@@ -1,5 +1,5 @@
 <template>
-  <app-dialog :close="close" width="calc(100vw - 45px)">
+  <app-dialog  :close="close">
     <template v-slot:title>
       <div>
         <span>
@@ -19,7 +19,7 @@
           debounce="400"
       />
     </template>
-    <template v-slot:head>
+    <template v-slot:content>
       <div class="q-px-lg" style="margin-top: 32px">
         <div v-if="isWaitingContacts" class="flex items-center justify-center">
           <q-circular-progress

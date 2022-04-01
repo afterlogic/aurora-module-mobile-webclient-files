@@ -1,6 +1,6 @@
 <template>
   <app-dialog v-model="showDialog" :close="closeDialog">
-    <template v-slot:head>
+    <template v-slot:content>
       <div class="dialog__header-text q-mx-lg q-mt-lg">
           <span>
           Last entered teammate

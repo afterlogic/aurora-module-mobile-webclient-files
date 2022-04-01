@@ -1,6 +1,6 @@
 <template>
   <app-dialog :close="cancel" width="calc(100vw - 20px)" >
-    <template v-slot:head>
+    <template v-slot:content>
       <div class="q-px-lg q-pb-md dialog__title-text">
         <span>{{ $t('SHAREDFILES.ACTION_SHARE') }}</span>
       </div>

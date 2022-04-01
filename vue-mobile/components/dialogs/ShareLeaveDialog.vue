@@ -1,6 +1,6 @@
 <template>
   <app-dialog v-model="openDialog" :close="cancelDialog">
-    <template v-slot:head>
+    <template v-slot:content>
       <q-item class="dialog__header-text">
       <p>
         Leave share of the <span class="text-bold">{{ currentFile.name }}</span> file?

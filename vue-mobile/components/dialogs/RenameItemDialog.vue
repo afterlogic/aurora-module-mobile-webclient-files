@@ -1,6 +1,6 @@
 <template>
   <app-dialog v-model="openDialog" :close="cancelDialog">
-    <template v-slot:head>
+    <template v-slot:content>
       <div class="q-px-lg q-pb-sm dialog__title-text">
             <span>{{
                 placeholder

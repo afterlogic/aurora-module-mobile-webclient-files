@@ -5,7 +5,7 @@
         <span>{{ $t('MAILWEBCLIENT.ACTION_ADD_NEW_FOLDER') }}</span>
       </div>
     </template>
-    <template v-slot:head>
+    <template v-slot:content>
       <q-item class="q-px-lg">
         <app-input
             placeholder="Enter folder name"

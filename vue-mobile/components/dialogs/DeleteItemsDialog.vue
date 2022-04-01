@@ -1,6 +1,6 @@
 <template>
   <app-dialog v-model="openDialog" :close="closeDialog">
-    <template v-slot:head>
+    <template v-slot:content>
       <div class="dialog__title-text q-ma-lg">
         <span>{{ title }}</span>
       </div>

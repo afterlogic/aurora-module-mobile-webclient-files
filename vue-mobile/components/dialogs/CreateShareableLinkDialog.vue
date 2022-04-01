@@ -19,7 +19,7 @@
         </span>
       </div>
     </template>
-    <template v-slot:head>
+    <template v-slot:content>
       <div v-if="file && (!file.paranoidKey || file.publicLink)">
         <div v-if="!file.publicLink">
           <app-checkbox
