@@ -11,7 +11,7 @@
         @click="onPreviousPath"
       />
     </q-card-actions>
-    <div class="col-10 flex justify-end q-pr-sm">
+    <div v-if="actions" class="col-10 flex justify-end q-pr-sm">
       <icon-action
           v-if="isShowAction(actions.createShareableLink)"
           class="q-mr-lg"
@@ -91,16 +91,19 @@
 import IconAction from "../common/IconAction";
 import { mapActions, mapGetters } from 'vuex'
 
-import { fileActions } from '../../utils/file-actions'
+import { getFileActions } from '../../utils/file-actions'
 
 export default {
   name: 'FileInfoHeader',
   components: {
     IconAction
   },
+  mounted() {
+    this.actions = getFileActions()
+  },
   data() {
     return {
-      actions: fileActions,
+      actions: null,
     }
   },
   computed: {

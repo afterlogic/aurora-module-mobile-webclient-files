@@ -1,5 +1,7 @@
 import eventBus from 'src/event-bus'
 import store from 'src/store'
+import { defineAsyncComponent } from "vue";
+
 
 const i18n = {
   $t: {
@@ -81,7 +83,7 @@ export const fileActions = {
   createShareableLink: {
     method: null,
     name: 'createShareableLink',
-    component: 'CreateShareableLinkDialog',
+    component: defineAsyncComponent(() => import('../components/dialogs/CreateShareableLinkDialog')),
     displayName: i18n.$t.OPENPGPFILESWEBCLIENT.HEADING_CREATE_PUBLIC_LINK,
     icon: 'SecureLinkIcon',
     isShowAction: isShowAction,
@@ -89,7 +91,7 @@ export const fileActions = {
   shareWithTeammates: {
     method: null,
     name: 'shareWithTeammates',
-    component: 'ShareWithTeammatesDialog',
+    component: defineAsyncComponent(() => import('../components/dialogs/ShareWithTeammatesDialog')),
     displayName: i18n.$t.SHAREDFILES.ACTION_SHARE,
     icon: 'SharingIcon',
     isShowAction: isShowAction,
@@ -97,7 +99,7 @@ export const fileActions = {
   shareLeave: {
     method: null,
     name: 'shareLeave',
-    component: 'ShareLeaveDialog',
+    component: defineAsyncComponent(() => import('../components/dialogs/ShareLeaveDialog')),
     displayName: 'Leave share ',
     icon: 'LeaveSharingIcon',
     isShowAction: isShowAction,
@@ -127,7 +129,7 @@ export const fileActions = {
   rename: {
     method: null,
     name: 'rename',
-    component: 'RenameItemDialog',
+    component: defineAsyncComponent(() => import('../components/dialogs/RenameItemDialog')),
     displayName: i18n.$t.FILESWEBCLIENT.ACTION_RENAME,
     icon: 'RenameIcon',
     isShowAction: isShowAction,
@@ -135,14 +137,24 @@ export const fileActions = {
   delete: {
     method: null,
     name: 'delete',
-    component: 'DeleteItemsDialog',
+    component: defineAsyncComponent(() => import('../components/dialogs/DeleteItemsDialog')),
     displayName: 'Delete',
     icon: 'DeleteIcon',
     isShowAction: isShowAction,
   },
 }
 
+export const getFileActions = () => {
+
+  eventBus.$emit('FilesMobileWebClient::getFileActionsList', fileActions)
+
+  return fileActions
+}
+
 export const getFileActionsList = (file) => {
+
+  eventBus.$emit('FilesMobileWebClient::getFileActionsList', fileActions)
+
   const actions = []
   if (file) {
     Object.keys(fileActions).forEach((key) => {

@@ -12,30 +12,32 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+
 import _ from 'lodash'
 
 import FileMenuDialog from './dialogs/FileMenuDialog'
-import RenameItemDialog from './dialogs/RenameItemDialog'
-import DeleteItemsDialog from './dialogs/DeleteItemsDialog'
-import CreateFolderDialog from './dialogs/CreateFolderDialog'
+// import RenameItemDialog from './dialogs/RenameItemDialog'
+// import DeleteItemsDialog from './dialogs/DeleteItemsDialog'
+// import CreateFolderDialog from './dialogs/CreateFolderDialog'
 import CreateButtonsDialogs from './dialogs/CreateButtonsDialogs'
-import CreateShareableLinkDialog from './dialogs/CreateShareableLinkDialog'
-import ShareWithTeammatesDialog from './dialogs/ShareWithTeammatesDialog'
+// import CreateShareableLinkDialog from './dialogs/CreateShareableLinkDialog'
+// import ShareWithTeammatesDialog from './dialogs/ShareWithTeammatesDialog'
 import FileUploader from './dialogs/FileUploader'
-import ShareLeaveDialog from "./dialogs/ShareLeaveDialog";
+// import ShareLeaveDialog from "./dialogs/ShareLeaveDialog";
+
 
 export default {
   name: 'DialogsList',
   components: {
     FileMenuDialog,
-    RenameItemDialog,
-    DeleteItemsDialog,
-    CreateFolderDialog,
+    // RenameItemDialog,
+    // DeleteItemsDialog,
+    // CreateFolderDialog,
     CreateButtonsDialogs,
-    CreateShareableLinkDialog,
-    ShareWithTeammatesDialog,
+    // CreateShareableLinkDialog,
+    // ShareWithTeammatesDialog,
     FileUploader,
-    ShareLeaveDialog
+    // ShareLeaveDialog
   },
   data() {
     return {
@@ -45,6 +47,10 @@ export default {
   },
   computed: {
     ...mapGetters('filesmobile', ['dialogComponent', 'currentFile']),
+    // componentInstance() {
+    //   const name = this.dialogComponent
+    //   return defineAsyncComponent(() => import(`./storage/${name}StorageIcon`))
+    // }
   },
   watch: {
     dialogComponent(val) {
@@ -53,19 +59,12 @@ export default {
           this.dialog = false
         } else {
           this.component = val.component
-          if (this.component === 'CreateShareableLinkDialog') {
-            if (!this.currentFile.paranoidKey) {
-              this.dialog = true
-            }
-            this.dialog = true
-          } else {
-            this.dialog = true
-          }
+          this.dialog = true
         }
       }
     },
     dialog(val) {
-      if (!val && this.dialogComponent.component === 'CreateButtonsDialogs')
+      if (!val && this.dialogComponent.name === 'createButtonsDialogs')
         this.changeDialogComponent({ component: '' })
     },
   },
@@ -74,7 +73,7 @@ export default {
     dialogAction(action) {
       this.closeDialog()
       if (action.component) {
-        this.changeDialogComponent({ component: action.component })
+        this.changeDialogComponent({ component: action.component, name: action.name })
       } else if (action.method) {
         action.method(this)
       }

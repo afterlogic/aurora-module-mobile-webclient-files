@@ -18,6 +18,9 @@ import { mapActions } from 'vuex'
 import CreateFolderIcon from '../icons/actions/CreateFolderIcon'
 import UploadFileIcon from '../icons/actions/UploadFileIcon'
 
+import { defineAsyncComponent, shallowRef } from "vue";
+
+
 export default {
   name: 'CreateButtonsDialogs',
   components: {
@@ -42,7 +45,7 @@ export default {
     ...mapActions('filesmobile', ['changeDialogComponent']),
     createFolder() {
       this.$emit('closeDialog')
-      this.changeDialogComponent({ component: 'CreateFolderDialog' })
+      this.changeDialogComponent({ component: defineAsyncComponent(() => import('./CreateFolderDialog')) })
     },
     uploadFile() {
       this.changeDialogComponent({ component: 'FileUploader' })
