@@ -135,6 +135,7 @@ export default {
       return text.getFriendlySize(this.currentFile.size)
     },
     isShared() {
+      if (this.currentFile?.sharedWithMeAccess) return false
       return !!this.currentFile.shares.length || this.currentFile.sharedWithMeAccess
     },
   },
