@@ -137,6 +137,7 @@ export default {
       return date.getDate(this.file.lastModified)
     },
     isShared() {
+      if (this.file.sharedWithMeAccess) return false
       return !!this.file.shares.length || this.file.sharedWithMeAccess
     },
   },

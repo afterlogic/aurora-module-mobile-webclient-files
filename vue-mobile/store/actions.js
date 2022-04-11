@@ -164,9 +164,10 @@ export default {
       IsFolder: currentFile.isFolder,
       RecipientEmail: '',
       PgpEncryptionMode: '',
+      LifetimeHrs: 0,
       Password: withPassword ? OpenPgp.generatePassword() : '',
     }
-    const module = withPassword ? 'OpenPgpFilesWebclient' : 'Files'
+    const module = 'OpenPgpFilesWebclient'
     const result = await filesWebApi.createShareableLink(parameters, module)
     if (result) {
       commit('setItemProperty', {
