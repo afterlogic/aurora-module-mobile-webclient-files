@@ -83,8 +83,5 @@ export default {
   line-height: 16px;
   text-align: center;
   color: #969494;
-  &__inscription {
-    margin-top: 50px;
-  }
 }
 </style>

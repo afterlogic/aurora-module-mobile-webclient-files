@@ -15,8 +15,8 @@
     </q-item-section>
     <q-item-section>
       <q-item-label class="file__name">{{ folderName }}</q-item-label>
-      <q-item-label class="flex items-center">
-        <shared-item-icon v-if="isShared" />
+      <q-item-label v-if="isShared" class="flex items-center">
+        <shared-item-icon />
       </q-item-label>
     </q-item-section>
     <q-item-section class="q-mr-sm" avatar side>

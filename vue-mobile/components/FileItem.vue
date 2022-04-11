@@ -28,21 +28,13 @@
       <q-item-label class="text-subtitle1 text-dark file__name">{{
         fileName
       }}</q-item-label>
-      <q-item-label class="text-secondary file__info" v-if="!file.downloading">
-        <div class="flex no-wrap items-center text-center">
-          <div v-if="file.paranoidKey" class="q-mr-xs flex justify-center">
-            <encrypted-item-icon />
-          </div>
-          <div v-if="isShared" class="q-mr-xs flex justify-center">
-            <shared-item-icon />
-          </div>
-          <div v-if="file.publicLink" class="q-mr-xs flex justify-center">
-            <link-item-icon />
-          </div>
-          <div class="items-center justify-center text-center text-no-wrap">{{ fileSize }}</div>
-          <div class="q-mx-xs text-no-wrap">|</div>
-          <div class=" text-no-wrap" style="overflow: hidden">{{ fileDate }}</div>
-        </div>
+      <q-item-label class="text-secondary file__info flex items-center no-wrap" v-if="!file.downloading">
+        <encrypted-item-icon v-if="file.paranoidKey" class="q-mr-xs"/>
+        <shared-item-icon v-if="isShared" class="q-mr-xs" width="14" height="14" />
+        <link-item-icon v-if="file.publicLink" class="q-mr-xs"/>
+        <div class="items-center justify-center text-center text-no-wrap">{{ fileSize }}</div>
+        <div class="q-mx-xs text-no-wrap">|</div>
+        <div class=" text-no-wrap" style="overflow: hidden">{{ fileDate }}</div>
       </q-item-label>
       <q-item-label v-if="file.downloading">
         <downloading-progress :file="file" />

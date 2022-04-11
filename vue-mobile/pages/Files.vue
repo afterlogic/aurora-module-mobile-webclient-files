@@ -198,7 +198,7 @@ export default {
 
 <style lang="scss">
 .file {
-  height: 60px !important;
+  height: 64px !important;
   border-bottom: 1px solid #F6F6F6;
   padding: 0;
   width: 100vw;

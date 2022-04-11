@@ -55,7 +55,7 @@
               </div>
               <div class="flex items-end q-mb-xs">
                 <encrypted-item-icon v-if="currentFile.paranoidKey" class="q-mx-xs"/>
-                <shared-item-icon v-if="isShared" class="q-mx-xs"/>
+                <shared-item-icon v-if="isShared" width="14" height="14" class="q-mx-xs"/>
                 <link-item-icon v-if="currentFile.publicLink" class="q-mx-xs"/>
               </div>
             </div>
