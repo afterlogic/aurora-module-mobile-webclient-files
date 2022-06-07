@@ -19,44 +19,44 @@
     <div v-if="loadingStatus" class="full-width">
       <q-linear-progress indeterminate track-color="grey-1" color="primary"/>
     </div>
-    <q-scroll-area
-        :thumb-style="{ width: '5px' }"
-        :class="fileListHeight"
-        v-if="!loadingStatus && (folderList.length || downloadFiles.length || fileList.length)"
-    >
-      <folder-item
-          v-for="file in folderList"
-          :key="file"
-          :folder="file"
-          :isSelected="isSelected"
-          :isCopied="isCopied"
-          :touchstart="touchstart"
-          :touchend="touchend"
-          @touchmove="touchend"
-          @showDialog="showDialog"
-          class="file"
-      />
-      <download-file-item
-          v-for="file in downloadFiles"
-          :key="file.name"
-          :file="file"
-          class="file"
-      />
-      <file-item
-          v-for="file in fileList"
-          :key="file"
-          :file="file"
-          :isSelected="isSelected"
-          :isCopied="isCopied"
-          :touchstart="touchstart"
-          :touchend="touchend"
-          @touchmove="touchend"
-          @showDialog="showDialog"
-          class="file"
-      />
+      <q-scroll-area
+          :thumb-style="{ width: '5px' }"
+          :class="fileListHeight"
+          v-if="!loadingStatus && (folderList.length || downloadFiles.length || fileList.length)"
+      >
+        <folder-item
+            v-for="file in folderList"
+            :key="file"
+            :folder="file"
+            :isSelected="isSelected"
+            :isCopied="isCopied"
+            :touchstart="touchstart"
+            :touchend="touchend"
+            @touchmove="touchmove"
+            @showDialog="showDialog"
+            class="file"
+        />
+        <download-file-item
+            v-for="file in downloadFiles"
+            :key="file.name"
+            :file="file"
+            class="file"
+        />
+        <file-item
+            v-for="file in fileList"
+            :key="file"
+            :file="file"
+            :isSelected="isSelected"
+            :isCopied="isCopied"
+            :touchstart="touchstart"
+            :touchend="touchend"
+            @touchmove="touchmove"
+            @showDialog="showDialog"
+            class="file"
+        />
 
-      <div style="height: 70px" class="full-width" />
-    </q-scroll-area>
+        <div style="height: 70px" class="full-width" />
+      </q-scroll-area>
     <files-captions v-if="!loadingStatus && !folderList.length && !downloadFiles.length && !fileList.length"/>
     <app-create-button :classes="classes" :show-dialog="showCreateButtonsDialog" v-if="isShowCreateButtons"/>
     <dialogs-list />
@@ -94,6 +94,7 @@ export default {
     return {
       touchTimer: null,
       isSelected: false,
+      notChoose: false,
     }
   },
   computed: {
@@ -139,9 +140,7 @@ export default {
   watch: {
     selectedFiles(items) {
       if (!items.length) {
-        setTimeout(() => {
-          this.isSelected = false
-        }, 300)
+        this.isSelected = false
       }
     },
   },
@@ -178,20 +177,26 @@ export default {
       this.changeSelectStatus()
     },
     touchstart(file) {
+      this.notChoose = false
       if (!file.downloading) {
         this.selectFile(file)
         if (!this.isArchive) {
           if (!this.isSelected && !this.isCopied) {
             this.touchTimer = setTimeout(this.selectItem, 1000)
-          } else if (!this.isCopied) {
-            this.changeSelectStatus()
           }
         }
       }
     },
     touchend() {
       if (this.touchTimer) clearTimeout(this.touchTimer)
+      if (this.isSelected && !this.isCopied && !this.notChoose) {
+        this.changeSelectStatus()
+      }
     },
+    touchmove() {
+      if (this.touchTimer) clearTimeout(this.touchTimer)
+      this.notChoose = true
+    }
   },
 }
 </script>

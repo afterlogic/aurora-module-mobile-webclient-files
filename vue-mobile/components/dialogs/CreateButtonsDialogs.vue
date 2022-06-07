@@ -39,6 +39,9 @@ export default {
   watch: {
     dialog(val) {
       this.openDialog = val
+      if (!val) {
+        this.changeDialogComponent({ component: '' })
+      }
     },
   },
   methods: {

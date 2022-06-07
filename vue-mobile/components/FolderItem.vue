@@ -1,13 +1,15 @@
 <template>
-  <q-item
+  <app-item
     v-if="folder"
     :disable="folder.isCopied"
-    v-ripple="!isSelected && !folder.isCopied"
     :active="folder.isSelected"
+    :item="folder"
+    :isSelected="folder.isSelected"
+    :isChoice="isSelected"
     clickable
-    @touchstart="touchstart(folder)"
-    @touchend="openFolder"
-    @touchmove.stop="touchMove"
+    @start="touchstart(folder)"
+    @end="openFolder"
+    @move="touchMove"
   >
     <share-with-me-item-icon v-if="folder.sharedWithMeAccess" class="absolute" style="left: 48px; top: 8px"/>
     <q-item-section class="q-ml-lg" avatar>
@@ -19,30 +21,18 @@
         <shared-item-icon />
       </q-item-label>
     </q-item-section>
-    <q-item-section class="q-mr-sm" avatar side>
+    <q-item-section v-if="!isSelected" class="q-mr-sm" avatar side>
       <q-btn
-        v-if="!folder.isSelected"
         size="14px"
         color="grey"
-        :disable="isSelected"
-        v-ripple="!isSelected"
         flat
         round
         icon="more_vert"
         @touchstart.stop
         @touchend.stop="showDialog"
       />
-      <q-btn
-        v-ripple="false"
-        v-if="folder.isSelected"
-        size="14px"
-        color="grey"
-        flat
-        round
-        icon="done"
-      />
     </q-item-section>
-  </q-item>
+  </app-item>
 </template>
 
 <script>
@@ -53,13 +43,15 @@ import { getShortName } from '../utils/common'
 import FolderIcon from './icons/FolderIcon'
 import SharedItemIcon from "./icons/item/SharedItemIcon";
 import ShareWithMeItemIcon from "./icons/ShareWithMeItemIcon";
+import AppItem from "../../../CoreMobileWebclient/vue-mobile/src/components/common/AppItem";
 
 export default {
   name: 'FolderItem',
   components: {
     FolderIcon,
     SharedItemIcon,
-    ShareWithMeItemIcon
+    ShareWithMeItemIcon,
+    AppItem
   },
   props: {
     folder: { type: Object, default: null },
@@ -93,8 +85,8 @@ export default {
       'changeSearchText'
     ]),
     async openFolder() {
+      this.touchend()
       if (!this.isSelected && !this.folder.isCopied && !this.isMoved) {
-        this.touchend()
         const path = {
           path: this.folder.fullPath,
           name: this.folder.name,

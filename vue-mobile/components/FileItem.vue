@@ -1,13 +1,15 @@
 <template>
-  <q-item
+  <app-item
     v-if="file"
     :disable="file.isCopied"
     :clickable="!isCopied"
-    v-ripple="!isSelected && !isCopied"
+    :item="file"
+    :isSelected="file.isSelected"
+    :isChoice="isSelected"
     :active="file.isSelected"
-    @touchstart.stop="touchstart(file)"
-    @touchmove.stop="touchMove"
-    @touchend.stop="selectFile"
+    @start="touchstart(file)"
+    @move="touchMove"
+    @end="selectFile"
   >
     <share-with-me-item-icon v-if="file.sharedWithMeAccess" class="absolute" style="left: 48px; top: 6px"/>
     <q-item-section class="q-ml-lg" avatar>
@@ -40,30 +42,20 @@
         <downloading-progress :file="file" />
       </q-item-label>
     </q-item-section>
-    <q-item-section class="q-mr-sm" avatar side>
-      <q-btn
-        v-if="!file.isSelected"
-        v-ripple="!isCopied && !isSelected"
-        :disable="isSelected"
-        size="14px"
-        color="grey"
-        flat
-        round
-        icon="more_vert"
-        @touchstart.stop
-        @touchend.stop="showDialog"
-      />
-      <q-btn
-        v-ripple="!isCopied"
-        v-if="file.isSelected"
-        size="14px"
-        color="grey"
-        flat
-        round
-        icon="done"
-      />
-    </q-item-section>
-  </q-item>
+    <transition name="button">
+      <q-item-section v-if="!isSelected" class="q-mr-sm" avatar side>
+        <q-btn
+            size="14px"
+            color="grey"
+            flat
+            round
+            icon="more_vert"
+            @touchstart.stop
+            @touchend.stop="showDialog"
+        />
+      </q-item-section>
+    </transition>
+  </app-item>
 </template>
 
 <script>
@@ -81,6 +73,7 @@ import EncryptedItemIcon from "./icons/item/EncryptedItemIcon";
 import LinkItemIcon from "./icons/item/LinkItemIcon";
 import SharedItemIcon from "./icons/item/SharedItemIcon";
 import ShareWithMeItemIcon from "./icons/ShareWithMeItemIcon";
+import AppItem from "../../../CoreMobileWebclient/vue-mobile/src/components/common/AppItem";
 
 export default {
   name: 'FileItem',
@@ -91,6 +84,7 @@ export default {
     EncryptedItemIcon,
     LinkItemIcon,
     SharedItemIcon,
+    AppItem
   },
   props: {
     file: { type: Object, default: null },
@@ -183,4 +177,16 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.button-enter-active {
+  transition: opacity 0.5s ease;
+}
+.button-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.button-enter-from,
+.button-leave-to {
+  opacity: 0;
+}
+</style>
