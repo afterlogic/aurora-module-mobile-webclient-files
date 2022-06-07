@@ -11,10 +11,9 @@
     @move="touchMove"
     @end="selectFile"
   >
-    <share-with-me-item-icon v-if="file.sharedWithMeAccess" class="absolute" style="left: 48px; top: 6px"/>
     <q-item-section class="q-ml-lg" avatar>
       <file-item-icon v-if="file.paranoidKey || !file.isImg" :file="file" />
-      <div v-if="file.isImg && !file.paranoidKey" class="text-primary">
+      <div v-if="file.isImg && !file.paranoidKey" class="text-primary relative-position">
         <div
           class="img-preview"
           :style="{
@@ -23,6 +22,11 @@
             width: '32px',
             height: '32px',
           }"
+        />
+        <share-with-me-item-icon
+            v-if="file.sharedWithMeAccess"
+            class="absolute"
+            style="left: 18px; top: -8px"
         />
       </div>
     </q-item-section>
