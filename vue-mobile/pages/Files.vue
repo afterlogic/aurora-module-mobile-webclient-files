@@ -19,11 +19,12 @@
     <div v-if="loadingStatus" class="full-width">
       <q-linear-progress indeterminate track-color="grey-1" color="primary"/>
     </div>
-      <q-scroll-area
-          :thumb-style="{ width: '5px' }"
-          :class="fileListHeight"
-          v-if="!loadingStatus && (folderList.length || downloadFiles.length || fileList.length)"
-      >
+    <q-scroll-area
+        :thumb-style="{ width: '5px' }"
+        :class="fileListHeight"
+        v-if="!loadingStatus && (folderList.length || downloadFiles.length || fileList.length)"
+    >
+      <app-pull-refresh :refresh-action="asyncGetFiles">
         <folder-item
             v-for="file in folderList"
             :key="file"
@@ -54,9 +55,9 @@
             @showDialog="showDialog"
             class="file"
         />
-
         <div style="height: 70px" class="full-width" />
-      </q-scroll-area>
+      </app-pull-refresh>
+    </q-scroll-area>
     <files-captions v-if="!loadingStatus && !folderList.length && !downloadFiles.length && !fileList.length"/>
     <app-create-button :classes="classes" :show-dialog="showCreateButtonsDialog" v-if="isShowCreateButtons"/>
     <dialogs-list />
@@ -65,7 +66,6 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-
 import MainLayout from 'src/layouts/MainLayout'
 import FileItem from '../components/FileItem'
 import FolderItem from '../components/FolderItem'
@@ -74,7 +74,7 @@ import DialogsList from '../components/DialogsList'
 import DownloadFileItem from '../components/DownloadFileItem'
 import FilesCaptions from '../components/FilesCaptions'
 import AppCreateButton from "src/components/common/AppCreateButton";
-
+import AppPullRefresh from "../../../CoreMobileWebclient/vue-mobile/src/components/common/AppPullRefresh";
 export default {
   name: 'Files',
   components: {
@@ -86,6 +86,7 @@ export default {
     AppCreateButton,
     DownloadFileItem,
     FilesCaptions,
+    AppPullRefresh
   },
   async mounted() {
     await this.init()
@@ -161,6 +162,13 @@ export default {
       await this.asyncGetFiles()
       this.changeLoadingStatus(false)
     },
+    onRefresh() {
+      console.log('refresh')
+      setTimeout(() => {
+        loading.value = false;
+        count.value++;
+      }, 1000);
+    },
     showCreateButtonsDialog() {
       if (this.dialogComponent.component === 'CreateButtonsDialogs') {
         this.changeDialogComponent({ component: '' })
@@ -196,7 +204,7 @@ export default {
     touchmove() {
       if (this.touchTimer) clearTimeout(this.touchTimer)
       this.notChoose = true
-    }
+    },
   },
 }
 </script>
