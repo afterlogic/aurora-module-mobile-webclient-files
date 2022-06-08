@@ -17,13 +17,13 @@
     <div class="text-center text-black text-bold col-4">
       <span>{{ `Selected: ${items.length}` }}</span>
     </div>
-    <div class="col-4 flex justify-end q-pr-sm">
+    <div class="col-4 flex no-wrap justify-end q-pr-sm">
       <icon-action
           @click="copyItems"
           class="q-mr-md"
           :icon="actions.copy.icon"
       />
-      <div v-if="isShowAction(actions.shareLeave) && sharedFiles.length" class="flex">
+      <div v-if="isShowAction(actions.shareLeave) && sharedFiles.length" class="flex no-wrap">
         <icon-action
             class="q-mr-xs"
             @click="onPerformAction(actions.shareLeave)"
@@ -31,7 +31,7 @@
         />
         <span class="q-mr-md">{{sharedFiles.length}}</span>
       </div>
-      <div v-if="isShowAction(actions.delete) && unsharedFiles.length" class="flex">
+      <div v-if="isShowAction(actions.delete) && unsharedFiles.length" class="flex no-wrap">
         <icon-action
             class="q-mr-xs"
             @click="deleteItems"
