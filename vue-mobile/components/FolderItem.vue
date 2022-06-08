@@ -11,9 +11,9 @@
     @end="openFolder"
     @move="touchMove"
   >
-    <share-with-me-item-icon v-if="folder.sharedWithMeAccess" class="absolute" style="left: 48px; top: 8px"/>
-    <q-item-section class="q-ml-lg" avatar>
+    <q-item-section class="q-ml-lg relative-position" avatar>
       <folder-icon color="secondary"></folder-icon>
+      <share-with-me-item-icon v-if="folder.sharedWithMeAccess" class="absolute" style="left: 21px; top: 11px"/>
     </q-item-section>
     <q-item-section>
       <q-item-label class="file__name">{{ folderName }}</q-item-label>
