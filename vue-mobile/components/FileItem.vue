@@ -46,7 +46,6 @@
         <downloading-progress :file="file" />
       </q-item-label>
     </q-item-section>
-    <transition name="button">
       <q-item-section v-if="!isSelected" class="q-mr-sm" avatar side>
         <q-btn
             size="14px"
@@ -58,7 +57,6 @@
             @touchend.stop="showDialog"
         />
       </q-item-section>
-    </transition>
   </app-item>
 </template>
 
