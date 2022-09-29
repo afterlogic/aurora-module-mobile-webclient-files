@@ -21,7 +21,7 @@
                 <q-item-section class="non-selectable">
                   <q-item-label class="flex">
                     <div v-if="isGroup(scope)" class="q-mr-sm">
-                      <team-icon v-if="scope.opt.isAll" width="16" height="16" />
+                      <all-storage-icon v-if="scope.opt.isAll" width="16" height="16"/>
                       <corporate-icon v-if="!scope.opt.isAll" width="16" height="16" />
                     </div>
                     <span class="q-mr-sm">
@@ -134,10 +134,12 @@ import NotAddedUserDialog from "./NotAddedUserDialog";
 import ShareWarningDialog from "./ShareWarningDialog";
 import CorporateIcon from "../icons/group/CorporateIcon";
 import TeamIcon from "../icons/group/TeamIcon";
+import AllStorageIcon from "../../../../ContactsMobileWebclient/vue-mobile/components/icons/storage/AllStorageIcon";
 
 export default {
   name: 'ShareWithTeammatesDialog',
   components: {
+    AllStorageIcon,
     CorporateIcon,
     TeamIcon,
     ButtonDialog,
