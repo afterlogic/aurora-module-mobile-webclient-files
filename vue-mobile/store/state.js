@@ -3,19 +3,20 @@ export default function () {
     storageList: [],
     fileList: [],
     folderList: [],
+    filesQuota: {},
+
     copyItems: [],
     downloadFiles: [],
-    filesQuota: {},
+
     currentStorage: '',
+    currentFile: null,
+    currentPath: '',
+    currentPaths: [],
+
     currentHeader: '',
     isLoading: false,
     searchText: '',
 
     dialogComponent: null,
-
-    currentFile: null,
-
-    currentPath: '',
-    currentPaths: [],
   }
 }
