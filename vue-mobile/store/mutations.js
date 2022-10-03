@@ -1,17 +1,17 @@
 export default {
-  setStorageList: (state, storages) => (state.storageList = storages),
-  setFileList: (state, fileList) => (state.fileList = fileList),
-  setFolderList: (state, folderList) => (state.folderList = folderList),
-  setFilesQuota: (state, filesQuota) => (state.filesQuota = filesQuota),
-  setCurrentStorage: (state, currentStorage) =>
-    (state.currentStorage = currentStorage),
-  setLoadingStatus: (state, status) => (state.isLoading = status),
-  setCurrentPath: (state, { path }) => (state.currentPath = path),
-  setCurrentFile: (state, file) => (state.currentFile = file),
-  setFileName: (state, fileName) => (state.currentFile.name = fileName),
-  setCurrentHeader: (state, headerName) =>
-    (state.currentHeader = headerName),
-  setSearchText: (state, text) => (state.searchText = text),
+  setStorageList: (state, storages) => { state.storageList = storages },
+  setFileList: (state, fileList) => { state.fileList = fileList },
+  setFolderList: (state, folderList) => { state.folderList = folderList },
+  setFilesQuota: (state, filesQuota) => { state.filesQuota = filesQuota },
+
+  setCurrentStorage: (state, currentStorage) => { state.currentStorage = currentStorage },
+  setLoadingStatus: (state, status) => { state.isLoading = status },
+  setCurrentPath: (state, { path }) => { state.currentPath = path },
+  setCurrentFile: (state, file) => { state.currentFile = file },
+  setFileName: (state, fileName) => { state.currentFile.name = fileName },
+  setCurrentHeader: (state, headerName) => { state.currentHeader = headerName },
+  setSearchText: (state, text) => { state.searchText = text },
+
   changeCurrentPath: (state, { path, index, lastStorage }) => {
     if (!lastStorage) {
       if (index === -1) {
@@ -34,6 +34,7 @@ export default {
       }
     })
   },
+
   removeFiles: (state, files) => {
     files.forEach((file) => {
       const itemIndex = state.fileList.findIndex(
@@ -44,8 +45,9 @@ export default {
       }
     })
   },
-  setSelectStatus: (state) =>
-    (state.currentFile.isSelected = !state.currentFile.isSelected),
+
+  setSelectStatus: (state) => { state.currentFile.isSelected = !state.currentFile.isSelected },
+
   removeSelectedItems: (state, items) => {
     if (items.length) {
       items.forEach((item) => {
@@ -53,14 +55,17 @@ export default {
       })
     }
   },
-  setDialogComponent: (state, dialogComponent) =>
-    (state.dialogComponent = dialogComponent),
-  setCopyItems: (state, items) => (state.copyItems = items),
+
+  setDialogComponent: (state, dialogComponent) => { state.dialogComponent = dialogComponent },
+
+  setCopyItems: (state, items) => { state.copyItems = items },
+  
   setItemsCopyStatus: (state, { items, status }) => {
     items.forEach((item) => {
       item.isCopied = status
     })
   },
+  
   setCopyItemsStatus: (state, { status }) => {
     state.fileList.forEach((item) => {
       if (item.isCopied) {
@@ -73,11 +78,10 @@ export default {
       }
     })
   },
-  setItemProperty: (state, { item, property, value }) =>
-    (item[property] = value),
-  removeCopiedFiles: (state) => (state.copyItems = []),
-  setDownloadsFiles: (state, files) =>
-    (state.downloadFiles = state.downloadFiles.concat(files)),
+
+  setItemProperty: (state, { item, property, value }) => { item[property] = value },
+  removeCopiedFiles: (state) => { state.copyItems = [] },
+  setDownloadFiles: (state, files) => { state.downloadFiles = state.downloadFiles.concat(files) },
   removeUploadedFiles: (state) => {
     const downloadableFiles = []
     state.downloadFiles.forEach((file) => {

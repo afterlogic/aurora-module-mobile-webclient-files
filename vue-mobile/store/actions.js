@@ -245,7 +245,7 @@ export default {
     return filesWebApi.clearHistory(parameters)
   },
   addDownloadsFiles: ({ state, commit, getters, dispatch }, files) => {
-    commit('setDownloadsFiles', files)
+    commit('setDownloadFiles', files)
   },
   removeUploadedFiles: ({ commit }) => {
     commit('removeUploadedFiles')

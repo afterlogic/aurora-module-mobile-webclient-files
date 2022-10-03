@@ -59,7 +59,6 @@ export default {
     ...mapActions('filesmobile', ['asyncCreateFolder', 'asyncGetFiles']),
     async createFolder() {
       if (!this.saving) {
-        console.log('createFolder')
         this.saving = true
         const result = await this.asyncCreateFolder({ name: this.folderName })
         if (result) {

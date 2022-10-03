@@ -171,7 +171,6 @@ export default {
       this.changeLoadingStatus(false)
     },
     onRefresh() {
-      console.log('refresh')
       setTimeout(() => {
         loading.value = false;
         count.value++;
