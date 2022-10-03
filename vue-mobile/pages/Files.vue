@@ -26,9 +26,9 @@
     >
       <app-pull-refresh :refresh-action="asyncGetFiles">
         <folder-item
-            v-for="file in folderList"
-            :key="file"
-            :folder="file"
+            v-for="folder in folderList"
+            :key="folder"
+            :folder="folder"
             :isSelected="isSelected"
             :isCopied="isCopied"
             :touchstart="touchstart"
@@ -75,8 +75,10 @@ import DownloadFileItem from '../components/DownloadFileItem'
 import FilesCaptions from '../components/FilesCaptions'
 import AppCreateButton from "src/components/common/AppCreateButton";
 import AppPullRefresh from "../../../CoreMobileWebclient/vue-mobile/src/components/common/AppPullRefresh";
+
 export default {
   name: 'Files',
+
   components: {
     MainLayout,
     FolderItem,
@@ -88,9 +90,11 @@ export default {
     FilesCaptions,
     AppPullRefresh
   },
+
   async mounted() {
     await this.init()
   },
+
   data() {
     return {
       touchTimer: null,
@@ -98,6 +102,7 @@ export default {
       notChoose: false,
     }
   },
+  
   computed: {
     ...mapGetters('filesmobile', [
       'fileList',
@@ -113,7 +118,10 @@ export default {
       'currentHeader',
       'dialogComponent'
     ]),
-    ...mapGetters('core', ['userData', 'userPublicId']),
+    ...mapGetters('core', [
+      'userData',
+      'userPublicId'
+    ]),
     userName() {
       if (this.userData) return this.userData.Name
       return ''

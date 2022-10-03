@@ -1,19 +1,11 @@
 <template>
-  <q-item
-      v-if="storage"
-      class="flex items-center"
-      clickable
-      v-ripple
-      @click.prevent="selectStorage"
-  >
-    <storage-icon
-        class="q-mx-md"
-        :storage-type="storage.Type"
-        :color="iconColor"
-    />
-    <div>
-      <span class="storage-name" :style="{color: textColor}">{{ storage.DisplayName }}</span>
-    </div>
+  <q-item class="q-px-lg" v-if="storage" clickable v-ripple @click.prevent="selectStorage">
+    <q-item-section side>
+      <storage-icon :storage-type="storage.Type" :color="iconColor" />
+    </q-item-section>
+    <q-item-section class="storage-name" :style="{color: textColor}">
+      {{ storage.DisplayName }}
+    </q-item-section>
   </q-item>
 </template>
 
