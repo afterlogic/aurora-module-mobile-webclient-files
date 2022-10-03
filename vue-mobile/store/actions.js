@@ -94,6 +94,7 @@ export default {
   changeSelectStatus: ({ commit }) => {
     commit('setSelectStatus')
   },
+  
   asyncDeleteItems: async ({ state, commit, getters, dispatch }, { items }) => {
     const currentStorage = getters['currentStorage']
     const currentPath = getters['currentPath']

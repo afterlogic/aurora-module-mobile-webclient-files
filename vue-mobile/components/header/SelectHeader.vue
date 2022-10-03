@@ -18,13 +18,13 @@
       <span>{{ `Selected: ${items.length}` }}</span>
     </div>
     <div class="col-4 flex no-wrap justify-end q-pr-sm">
-      <icon-action
+      <action-icon
           @click="copyItems"
           class="q-mr-md"
           :icon="actions.copy.icon"
       />
       <div v-if="isShowAction(actions.shareLeave) && sharedFiles.length" class="flex no-wrap">
-        <icon-action
+        <action-icon
             class="q-mr-xs"
             @click="onPerformAction(actions.shareLeave)"
             :icon="actions.shareLeave.icon"
@@ -32,7 +32,7 @@
         <span class="q-mr-md">{{sharedFiles.length}}</span>
       </div>
       <div v-if="isShowAction(actions.delete) && unsharedFiles.length" class="flex no-wrap">
-        <icon-action
+        <action-icon
             class="q-mr-xs"
             @click="deleteItems"
             :icon="actions.delete.icon"
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import IconAction from '../common/IconAction'
+import ActionIcon from '../common/ActionIcon'
 
 import {mapActions, mapGetters} from 'vuex'
 
@@ -53,7 +53,7 @@ import { fileActions } from '../../utils/file-actions'
 export default {
   name: 'SelectHeader',
   components: {
-    IconAction
+    ActionIcon
   },
   props: {
     items: {

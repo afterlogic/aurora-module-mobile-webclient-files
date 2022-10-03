@@ -22,7 +22,7 @@
             clickable
           >
             <div class="flex full-width" @click="performAction(fileAction)">
-              <icon-action :icon="fileAction.icon" />
+              <action-icon :icon="fileAction.icon" />
               <div class="q-pl-md text-subtitle1 flex items-center">
                 <p>{{ fileAction.displayName }}</p>
               </div>
@@ -39,7 +39,7 @@ import { mapGetters } from 'vuex'
 
 import { getFileActionsList } from '../../utils/file-actions'
 
-import IconAction from '../common/IconAction'
+import ActionIcon from '../common/ActionIcon'
 
 export default {
   name: 'FileMenuDialog',
@@ -48,7 +48,7 @@ export default {
     file: { type: Object, default: null },
   },
   components: {
-    IconAction,
+    ActionIcon,
   },
   computed: {
     ...mapGetters('filesmobile', ['currentStorage', 'currentPath']),

@@ -1,5 +1,5 @@
 <template>
-  <div class="icon-action flex justify-center items-center">
+  <div class="action-icon flex justify-center items-center">
     <component :is="componentInstance" />
   </div>
 </template>
@@ -8,7 +8,7 @@
 import { defineAsyncComponent } from "vue";
 
 export default {
-  name: 'IconAction',
+  name: 'ActionIcon',
   props: {
     icon: { type: String, required: true },
   },
@@ -22,7 +22,7 @@ export default {
 </script>
 
 <style scoped>
-.icon-action {
+.action-icon {
   width: 16px;
 }
 </style>

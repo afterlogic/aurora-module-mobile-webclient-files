@@ -69,7 +69,7 @@ export default {
     async deleteItems() {
       this.saving = true
       const items = []
-      if (this.selectedFiles.length) {
+      if (this.selectedFiles.length > 1) {
         this.selectedFiles.forEach((file) => {
           if (file.sharedWithMeAccess === 0) {
             items.push({

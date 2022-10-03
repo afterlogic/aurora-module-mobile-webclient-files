@@ -12,19 +12,19 @@
       />
     </q-card-actions>
     <div v-if="actions" class="col-10 flex justify-end q-pr-sm">
-      <icon-action
+      <action-icon
           v-if="isShowAction(actions.createShareableLink)"
           class="q-mr-lg"
           icon="SecureLinkIcon"
           @click="onPerformAction(actions.createShareableLink)"
       />
-      <icon-action
+      <action-icon
           v-if="isShowAction(actions.download)"
           class="q-mr-lg"
           icon="DownloadIcon"
           @click="onPerformAction(actions.download)"
       />
-      <icon-action
+      <action-icon
           v-if="isShowAction(actions.delete)"
           class="q-mr-lg"
           icon="DeleteIcon"
@@ -33,7 +33,7 @@
       <div class="dropdown-more flex justify-center items-center">
         <q-btn-dropdown v-if="isShowDropdown" :menu-offset="[8, -45]" flat unelevated dense>
           <template v-slot:label>
-            <icon-action class="q-mr-md" icon="MoreIcon" />
+            <action-icon class="q-mr-md" icon="MoreIcon" />
           </template>
           <q-list style="width: 205px; min-height: 55px">
             <q-item
@@ -42,7 +42,7 @@
               v-close-popup
               @click="onPerformAction(actions.shareWithTeammates)"
             >
-              <icon-action class="q-mr-md" :icon="actions.shareWithTeammates.icon" />
+              <action-icon class="q-mr-md" :icon="actions.shareWithTeammates.icon" />
               <q-item-section>
                 <q-item-label>{{
                   actions.shareWithTeammates.displayName
@@ -55,7 +55,7 @@
                 v-close-popup
                 @click="onPerformAction(actions.shareLeave)"
             >
-              <icon-action class="q-mr-md" :icon="actions.shareLeave.icon" />
+              <action-icon class="q-mr-md" :icon="actions.shareLeave.icon" />
               <q-item-section>
                 <q-item-label>{{
                     actions.shareLeave.displayName
@@ -64,7 +64,7 @@
             </q-item>
             <q-item
               v-if="isShowAction(actions.copy)" clickable v-close-popup @click="onCopyMove(actions.copy)">
-              <icon-action class="q-mr-md" :icon="actions.copy.icon" />
+              <action-icon class="q-mr-md" :icon="actions.copy.icon" />
               <q-item-section>
                 <q-item-label>{{ actions.copy.displayName }}</q-item-label>
               </q-item-section>
@@ -75,7 +75,7 @@
               v-close-popup
               @click="onPerformAction(actions.rename)"
             >
-              <icon-action class="q-mr-md" :icon="actions.rename.icon" />
+              <action-icon class="q-mr-md" :icon="actions.rename.icon" />
               <q-item-section>
                 <q-item-label>{{ actions.rename.displayName }}</q-item-label>
               </q-item-section>
@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import IconAction from "../common/IconAction";
+import ActionIcon from "../common/ActionIcon";
 import { mapActions, mapGetters } from 'vuex'
 
 import { getFileActions } from '../../utils/file-actions'
@@ -96,7 +96,7 @@ import { getFileActions } from '../../utils/file-actions'
 export default {
   name: 'FileInfoHeader',
   components: {
-    IconAction
+    ActionIcon
   },
   mounted() {
     this.actions = getFileActions()
