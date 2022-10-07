@@ -1,18 +1,16 @@
 <template>
   <app-item
     v-if="folder"
-    :disable="folder.isCopied"
-    :active="folder.isSelected"
     :item="folder"
     :isSelected="folder.isSelected"
-    :isChoice="isSelected"
-    clickable
-    @start="touchstart(folder)"
-    @end="openFolder"
-    @move="touchMove"
+    :disable="folder.isCopied"
+    :clickable="!isCopied"
+    :active="folder.isSelected"
+    :isChoice="isSelectMode"
+    @click="listItemClick(folder)"
   >
-    <q-item-section class="q-ml-lg relative-position" avatar>
-      <folder-icon color="secondary"></folder-icon>
+    <q-item-section class="relative-position" side>
+      <folder-icon color="secondary" />
       <share-with-me-item-icon v-if="folder.sharedWithMeAccess" class="absolute" style="left: 21px; top: 11px"/>
     </q-item-section>
     <q-item-section>
@@ -21,15 +19,14 @@
         <shared-item-icon />
       </q-item-label>
     </q-item-section>
-    <q-item-section v-if="!isSelected" class="q-mr-sm" avatar side>
+    <q-item-section v-if="!isSelectMode" side>
       <q-btn
         size="14px"
         color="grey"
         flat
         round
         icon="more_vert"
-        @touchstart.stop
-        @touchend.stop="showDialog"
+        @click.stop="menuClick"
       />
     </q-item-section>
   </app-item>
@@ -41,9 +38,9 @@ import { mapGetters, mapActions } from 'vuex'
 import { getShortName } from '../utils/common'
 
 import FolderIcon from './icons/FolderIcon'
-import SharedItemIcon from "./icons/item/SharedItemIcon";
-import ShareWithMeItemIcon from "./icons/ShareWithMeItemIcon";
-import AppItem from "../../../CoreMobileWebclient/vue-mobile/src/components/common/AppItem";
+import SharedItemIcon from './icons/item/SharedItemIcon'
+import ShareWithMeItemIcon from './icons/ShareWithMeItemIcon'
+import AppItem from 'src/components/common/AppItem'
 
 export default {
   name: 'FolderItem',
@@ -55,18 +52,17 @@ export default {
   },
   props: {
     folder: { type: Object, default: null },
-    isSelected: { type: Boolean, default: false },
+    isSelectMode: { type: Boolean, default: false },
     isCopied: { type: Boolean, default: false },
-    touchstart: { type: Function, default: null, require: true },
-    touchend: { type: Function, default: null, require: true },
+    selectItemHandler: { type: Function, default: null, require: true },
+    openMenuHandler: { type: Function, default: null, require: true },
   },
   computed: {
-    ...mapGetters('filesmobile', ['currentStorage']),
+    ...mapGetters('filesmobile', [
+      'currentStorage'
+    ]),
     folderName() {
-      if (this.folder) {
-        return getShortName(this.folder.name, 30)
-      }
-      return ''
+      return this.folder ? getShortName(this.folder.name, 50) : ''
     },
     isShared() {
       return !!this.folder.shares.length || this.folder.sharedWithMeAccess
@@ -85,8 +81,7 @@ export default {
       'changeSearchText'
     ]),
     async openFolder() {
-      this.touchend()
-      if (!this.isSelected && !this.folder.isCopied && !this.isMoved) {
+      if (!this.isSelectMode && !this.folder.isCopied && !this.isMoved) {
         const path = {
           path: this.folder.fullPath,
           name: this.folder.name,
@@ -99,13 +94,16 @@ export default {
         this.isMoved = false
       }
     },
-    touchMove() {
-      this.isMoved = true
-      this.$emit('touchmove')
+    listItemClick(item) {
+      if (this.isSelectMode) {
+        this.selectItemHandler(item)
+      } else {
+        this.openFolder()
+      }
     },
-    showDialog() {
-      if (!this.isSelected && !this.isCopied) {
-        this.$emit('showDialog', {
+    menuClick() {
+      if (!this.isSelectMode && !this.isCopied) {
+        this.openMenuHandler({
           file: this.folder,
           component: 'FileMenuDialog',
         })
@@ -114,5 +112,3 @@ export default {
   },
 }
 </script>
-
-<style scoped></style>

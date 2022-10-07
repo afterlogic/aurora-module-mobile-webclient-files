@@ -26,17 +26,17 @@
     >
       <app-pull-refresh :refresh-action="asyncGetFiles">
         <folder-item
+            class="folder"
             v-for="folder in folderList"
-            :key="folder"
+            :key="folder.Hash"
+            v-touch-hold.mouse="event => longPress(folder, event)"
+
             :folder="folder"
-            :isSelected="isSelected"
+            :isSelectMode="isSelectMode"
             :isCopied="isCopied"
-            :touchstart="touchstart"
-            :touchend="touchend"
-            @touchmove="touchmove"
-            @showDialog="showDialog"
-            class="file"
-        />
+            :selectItemHandler="selectItem"
+            :openMenuHandler="openMenu"
+          />
         <download-file-item
             v-for="file in downloadFiles"
             :key="file.name"
@@ -44,17 +44,17 @@
             class="file"
         />
         <file-item
+            class="file"
             v-for="file in fileList"
             :key="file"
+            v-touch-hold.mouse="event => longPress(file, event)"
+
             :file="file"
-            :isSelected="isSelected"
+            :isSelectMode="isSelectMode"
             :isCopied="isCopied"
-            :touchstart="touchstart"
-            :touchend="touchend"
-            @touchmove="touchmove"
-            @showDialog="showDialog"
-            class="file"
-        />
+            :selectItemHandler="selectItem"
+            :openMenuHandler="openMenu"
+          />
         <div style="height: 70px" class="full-width" />
       </app-pull-refresh>
     </q-scroll-area>
@@ -99,7 +99,7 @@ export default {
   data() {
     return {
       touchTimer: null,
-      isSelected: false,
+      isSelectMode: false,
       notChoose: false,
     }
   },
@@ -147,7 +147,7 @@ export default {
   watch: {
     selectedFiles(items) {
       if (!items.length) {
-        this.isSelected = false
+        this.isSelectMode = false
       }
     },
   },
@@ -168,12 +168,12 @@ export default {
       await this.asyncGetFiles()
       this.changeLoadingStatus(false)
     },
-    onRefresh() {
-      setTimeout(() => {
-        loading.value = false;
-        count.value++;
-      }, 1000);
-    },
+    // onRefresh() {
+    //   setTimeout(() => {
+    //     loading.value = false;
+    //     count.value++;
+    //   }, 1000);
+    // },
     showCreateButtonsDialog() {
       if (this.dialogComponent.component === 'CreateButtonsDialogs') {
         this.changeDialogComponent({ component: '' })
@@ -181,34 +181,16 @@ export default {
         this.changeDialogComponent({ component: 'CreateButtonsDialogs' })
       }
     },
-    showDialog({ file, component }) {
+    openMenu({ file, component }) {
       this.selectFile(file)
       this.changeDialogComponent({ component })
     },
-    selectItem() {
-      this.isSelected = true
-      this.changeSelectStatus()
+    selectItem(item) {
+      this.changeSelectStatus(item)
     },
-    touchstart(file) {
-      this.notChoose = false
-      if (!file.downloading) {
-        this.selectFile(file)
-        if (!this.isArchive) {
-          if (!this.isSelected && !this.isCopied) {
-            this.touchTimer = setTimeout(this.selectItem, 1000)
-          }
-        }
-      }
-    },
-    touchend() {
-      if (this.touchTimer) clearTimeout(this.touchTimer)
-      if (this.isSelected && !this.isCopied && !this.notChoose) {
-        this.changeSelectStatus()
-      }
-    },
-    touchmove() {
-      if (this.touchTimer) clearTimeout(this.touchTimer)
-      this.notChoose = true
+    longPress(item) {
+      this.isSelectMode = true
+      this.selectItem(item)
     },
   },
 }
@@ -216,10 +198,10 @@ export default {
 
 <style lang="scss">
 .file {
-  height: 64px !important;
-  border-bottom: 1px solid #F6F6F6;
-  padding: 0;
-  width: 100vw;
+  // height: 64px !important;
+  // border-bottom: 1px solid #F6F6F6;
+  // padding: 0;
+  // width: 100vw;
   &__name {
     font-style: normal;
     font-weight: normal;

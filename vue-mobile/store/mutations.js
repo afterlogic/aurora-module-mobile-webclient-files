@@ -46,7 +46,10 @@ export default {
     })
   },
 
-  setSelectStatus: (state) => { state.currentFile.isSelected = !state.currentFile.isSelected },
+  setSelectStatus: (state, item) => {
+    // state.currentFile.isSelected = !state.currentFile.isSelected
+    item.isSelected = !item.isSelected
+  },
 
   removeSelectedItems: (state, items) => {
     if (items.length) {

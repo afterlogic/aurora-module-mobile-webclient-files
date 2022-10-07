@@ -1,17 +1,15 @@
 <template>
   <app-item
     v-if="file"
-    :disable="file.isCopied"
-    :clickable="!isCopied"
     :item="file"
     :isSelected="file.isSelected"
-    :isChoice="isSelected"
+    :disable="file.isCopied"
+    :clickable="!isCopied"
     :active="file.isSelected"
-    @start="touchstart(file)"
-    @move="touchMove"
-    @end="selectFile"
+    :isChoice="isSelectMode"
+    @click="listItemClick(file)"
   >
-    <q-item-section class="q-ml-lg" avatar>
+    <q-item-section class="" side>
       <file-item-icon v-if="file.paranoidKey || !file.isImg" :file="file" />
       <div v-if="file.isImg && !file.paranoidKey" class="text-primary relative-position">
         <div
@@ -46,17 +44,16 @@
         <downloading-progress :file="file" />
       </q-item-label>
     </q-item-section>
-      <q-item-section v-if="!isSelected" class="q-mr-sm" avatar side>
-        <q-btn
-            size="14px"
-            color="grey"
-            flat
-            round
-            icon="more_vert"
-            @touchstart.stop
-            @touchend.stop="showDialog"
-        />
-      </q-item-section>
+    <q-item-section v-if="!isSelectMode" side>
+      <q-btn
+          size="14px"
+          color="grey"
+          flat
+          round
+          icon="more_vert"
+          @click.stop="menuClick"
+      />
+    </q-item-section>
   </app-item>
 </template>
 
@@ -90,10 +87,10 @@ export default {
   },
   props: {
     file: { type: Object, default: null },
-    isSelected: { type: Boolean, default: false },
+    isSelectMode: { type: Boolean, default: false },
     isCopied: { type: Boolean, default: false },
-    touchstart: { type: Function, default: null, require: true },
-    touchend: { type: Function, default: null, require: true },
+    selectItemHandler: { type: Function, default: null, require: true },
+    openMenuHandler: { type: Function, default: null, require: true },
   },
   data() {
     return {
@@ -135,10 +132,10 @@ export default {
       'changeCurrentHeader',
       'asyncGetFiles',
     ]),
-    async selectFile() {
-      this.touchend()
+    async openFile() {
+      // this.touchend()
       if (
-        !this.isSelected &&
+        !this.isSelectMode &&
         !this.isMoved &&
         !this.copiedFiles.length &&
         !this.file.downloading &&
@@ -152,7 +149,7 @@ export default {
         await this.changeCurrentPaths({ path, lastStorage: false })
         await this.asyncGetFiles()
       } else if (
-        !this.isSelected &&
+        !this.isSelectMode &&
         !this.isMoved &&
         !this.file.downloading &&
         !this.copiedFiles.length &&
@@ -163,13 +160,16 @@ export default {
         this.isMoved = false
       }
     },
-    touchMove() {
-      this.isMoved = true
-      this.$emit('touchmove')
+    listItemClick(item) {
+      if (this.isSelectMode) {
+        this.selectItemHandler(item)
+      } else {
+        this.openFile()
+      }
     },
-    showDialog() {
-      if (!this.isSelected && !this.isCopied) {
-        this.$emit('showDialog', {
+    menuClick() {
+      if (!this.isSelectMode && !this.isCopied) {
+        this.openMenuHandler({
           file: this.file,
           component: 'FileMenuDialog',
         })

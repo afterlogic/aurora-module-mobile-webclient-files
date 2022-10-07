@@ -91,8 +91,9 @@ export default {
   selectFile: ({ commit }, file) => {
     commit('setCurrentFile', file)
   },
-  changeSelectStatus: ({ commit }) => {
-    commit('setSelectStatus')
+  changeSelectStatus: ({ commit }, item) => {
+    console.log('changeSelectStatus', item)
+    commit('setSelectStatus', item)
   },
   
   asyncDeleteItems: async ({ state, commit, getters, dispatch }, { items }) => {
