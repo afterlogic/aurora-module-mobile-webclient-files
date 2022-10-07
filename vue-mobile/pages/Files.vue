@@ -59,7 +59,7 @@
       </app-pull-refresh>
     </q-scroll-area>
     <files-captions v-if="!loadingStatus && !folderList.length && !downloadFiles.length && !fileList.length"/>
-    <app-create-button :classes="classes" :show-dialog="showCreateButtonsDialog" v-if="isShowCreateButtons"/>
+    <app-create-button :rotate="appButtonRotate" @click="showCreateButtonsDialog" v-if="isShowCreateButtons"/>
     <dialogs-list />
   </main-layout>
 </template>
@@ -73,8 +73,9 @@ import StorageItem from '../components/StorageItem'
 import DialogsList from '../components/DialogsList'
 import DownloadFileItem from '../components/DownloadFileItem'
 import FilesCaptions from '../components/FilesCaptions'
-import AppCreateButton from "src/components/common/AppCreateButton";
-import AppPullRefresh from "../../../CoreMobileWebclient/vue-mobile/src/components/common/AppPullRefresh";
+
+import AppCreateButton from 'src/components/common/AppCreateButton'
+import AppPullRefresh from 'src/components/common/AppPullRefresh'
 
 export default {
   name: 'Files',
@@ -129,11 +130,8 @@ export default {
     userEmail() {
       return this.userPublicId
     },
-    classes() {
-      if (this.dialogComponent?.component === 'CreateButtonsDialogs') {
-        return 'z-index-max rotate'
-      }
-      return 'z-index-min'
+    appButtonRotate() {
+      return this.dialogComponent?.component === 'CreateButtonsDialogs'
     },
     isCopied() {
       return !!this.copiedFiles.length
