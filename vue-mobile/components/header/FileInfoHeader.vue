@@ -1,17 +1,9 @@
 <template>
-  <q-toolbar style="height: 55px; font-size: 16px; padding: 0">
-    <q-card-actions align="left" class="col-2">
-      <q-btn
-        flat
-        size="17px"
-        color="black"
-        round
-        dense
-        icon="chevron_left"
-        @click="onPreviousPath"
-      />
-    </q-card-actions>
-    <div v-if="actions" class="col-10 flex justify-end q-pr-sm">
+  <q-toolbar class="app-header">
+    <div class="col">
+      <q-btn icon="chevron_left" @click="onPreviousPath" color="black" flat round dense />
+    </div>
+    <div v-if="actions" class="col flex justify-end">
       <action-icon
           v-if="isShowAction(actions.createShareableLink)"
           class="q-mr-lg"
@@ -44,9 +36,7 @@
             >
               <action-icon class="q-mr-md" :icon="actions.shareWithTeammates.icon" />
               <q-item-section>
-                <q-item-label>{{
-                  actions.shareWithTeammates.displayName
-                }}</q-item-label>
+                {{ actions.shareWithTeammates.displayName }}
               </q-item-section>
             </q-item>
             <q-item
@@ -57,16 +47,14 @@
             >
               <action-icon class="q-mr-md" :icon="actions.shareLeave.icon" />
               <q-item-section>
-                <q-item-label>{{
-                    actions.shareLeave.displayName
-                  }}</q-item-label>
+                {{ actions.shareLeave.displayName }}
               </q-item-section>
             </q-item>
             <q-item
               v-if="isShowAction(actions.copy)" clickable v-close-popup @click="onCopyMove(actions.copy)">
               <action-icon class="q-mr-md" :icon="actions.copy.icon" />
               <q-item-section>
-                <q-item-label>{{ actions.copy.displayName }}</q-item-label>
+                {{ actions.copy.displayName }}
               </q-item-section>
             </q-item>
             <q-item
@@ -77,7 +65,7 @@
             >
               <action-icon class="q-mr-md" :icon="actions.rename.icon" />
               <q-item-section>
-                <q-item-label>{{ actions.rename.displayName }}</q-item-label>
+                {{ actions.rename.displayName }}
               </q-item-section>
             </q-item>
           </q-list>
@@ -88,9 +76,9 @@
 </template>
 
 <script>
-import ActionIcon from "../common/ActionIcon";
 import { mapActions, mapGetters } from 'vuex'
 
+import ActionIcon from '../common/ActionIcon'
 import { getFileActions } from '../../utils/file-actions'
 
 export default {
@@ -153,9 +141,3 @@ export default {
   },
 }
 </script>
-
-<style>
-.dropdown-more .q-btn-dropdown__arrow {
-  display: none;
-}
-</style>

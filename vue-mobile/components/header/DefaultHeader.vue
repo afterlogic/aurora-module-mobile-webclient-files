@@ -1,25 +1,8 @@
 <template>
-  <q-toolbar style="height: 55px" class="justify-between">
-    <q-btn
-      flat
-      v-if="currentPaths.length <= 1"
-      size="15px"
-      @click="$emit('openDrawer')"
-      color="black"
-      round
-      dense
-      icon="menu"
-    />
-    <q-btn
-      v-if="currentPaths.length > 1"
-      flat
-      size="15px"
-      color="black"
-      round
-      dense
-      icon="chevron_left"
-      @click="onPreviousPath"
-    />
+  <q-toolbar class="app-header">
+    <q-btn icon="menu" @click="$emit('openDrawer')" v-if="currentPaths.length <= 1" color="black" round flat dense />
+    <q-btn icon="chevron_left" @click="onPreviousPath" v-if="currentPaths.length > 1" color="black" round flat dense />
+    
     <div class="flex column q-px-lg" style="flex-grow: 1">
       <q-btn-dropdown
         model-value
@@ -53,10 +36,9 @@
           </div>
         </q-list>
       </q-btn-dropdown>
-      <span
-        class="header-storage__name"
-        >{{ storageName }}</span
-      >
+      <span class="header-storage__name">
+        {{ storageName }}
+      </span>
     </div>
     <q-btn
       flat

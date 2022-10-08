@@ -1,24 +1,13 @@
 <template>
-  <q-toolbar
-    style="height: 55px; font-size: 16px; padding: 0"
-    class="bg-primary"
-  >
-    <q-card-actions align="left" class="col-4">
-      <q-btn
-        flat
-        size="15px"
-        @click="remove"
-        color="black"
-        round
-        dense
-        icon="close"
-      />
-    </q-card-actions>
-    <div class="text-center text-black text-bold col-4">
+  <q-toolbar class="app-header">
+    <div class="col">
+      <q-btn @click="resetSelection" color="black" icon="close" flat round dense />
+    </div>
+    <div class="col text-center text-black text-bold col">
       <span>{{ `Selected: ${items.length}` }}</span>
     </div>
-    <div class="col-4 flex no-wrap justify-end q-pr-sm">
-      <action-icon
+    <div class="col flex no-wrap justify-end">
+      <action-icon 
           @click="copyItems"
           class="q-mr-md"
           :icon="actions.copy.icon"
@@ -37,33 +26,32 @@
             @click="deleteItems"
             :icon="actions.delete.icon"
         />
-        <span class="q-mr-md">{{unsharedFiles.length}}</span>
       </div>
     </div>
   </q-toolbar>
 </template>
 
 <script>
-import ActionIcon from '../common/ActionIcon'
-
 import {mapActions, mapGetters} from 'vuex'
-
 import { fileActions } from '../../utils/file-actions'
+import ActionIcon from '../common/ActionIcon'
 
 export default {
   name: 'SelectHeader',
-  components: {
-    ActionIcon
-  },
-  props: {
-    items: {
-      type: Array,
-      default: () => [],
-    },
 
+  components: {
+    ActionIcon,
   },
+
+  props: {
+    items: { type: Array, default: () => [], },
+  },
+
   computed: {
-    ...mapGetters('filesmobile', ['currentStorage', 'currentPath']),
+    ...mapGetters('filesmobile', [
+      'currentStorage',
+      'currentPath'
+    ]),
     unsharedFiles() {
       return this.items.filter( item => item.sharedWithMeAccess === 0 )
     },
@@ -80,7 +68,7 @@ export default {
       'changeDialogComponent',
       'addCopyItems',
     ]),
-    remove() {
+    resetSelection() {
       this.removeSelectedItems({ items: this.items })
     },
     deleteItems() {
@@ -109,5 +97,3 @@ export default {
   },
 }
 </script>
-
-<style scoped></style>

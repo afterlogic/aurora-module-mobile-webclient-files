@@ -204,7 +204,7 @@ export default {
       return await this.getContactSuggestions(params)
     },
     sendViaMessage() {
-      console.log('coming soon')
+      notification.showReport('Coming soon')
     },
     selectContact(contact) {
       this.recipient = contact
@@ -234,9 +234,7 @@ export default {
     },
     copyText(text, valueName) {
       navigator.clipboard.writeText(text).then(() => {
-        notification.showReport(
-          `The ${valueName} has been copied to the clipboard.`
-        )
+        notification.showReport(`The ${valueName} has been copied to the clipboard.`)
       })
     },
     setComponents(components) {

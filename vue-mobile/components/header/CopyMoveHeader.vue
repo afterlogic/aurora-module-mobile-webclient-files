@@ -1,43 +1,14 @@
 <template>
-  <q-toolbar
-    style="height: 55px; font-size: 16px; padding: 0"
-    class="bg-primary"
-  >
-    <q-card-actions align="left" class="col-3">
-      <q-btn
-        v-if="currentPaths.length <= 1"
-        flat
-        size="15px"
-        color="black"
-        round
-        dense
-        icon="close"
-        @click="removeCopiedItems"
-      />
-      <q-btn
-        v-if="currentPaths.length > 1"
-        flat
-        size="15px"
-        color="black"
-        round
-        dense
-        icon="chevron_left"
-        @click="onPreviousPath"
-      />
-    </q-card-actions>
-    <div class="text-center text-black text-bold col-6">
+  <q-toolbar class="app-header bg-primary">
+    <div class="col">
+      <q-btn icon="close" @click="removeCopiedItems" v-if="currentPaths.length <= 1" color="black" round flat dense />
+      <q-btn icon="chevron_left" @click="onPreviousPath" v-if="currentPaths.length > 1" color="black" round flat dense />
+    </div>
+    <div class="col text-center text-black text-bold">
       <span>Move files/folders</span>
     </div>
-    <div class="col-3 flex justify-end q-mr-md">
-      <q-btn
-        flat
-        size="15px"
-        color="black"
-        round
-        dense
-        icon="create_new_folder"
-        @click="createFolder"
-      />
+    <div class="col flex justify-end">
+      <q-btn icon="create_new_folder" @click="createFolder" color="black" round flat dense />
       <div class="dropdown-more flex justify-center items-center">
         <q-btn-dropdown v-close-popup :menu-offset="[8, -45]" flat unelevated dense>
           <template v-slot:label>
@@ -59,8 +30,8 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
-import StorageItem from "../StorageItem";
-import ActionIcon from "../common/ActionIcon";
+import StorageItem from '../StorageItem'
+import ActionIcon from '../common/ActionIcon'
 
 export default {
   name: 'CopyMoveHeader',
@@ -94,9 +65,3 @@ export default {
   },
 }
 </script>
-
-<style>
-.dropdown-more .q-btn-dropdown__arrow {
-  display: none;
-}
-</style>

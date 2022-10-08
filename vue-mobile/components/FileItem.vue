@@ -9,7 +9,7 @@
     :isChoice="isSelectMode"
     @click="listItemClick(file)"
   >
-    <q-item-section class="" side>
+    <q-item-section side>
       <file-item-icon v-if="file.paranoidKey || !file.isImg" :file="file" />
       <div v-if="file.isImg && !file.paranoidKey" class="text-primary relative-position">
         <div
@@ -133,7 +133,6 @@ export default {
       'asyncGetFiles',
     ]),
     async openFile() {
-      // this.touchend()
       if (
         !this.isSelectMode &&
         !this.isMoved &&

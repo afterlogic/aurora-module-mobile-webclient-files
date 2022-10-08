@@ -92,7 +92,6 @@ export default {
     commit('setCurrentFile', file)
   },
   changeSelectStatus: ({ commit }, item) => {
-    console.log('changeSelectStatus', item)
     commit('setSelectStatus', item)
   },
   

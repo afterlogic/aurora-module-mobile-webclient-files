@@ -1,41 +1,27 @@
 <template>
   <div>
-    <q-toolbar class="search-toolbar">
-      <div class="col-2">
-        <q-card-actions align="left">
-          <q-btn
-              flat
-              size="15px"
-              color="black"
-              round
-              dense
-              icon="close"
-              @click="close"
-          />
-        </q-card-actions>
+    <q-toolbar class="app-header search-toolbar">
+      <div class="col">
+        <q-btn @click="onCloseSearch" color="black" icon="close" flat round dense />
       </div>
-      <div class="flex text-center items-center text-black col-8 search" style="overflow: hidden">
+      <div class="col flex text-center items-center text-black search" style="overflow: hidden">
         <div class="full-width">
-          <span class="text-bold search-title"
-          >Search</span
-          >
+          <span class="text-bold search-title">
+            Search
+          </span>
         </div>
         <div class="search-path flex no-wrap justify-center full-width">
           <span>{{ currentStorage.DisplayName }}{{currentPath.length ? '/' : ''}}</span>
           <div class="flex" style="direction: rtl; overflow: hidden;">
-            <span
-                style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;margin-left: -0.6em;"
-            >
+            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: -0.6em;">
               i{{currentFolder}}
             </span>
           </div>
         </div>
       </div>
-      <div class="col-2" />
+      <div class="col" />
     </q-toolbar>
-    <q-toolbar
-      class="flex row search-toolbar-input"
-    >
+    <q-toolbar class="flex row search-toolbar-input">
       <q-input
         v-model="text"
         :style="{ height: '48px' }"
@@ -63,7 +49,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('filesmobile', ['currentStorage', 'searchText', 'currentPath']),
+    ...mapGetters('filesmobile', [
+      'currentStorage',
+      'searchText',
+      'currentPath'
+    ]),
     currentFolder() {
       // const paths = this.currentPath.split('/')
       // if (this.currentPath.length > 20) {
@@ -97,7 +87,7 @@ export default {
       this.changeSearchText(this.text)
       const result = await this.asyncGetFiles()
     },
-    async close() {
+    async onCloseSearch() {
       this.changeSearchText('')
       this.changeCurrentHeader('')
       await this.asyncGetFiles()
@@ -116,11 +106,6 @@ export default {
   font-size: 18px;
   line-height: 20px;
   margin-top: 5px
-}
-.search-toolbar {
-  height: 55px;
-  font-size: 16px;
-  padding: 0
 }
 .search-path {
   font-weight: 400;
