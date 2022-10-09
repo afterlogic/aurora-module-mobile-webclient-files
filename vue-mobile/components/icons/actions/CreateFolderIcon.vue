@@ -1,59 +1,8 @@
 <template>
-  <svg
-    width="60"
-    height="60"
-    viewBox="0 0 60 60"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <g filter="url(#filter0_d_228_29)">
-      <circle cx="30" cy="30" r="20" fill="white" />
-    </g>
-    <path
-      d="M22 35V26V25C22 24.4477 22.4477 24 23 24H27.6972C27.8946 24 28.0877 24.0584 28.2519 24.1679L30.7481 25.8321C30.9123 25.9416 31.1054 26 31.3028 26H37C37.5523 26 38 26.4477 38 27V35C38 35.5523 37.5523 36 37 36H23C22.4477 36 22 35.5523 22 35Z"
-      fill="#469CF8"
-      stroke="#469CF8"
-      stroke-width="3"
-    />
-    <path d="M30 26H22" stroke="#469CF8" stroke-width="3" />
-    <path d="M23 26L27 26" stroke="white" />
-    <defs>
-      <filter
-        id="filter0_d_228_29"
-        x="0"
-        y="0"
-        width="60"
-        height="60"
-        filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
-      >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
-        <feColorMatrix
-          in="SourceAlpha"
-          type="matrix"
-          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          result="hardAlpha"
-        />
-        <feOffset />
-        <feGaussianBlur stdDeviation="5" />
-        <feComposite in2="hardAlpha" operator="out" />
-        <feColorMatrix
-          type="matrix"
-          values="0 0 0 0 0.109804 0 0 0 0 0.521569 0 0 0 0 0.905882 0 0 0 0.4 0"
-        />
-        <feBlend
-          mode="normal"
-          in2="BackgroundImageFix"
-          result="effect1_dropShadow_228_29"
-        />
-        <feBlend
-          mode="normal"
-          in="SourceGraphic"
-          in2="effect1_dropShadow_228_29"
-          result="shape"
-        />
-      </filter>
-    </defs>
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#469CF8" d="M1 25V7.97297V6.5C1 5.67157 1.67157 5 2.5 5H12.25L17.1538 8.14286H29C30.1046 8.14286 31 9.03829 31 10.1429V25C31 26.1046 30.1046 27 29 27H3C1.89543 27 1 26.1046 1 25Z"></path>
+    <path fill="#469CF8" d="M17.1538 8.14286L16.6143 8.98479L16.8609 9.14286H17.1538V8.14286ZM12.25 5L12.7896 4.15807L12.5429 4H12.25V5ZM0 7.97297V25H2V7.97297H0ZM3 28H29V26H3V28ZM32 25V10.1429H30V25H32ZM29 7.14286H17.1538V9.14286H29V7.14286ZM17.6934 7.30093L12.7896 4.15807L11.7104 5.84193L16.6143 8.98479L17.6934 7.30093ZM12.25 4H2.5V6H12.25V4ZM0 6.5V7.97297H2V6.5H0ZM32 10.1429C32 8.48601 30.6569 7.14286 29 7.14286V9.14286C29.5523 9.14286 30 9.59057 30 10.1429H32ZM29 28C30.6569 28 32 26.6569 32 25H30C30 25.5523 29.5523 26 29 26V28ZM2.5 4C1.11929 4 0 5.11929 0 6.5H2C2 6.22386 2.22386 6 2.5 6V4ZM0 25C0 26.6569 1.34315 28 3 28V26C2.44772 26 2 25.5523 2 25H0Z"></path>
+    <path d="M0 11H11" stroke="white" stroke-width="3"></path>
   </svg>
 </template>
 
@@ -62,5 +11,3 @@ export default {
   name: 'CreateFolderIcon',
 }
 </script>
-
-<style scoped></style>

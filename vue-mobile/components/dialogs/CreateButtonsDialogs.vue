@@ -5,9 +5,13 @@
     transition-duration="200"
     v-model="openDialog"
   >
-    <div class="flex column q-pa-sm absolute create-buttons">
-      <upload-file-icon @click="uploadFile" />
-      <create-folder-icon @click="createFolder" />
+    <div class="flex column absolute create-buttons">
+      <div class="create-buttons__item upload-file" @click="uploadFile">
+        <upload-file-icon />
+      </div>
+      <div class="create-buttons__item create-folder" @click="createFolder">
+        <create-folder-icon />
+      </div>
     </div>
   </q-dialog>
 </template>
@@ -18,8 +22,7 @@ import { mapActions } from 'vuex'
 import CreateFolderIcon from '../icons/actions/CreateFolderIcon'
 import UploadFileIcon from '../icons/actions/UploadFileIcon'
 
-import { defineAsyncComponent, shallowRef } from "vue";
-
+import { defineAsyncComponent, shallowRef } from 'vue'
 
 export default {
   name: 'CreateButtonsDialogs',
@@ -58,13 +61,33 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .create-buttons {
   box-shadow: none;
   position: fixed;
   z-index: 1;
-  bottom: 138px;
-  right: 9px;
-  margin-right: 2px;
+  bottom: 132px;
+  right: 16px;
+  margin-right: 0px;
+  width: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__item {
+    width: 40px;
+    height: 40px;
+    background-color: #fff;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    box-shadow: 0 0 10px rgba(28, 133, 231, 0.4);
+  }
+}
+
+.create-folder svg {
+  width: 20px;
 }
 </style>
