@@ -9,11 +9,10 @@
     :isChoice="isSelectMode"
     @click="listItemClick(file)"
   >
-    <q-item-section side>
+    <q-item-section class="file_thumb" side>
       <file-item-icon v-if="file.paranoidKey || !file.isImg" :file="file" />
-      <div v-if="file.isImg && !file.paranoidKey" class="text-primary relative-position">
-        <div
-          class="img-preview"
+      <div v-if="file.isImg && !file.paranoidKey" class="text-primary">
+        <div class="img-preview"
           :style="{
             background: `url(${filePreview}) no-repeat center`,
             'background-size': 'contain',
@@ -21,38 +20,28 @@
             height: '32px',
           }"
         />
-        <share-with-me-item-icon
-            v-if="file.sharedWithMeAccess"
-            class="absolute"
-            style="left: 18px; top: -8px"
-        />
+        <share-with-me-item-icon v-if="file.sharedWithMeAccess" class="absolute" style="left: 18px; top: -8px" />
       </div>
     </q-item-section>
-    <q-item-section>
-      <q-item-label class="text-subtitle1 text-dark file__name">{{
-        fileName
-      }}</q-item-label>
-      <q-item-label class="text-secondary file__info flex items-center no-wrap" v-if="!file.downloading">
-        <encrypted-item-icon v-if="file.paranoidKey" class="q-mr-xs"/>
-        <shared-item-icon v-if="isShared" class="q-mr-xs" width="14" height="14" />
-        <link-item-icon v-if="file.publicLink" class="q-mr-xs"/>
-        <div class="items-center justify-center text-center text-no-wrap">{{ fileSize }}</div>
-        <div class="q-mx-xs text-no-wrap">|</div>
-        <div class=" text-no-wrap" style="overflow: hidden">{{ fileDate }}</div>
+
+    <q-item-section class="list-item__text">
+      <q-item-label class="list-item__text_primary file__name">
+        {{ fileName }}
       </q-item-label>
-      <q-item-label v-if="file.downloading">
+      <q-item-label v-if="!file.downloading" class="list-item__text_secondary file__info">
+        <encrypted-item-icon _v-if="file.paranoidKey" class="file__info-icon_encrypted"/>
+        <shared-item-icon _v-if="isShared" class="file__info-icon_shared" width="14" height="14" />
+        <link-item-icon _v-if="file.publicLink" class="file__info-icon_link"/>
+        <span class="file__size">{{ fileSize }}</span>
+        <span class="file__separator">|</span>
+        <span class="file__date">{{ fileDate }}</span>
+      </q-item-label>
+      <q-item-label v-if="file.downloading" class="file__download-progress">
         <downloading-progress :file="file" />
       </q-item-label>
     </q-item-section>
-    <q-item-section v-if="!isSelectMode" side>
-      <q-btn
-          size="14px"
-          color="grey"
-          flat
-          round
-          icon="more_vert"
-          @click.stop="menuClick"
-      />
+    <q-item-section v-if="!isSelectMode" class="file__menu" side>
+      <q-btn icon="more_vert" @click.stop="menuClick" color="grey" flat round />
     </q-item-section>
   </app-item>
 </template>
@@ -66,13 +55,13 @@ import { getApiHost } from 'src/api/helpers'
 
 import { getShortName } from '../utils/common'
 
+import AppItem from 'src/components/common/AppItem'
 import FileItemIcon from './icons/FileItemIcon'
 import DownloadingProgress from './common/DownloadingProgress'
-import EncryptedItemIcon from "./icons/item/EncryptedItemIcon";
-import LinkItemIcon from "./icons/item/LinkItemIcon";
-import SharedItemIcon from "./icons/item/SharedItemIcon";
-import ShareWithMeItemIcon from "./icons/ShareWithMeItemIcon";
-import AppItem from "../../../CoreMobileWebclient/vue-mobile/src/components/common/AppItem";
+import EncryptedItemIcon from './icons/item/EncryptedItemIcon'
+import LinkItemIcon from './icons/item/LinkItemIcon'
+import SharedItemIcon from './icons/item/SharedItemIcon'
+import ShareWithMeItemIcon from './icons/ShareWithMeItemIcon'
 
 export default {
   name: 'FileItem',
@@ -178,8 +167,34 @@ export default {
 }
 </script>
 
-<style scoped>
-.button-enter-active {
+<style lang="scss" scoped>
+.file {
+  // &__name {
+  // }
+  &__info {
+    display: flex;
+    align-items: center;
+  }
+  &__info-icon_encrypted,
+  &__info-icon_shared,
+  &__info-icon_link {
+    fill: $secondary;
+  }
+
+  .list-item__selected &__info-icon_encrypted,
+  .list-item__selected &__info-icon_shared,
+  .list-item__selected &__info-icon_link {
+    fill: #000;
+  }
+  // &__size,
+  // &__separator,
+  // &__date {
+  // }
+  &__separator {
+    margin: -1px 4px 0;
+  }
+}
+/* .button-enter-active {
   transition: opacity 0.5s ease;
 }
 .button-leave-active {
@@ -189,5 +204,7 @@ export default {
 .button-enter-from,
 .button-leave-to {
   opacity: 0;
-}
+} */
+
+
 </style>

@@ -9,25 +9,20 @@
     :isChoice="isSelectMode"
     @click="listItemClick(folder)"
   >
-    <q-item-section class="relative-position" side>
+    <q-item-section class="folder__metadata" side>
       <folder-icon color="secondary" />
       <share-with-me-item-icon v-if="folder.sharedWithMeAccess" class="absolute" style="left: 21px; top: 11px"/>
     </q-item-section>
-    <q-item-section>
-      <q-item-label class="file__name">{{ folderName }}</q-item-label>
-      <q-item-label v-if="isShared" class="flex items-center">
+
+    <q-item-section class="list-item__text">
+      <q-item-label class="list-item__text_primary folder__name">{{ folderName }}</q-item-label>
+      <q-item-label v-if="isShared" class="list-item__text_secondary folder__info">
         <shared-item-icon />
       </q-item-label>
     </q-item-section>
-    <q-item-section v-if="!isSelectMode" side>
-      <q-btn
-        size="14px"
-        color="grey"
-        flat
-        round
-        icon="more_vert"
-        @click.stop="menuClick"
-      />
+
+    <q-item-section v-if="!isSelectMode" class="folder__menu" side>
+      <q-btn icon="more_vert" @click.stop="menuClick" color="grey" flat round />
     </q-item-section>
   </app-item>
 </template>

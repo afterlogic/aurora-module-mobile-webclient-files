@@ -197,27 +197,6 @@ export default {
 </script>
 
 <style lang="scss">
-.file {
-  // height: 64px !important;
-  // border-bottom: 1px solid #F6F6F6;
-  // padding: 0;
-  // width: 100vw;
-  &__name {
-    font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 16px;
-    letter-spacing: 0.3px;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-  &__info {
-    font-style: normal;
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 10px;
-  }
-}
 .files__list-default {
   height: 100%;
 }
