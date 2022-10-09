@@ -29,9 +29,9 @@
         {{ fileName }}
       </q-item-label>
       <q-item-label v-if="!file.downloading" class="list-item__text_secondary file__info">
-        <encrypted-item-icon _v-if="file.paranoidKey" class="file__info-icon_encrypted"/>
-        <shared-item-icon _v-if="isShared" class="file__info-icon_shared" width="14" height="14" />
-        <link-item-icon _v-if="file.publicLink" class="file__info-icon_link"/>
+        <encrypted-item-icon v-if="file.paranoidKey" class="file__info-icon_encrypted"/>
+        <shared-item-icon v-if="isShared" class="file__info-icon_shared" width="14" height="14" />
+        <link-item-icon v-if="file.publicLink" class="file__info-icon_link"/>
         <span class="file__size">{{ fileSize }}</span>
         <span class="file__separator">|</span>
         <span class="file__date">{{ fileDate }}</span>
