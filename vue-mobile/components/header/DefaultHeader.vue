@@ -1,54 +1,45 @@
 <template>
   <q-toolbar class="app-header">
-    <q-btn icon="menu" @click="$emit('openDrawer')" v-if="currentPaths.length <= 1" color="black" round flat dense />
-    <q-btn icon="chevron_left" @click="onPreviousPath" v-if="currentPaths.length > 1" color="black" round flat dense />
+    <div class="col app-header__left">
+      <q-btn icon="menu" @click="$emit('openDrawer')" v-if="currentPaths.length <= 1" color="black" round flat dense />
+      <q-btn icon="chevron_left" @click="onPreviousPath" v-if="currentPaths.length > 1" color="black" round flat dense />
+    </div>
     
-    <div class="flex column q-px-lg" style="flex-grow: 1">
+    <div class="col app-header__title" _style="flex-grow: 1">
+      <span class="app-header__title-main" v-if="currentPaths.length == 1">
+        {{ $t('FILESWEBCLIENT.HEADING_BROWSER_TAB') }}
+      </span>
+
       <q-btn-dropdown
+        v-if="currentPaths.length > 1"
         model-value
-        :menu-offset="[8,-8]"
         v-model="isOpen"
         :ripple="false"
-        :dropdown-icon="currentPaths.length > 1 ? 'arrow_drop_down' : 'none'"
+        dropdown-icon="arrow_drop_down"
+        class="files-dropdown"
         dense
-        class="text-black files-dropdown"
         no-caps
         flat
-        :label="
-          currentPaths.length <= 1
-            ? $t('FILESWEBCLIENT.HEADING_BROWSER_TAB')
-            : getShortName(currentPaths[currentPaths.length - 1].name, 20)
-        "
+        :label="getShortName(currentPaths[currentPaths.length - 1].name, 20)"
       >
         <q-list>
           <div v-for="(path, index) in currentPaths" :key="path.path">
-            <q-item
-              clickable
-              dense
-              v-close-popup
-              @click="openPath(path)"
-              v-if="currentPaths.length - 1 !== index"
-            >
-              <div class="files-dropdown__item flex items-center">
-                <span>{{ getShortName(path.name, 20) }}</span>
+            <q-item v-if="currentPaths.length - 1 !== index" @click="openPath(path)" clickable dense v-close-popup>
+              <div class="files-dropdown__item">
+                {{ getShortName(path.name, 20) }}
               </div>
             </q-item>
           </div>
         </q-list>
       </q-btn-dropdown>
-      <span class="header-storage__name">
+      <span class="app-header__title-secondary">
         {{ storageName }}
       </span>
     </div>
-    <q-btn
-      flat
-      size="15px"
-      color="black"
-      round
-      dense
-      icon="search"
-      @click="showSearchHeader"
-    />
+
+    <div class="col app-header__right">
+      <q-btn icon="search" @click="showSearchHeader" size="15px" color="black" flat round dense />
+    </div>
   </q-toolbar>
 </template>
 
@@ -99,33 +90,38 @@ export default {
 }
 </script>
 
-<style>
-.header-storage__name {
-  position: absolute;
-  top: 35px;
-  left: calc(50%);
-  transform: translate(-50%, 0);
-  font-style: normal;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 10px;
-  color: #969494;
-}
+<style lang="scss">
+// .header-storage__name {
+//   position: absolute;
+//   top: 35px;
+//   left: calc(50%);
+//   transform: translate(-50%, 0);
+//   font-style: normal;
+//   font-weight: 400;
+//   font-size: 12px;
+//   line-height: 10px;
+//   color: #969494;
+// }
+
 .files-dropdown {
-  padding-left: 41px;
-  margin-top: -8px;
-  font-size: 18px;
-  line-height: 20px;
-}
-.files-dropdown span .block {
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 20px;
-}
-.files-dropdown__item {
-  font-style: normal;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 20px !important;
+  padding: 0 0 0 24px;
+  min-height: auto;
+
+  &__item {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 20px !important;
+    display: flex;
+    align-items: center;
+  }
+
+  .block {
+    font-size: 18px;
+    line-height: 20px;
+  }
+  .q-icon {
+    height: 20px;
+  }
 }
 </style>

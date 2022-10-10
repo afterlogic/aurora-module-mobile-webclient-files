@@ -1,9 +1,9 @@
 <template>
   <q-toolbar class="app-header">
-    <div class="col">
+    <div class="col app-header__left">
       <q-btn icon="chevron_left" @click="onPreviousPath" color="black" flat round dense />
     </div>
-    <div v-if="actions" class="col flex justify-end">
+    <div class="col app-header__right">
       <action-icon
           v-if="isShowAction(actions.createShareableLink)"
           class="q-mr-lg"

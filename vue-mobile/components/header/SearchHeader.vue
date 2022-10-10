@@ -1,16 +1,14 @@
 <template>
   <div>
     <q-toolbar class="app-header search-toolbar">
-      <div class="col">
+      <div class="col app-header__left">
         <q-btn @click="onCloseSearch" color="black" icon="close" flat round dense />
       </div>
-      <div class="col flex text-center items-center text-black search" style="overflow: hidden">
-        <div class="full-width">
-          <span class="text-bold search-title">
-            Search
-          </span>
-        </div>
-        <div class="search-path flex no-wrap justify-center full-width">
+      <div class="col-8 app-header__title">
+        <span class="app-header__title-main">
+          Search
+        </span>
+        <div class="app-header__title-secondary flex no-wrap justify-center full-width">
           <span>{{ currentStorage.DisplayName }}{{currentPath.length ? '/' : ''}}</span>
           <div class="flex" style="direction: rtl; overflow: hidden;">
             <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: -0.6em;">
@@ -19,19 +17,17 @@
           </div>
         </div>
       </div>
-      <div class="col" />
+      <div class="col app-header__right"></div>
     </q-toolbar>
-    <q-toolbar class="flex row search-toolbar-input">
+    <q-toolbar class="search-toolbar__field">
       <q-input
         v-model="text"
-        :style="{ height: '48px' }"
-        :input-style="{ height: '48px' }"
         placeholder="Search"
         autofocus
         borderless
         outlined
-        class="col-12 q-px-md search"
-        model-value=""
+        dense
+        class="search-toolbar__input"
         debounce="400"
       />
     </q-toolbar>
@@ -96,26 +92,8 @@ export default {
 }
 </script>
 
-<style>
-.search .q-field__control {
+<style scoped>
+/* .search .q-field__control {
   height: 48px;
-}
-.search-title {
-  font-style: normal;
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 20px;
-  margin-top: 5px
-}
-.search-path {
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 10px;
-  color: #B6B5B5;
-}
-.search-toolbar-input {
-  height: 74px;
-  font-size: 16px;
-  padding: 0
-}
+} */
 </style>

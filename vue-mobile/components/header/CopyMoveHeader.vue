@@ -1,13 +1,13 @@
 <template>
   <q-toolbar class="app-header bg-primary">
-    <div class="col">
+    <div class="col app-header__left">
       <q-btn icon="close" @click="removeCopiedItems" v-if="currentPaths.length <= 1" color="black" round flat dense />
       <q-btn icon="chevron_left" @click="onPreviousPath" v-if="currentPaths.length > 1" color="black" round flat dense />
     </div>
-    <div class="col text-center text-black text-bold">
-      <span>Move files/folders</span>
+    <div class="col app-header__title">
+      Move files/folders
     </div>
-    <div class="col flex justify-end">
+    <div class="col app-header__right">
       <q-btn icon="create_new_folder" @click="createFolder" color="black" round flat dense />
       <div class="dropdown-more flex justify-center items-center">
         <q-btn-dropdown v-close-popup :menu-offset="[8, -45]" flat unelevated dense>
