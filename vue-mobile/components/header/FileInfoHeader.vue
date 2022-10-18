@@ -4,19 +4,19 @@
       <q-btn icon="chevron_left" @click="onPreviousPath" color="black" flat round dense />
     </div>
     <div class="col app-header__right">
-      <action-icon
+      <!-- <action-icon
           v-if="isShowAction(actions.createShareableLink)"
           class="q-mr-lg"
           icon="SecureLinkIcon"
           @click="onPerformAction(actions.createShareableLink)"
-      />
-      <action-icon
+      /> -->
+      <!-- <action-icon
           v-if="isShowAction(actions.download)"
           class="q-mr-lg"
           icon="DownloadIcon"
           @click="onPerformAction(actions.download)"
-      />
-      <action-icon
+      /> -->
+      <!-- <action-icon
           v-if="isShowAction(actions.delete)"
           class="q-mr-lg"
           icon="DeleteIcon"
@@ -70,7 +70,7 @@
             </q-item>
           </q-list>
         </q-btn-dropdown>
-      </div>
+      </div> -->
     </div>
   </q-toolbar>
 </template>
@@ -79,7 +79,8 @@
 import { mapActions, mapGetters } from 'vuex'
 
 import ActionIcon from '../common/ActionIcon'
-import { getFileActions } from '../../utils/file-actions'
+import { getFileActions, fileActions } from '../../utils/file-actions'
+import {  } from '../../utils/file-actions'
 
 export default {
   name: 'FileInfoHeader',
@@ -87,7 +88,10 @@ export default {
     ActionIcon
   },
   mounted() {
-    this.actions = getFileActions()
+    // this.actions = getFileActions()
+    // console.log('actions',  this.actions)
+    this.actions = fileActions
+
   },
   data() {
     return {
@@ -101,9 +105,9 @@ export default {
     },
   },
   watch: {
-    'fileList.length'() {
-      this.onPreviousPath()
-    },
+    // 'fileList.length'() {
+    //   this.onPreviousPath()
+    // },
   },
   methods: {
     ...mapActions('filesmobile', ['changeDialogComponent', 'asyncDownloadFile']),

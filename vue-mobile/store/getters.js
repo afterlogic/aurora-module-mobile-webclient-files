@@ -7,17 +7,15 @@ export default {
   filesQuota: (state) => state.filesQuota,
   currentStorage: (state) => state.currentStorage,
   loadingStatus: (state) => state.isLoading,
-  currentPaths: (state) => state.currentPaths,
+  currentPathString: (state) => ( '/' + (state.currentPath.length > 0 ? state.currentPath.join('/') : '') ),
   currentPath: (state) => state.currentPath,
   currentFile: (state) => state.currentFile,
   downloadFiles: (state) => state.downloadFiles,
   currentHeader: (state) => state.currentHeader,
   searchText: (state) => state.searchText,
   isArchive: (state) => {
-    return (
-      state.currentPath.split('.')[state.currentPath.split('.').length - 1] ===
-      'zip'
-    )
+    return false
+    // return state.currentPath.split('.')[state.currentPath.split('.').length - 1] === 'zip'
   },
   selectedFiles: (state) => {
     const files = getFilteredItems(state.fileList, 'isSelected')

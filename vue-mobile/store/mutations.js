@@ -5,24 +5,25 @@ export default {
   setFilesQuota: (state, filesQuota) => { state.filesQuota = filesQuota },
 
   setCurrentStorage: (state, currentStorage) => { state.currentStorage = currentStorage },
-  setLoadingStatus: (state, status) => { state.isLoading = status },
   setCurrentPath: (state, { path }) => { state.currentPath = path },
   setCurrentFile: (state, file) => { state.currentFile = file },
+  setLoadingStatus: (state, status) => { state.isLoading = status },
+  
   setFileName: (state, fileName) => { state.currentFile.name = fileName },
   setCurrentHeader: (state, headerName) => { state.currentHeader = headerName },
   setSearchText: (state, text) => { state.searchText = text },
 
-  changeCurrentPath: (state, { path, index, lastStorage }) => {
-    if (!lastStorage) {
-      if (index === -1) {
-        state.currentPaths.push(path)
-      } else {
-        state.currentPaths.splice(index + 1)
-      }
-    } else {
-      state.currentPaths = [path]
-    }
-  },
+  // changeCurrentPath: (state, { path, index, lastStorage }) => {
+  //   if (!lastStorage) {
+  //     if (index === -1) {
+  //       state.currentPath.push(path)
+  //     } else {
+  //       state.currentPath.splice(index + 1)
+  //     }
+  //   } else {
+  //     state.currentPath = [path]
+  //   }
+  // },
 
   removeFolders: (state, folders) => {
     folders.forEach((folder) => {

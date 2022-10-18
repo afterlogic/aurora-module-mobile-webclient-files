@@ -1,85 +1,83 @@
 <template>
-  <main-layout>
-    <share-with-me-info-icon v-if="currentFile?.sharedWithMeAccess" class="absolute" style="right: 0; position: fixed; z-index: 1"/>
-    <q-scroll-area :thumb-style="{ width: '5px', 'z-index': 2 }" class="file-info__info">
-      <div v-if="currentFile">
-        <div class="flex items-center justify-center">
+  <share-with-me-info-icon v-if="currentFile?.sharedWithMeAccess" class="absolute" style="right: 0; position: fixed; z-index: 1"/>
+  <q-scroll-area :thumb-style="{ width: '5px', 'z-index': 2 }" class="file-info__info">
+    <div v-if="currentFile">
+      <div class="flex items-center justify-center">
+        <div
+            class="file-info__preview full-width"
+            style="height: 1em"
+        >
+          <q-linear-progress v-if="currentFile.decryptionProgress" indeterminate track-color="grey-1" color="primary"/>
+        </div>
+        <div
+            v-if="(currentFile.paranoidKey || !currentFile.thumbnailUrl) &&
+              !currentFile.decryptViewUrl"
+            class="file-info__preview q-my-xl"
+        >
+          <file-item-icon
+              v-if="currentFile.paranoidKey || !currentFile.thumbnailUrl"
+              :file="currentFile"
+              :height="64"
+              :width="64"
+          />
           <div
-              class="file-info__preview full-width"
-              style="height: 1em"
+              v-if="isShowDecryptAction"
+              class="text-primary q-mt-md view-action flex items-center justify-center"
+              @click="onDecrypt"
           >
-            <q-linear-progress v-if="currentFile.decryptionProgress" indeterminate track-color="grey-1" color="primary"/>
-          </div>
-          <div
-              v-if="(currentFile.paranoidKey || !currentFile.thumbnailUrl) &&
-               !currentFile.decryptViewUrl"
-              class="file-info__preview q-my-xl"
-          >
-            <file-item-icon
-                v-if="currentFile.paranoidKey || !currentFile.thumbnailUrl"
-                :file="currentFile"
-                :height="64"
-                :width="64"
-            />
-            <div
-                v-if="isShowDecryptAction"
-                class="text-primary q-mt-md view-action flex items-center justify-center"
-                @click="onDecrypt"
-            >
-              <span>Show</span>
-            </div>
-          </div>
-          <div
-              class="q-my-lg"
-              style="height: 100%; width: 100%"
-              v-if="(currentFile.thumbnailUrl && !currentFile.paranoidKey) ||
-               currentFile.decryptViewUrl"
-          >
-            <div style="display:flex; justify-content:center; align-items:center; min-height: 250px;">
-              <img :src="filePreview" style="max-height: 400px; max-width: 100%;" />
-            </div>
-            <!--<q-img
-                class="file-info__img"
-                :src="filePreview"
-                no-spinner
-                fit="scale-down"
-                style="max-height: 400px;max-width: 100%;min-height: 250px;"
-            />-->
+            <span>Show</span>
           </div>
         </div>
-        <div>
-          <div class="q-mx-md">
-            <div class="flex" style="border-bottom: 1px solid #C6C6C6;">
-              <div style="flex-grow: 1">
-                <input-form :border="false" readonly :value="currentFile.name" label="File name" />
-              </div>
-              <div class="flex items-end q-mb-xs">
-                <encrypted-item-icon v-if="currentFile.paranoidKey" class="q-mx-xs"/>
-                <shared-item-icon v-if="isShared" width="14" height="14" class="q-mx-xs"/>
-                <link-item-icon v-if="currentFile.publicLink" class="q-mx-xs"/>
-              </div>
-            </div>
+        <div
+            class="q-my-lg"
+            style="height: 100%; width: 100%"
+            v-if="(currentFile.thumbnailUrl && !currentFile.paranoidKey) ||
+              currentFile.decryptViewUrl"
+        >
+          <div style="display:flex; justify-content:center; align-items:center; min-height: 250px;">
+            <img :src="filePreview" style="max-height: 400px; max-width: 100%;" />
           </div>
-          <div class="flex no-wrap justify-between q-ma-md">
-            <input-form readonly :value="fileSize" label="Size" style="width:100%" />
-            <div style="width:60px;"></div>
-            <input-form readonly :value="fileDate" label="Created" style="width:100%" />
-          </div>
-          <div class="q-ma-md">
-            <input-form readonly :value="filePatch" label="Location" />
-          </div>
-          <div class="q-ma-md">
-            <input-form readonly :value="currentFile.owner" label="Owner" />
-          </div>
+          <!--<q-img
+              class="file-info__img"
+              :src="filePreview"
+              no-spinner
+              fit="scale-down"
+              style="max-height: 400px;max-width: 100%;min-height: 250px;"
+          />-->
         </div>
-        <div style="height: 50px"/>
       </div>
-    </q-scroll-area>
-    <dialogs-list />
-  </main-layout>
+      <div>
+        <div class="q-mx-md">
+          <div class="flex" style="border-bottom: 1px solid #C6C6C6;">
+            <div style="flex-grow: 1">
+              <input-form :border="false" readonly :value="currentFile.name" label="File name" />
+            </div>
+            <div class="flex items-end q-mb-xs">
+              <encrypted-item-icon v-if="currentFile.paranoidKey" class="q-mx-xs"/>
+              <shared-item-icon v-if="isShared" width="14" height="14" class="q-mx-xs"/>
+              <link-item-icon v-if="currentFile.publicLink" class="q-mx-xs"/>
+            </div>
+          </div>
+        </div>
+        <div class="flex no-wrap justify-between q-ma-md">
+          <input-form readonly :value="fileSize" label="Size" style="width:100%" />
+          <div style="width:60px;"></div>
+          <input-form readonly :value="fileDate" label="Created" style="width:100%" />
+        </div>
+        <div class="q-ma-md">
+          <input-form readonly :value="filePatch" label="Location" />
+        </div>
+        <div class="q-ma-md">
+          <input-form readonly :value="currentFile.owner" label="Owner" />
+        </div>
+      </div>
+      <div style="height: 50px"/>
+    </div>
+  </q-scroll-area>
+  <dialogs-list />
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 import date from 'src/utils/date'
 import text from 'src/utils/text'
@@ -87,18 +85,17 @@ import { getApiHost } from 'src/api/helpers'
 import eventBus from 'src/event-bus'
 
 import DialogsList from '../components/DialogsList'
-import MainLayout from 'src/layouts/MainLayout'
 import FileItemIcon from '../components/icons/FileItemIcon'
 import InputForm from '../components/common/InputForm'
-import EncryptedItemIcon from "../components/icons/item/EncryptedItemIcon";
-import LinkItemIcon from "../components/icons/item/LinkItemIcon";
-import SharedItemIcon from "../components/icons/item/SharedItemIcon";
-import ShareWithMeInfoIcon from "../components/icons/ShareWithMeInfoIcon";
+import EncryptedItemIcon from '../components/icons/item/EncryptedItemIcon'
+import LinkItemIcon from '../components/icons/item/LinkItemIcon'
+import SharedItemIcon from '../components/icons/item/SharedItemIcon'
+import ShareWithMeInfoIcon from '../components/icons/ShareWithMeInfoIcon'
 
 export default {
   name: 'FileInfo',
+
   components: {
-    MainLayout,
     FileItemIcon,
     InputForm,
     DialogsList,
@@ -107,13 +104,17 @@ export default {
     SharedItemIcon,
     ShareWithMeInfoIcon
   },
+
   mounted() {
-    if (!this.currentFile) {
-      this.$router.push('/files')
-    }
+    this.getFile()
   },
+
   computed: {
-    ...mapGetters('filesmobile', ['currentFile']),
+    ...mapGetters('filesmobile', [
+      'currentFile',
+      'currentStorage',
+      'fileList',
+    ]),
     isShowDecryptAction() {
       if (!this.currentFile) return ''
       return this.currentFile.paranoidKey && this.currentFile.thumbnailUrl
@@ -140,13 +141,34 @@ export default {
     },
   },
   watch: {
+    currentStorage(){
+      this.getFile()
+    },
     currentFile(file) {
       if (!file) {
-        this.$router.push('/files')
+        // this.$router.back()
       }
     }
   },
   methods: {
+    ...mapActions('filesmobile', [
+      'asyncGetFiles',
+      'selectFile',
+    ]),
+    async getFile() {
+      //restore data on page reload
+      if (this.currentStorage) {
+        if (this.fileList.length === 0) {
+          await this.asyncGetFiles();
+        }
+        const fileName = this.$route.params.fileName
+        const file = this.fileList.find((item) => item.name === fileName)
+  
+        if (file) {
+          this.selectFile(file)
+        }
+      }
+    },
     onDecrypt() {
       eventBus.$emit('CoreMobileWebclient::viewFile', {
         getParentComponent: this.$root._getParentComponent

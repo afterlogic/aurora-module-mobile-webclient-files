@@ -116,7 +116,7 @@ export const getFolders = (items) => {
   return folders
 }
 export const getShortName = (name, length) => {
-  if (name.length > length) {
+  if (name && name.length > length) {
     return name.substr(0, length - 2)
   }
   return name

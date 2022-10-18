@@ -75,18 +75,18 @@ export default {
   },
   methods: {
     ...mapActions('filesmobile', [
-      'asyncGetFiles',
+      // 'asyncGetFiles',
       'changeCurrentHeader',
       'changeSearchText'
     ]),
     async search() {
       this.changeSearchText(this.text)
-      const result = await this.asyncGetFiles()
+      // const result = await this.asyncGetFiles()
     },
     async onCloseSearch() {
       this.changeSearchText('')
       this.changeCurrentHeader('')
-      await this.asyncGetFiles()
+      // await this.asyncGetFiles()
     },
   },
 }

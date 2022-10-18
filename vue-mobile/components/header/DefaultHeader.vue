@@ -1,32 +1,32 @@
 <template>
   <q-toolbar class="app-header">
     <div class="col app-header__left">
-      <q-btn icon="menu" @click="$emit('openDrawer')" v-if="currentPaths.length <= 1" color="black" round flat dense />
-      <q-btn icon="chevron_left" @click="onPreviousPath" v-if="currentPaths.length > 1" color="black" round flat dense />
+      <q-btn icon="menu" @click="$emit('openDrawer')" v-if="isStorageRoot" color="black" round flat dense />
+      <q-btn icon="chevron_left" @click="onPreviousPath" v-if="!isStorageRoot" color="black" round flat dense />
     </div>
     
     <div class="col app-header__title" _style="flex-grow: 1">
-      <span class="app-header__title-main" v-if="currentPaths.length == 1">
+      <span class="app-header__title-main" v-if="isStorageRoot">
         {{ $t('FILESWEBCLIENT.HEADING_BROWSER_TAB') }}
       </span>
 
       <q-btn-dropdown
-        v-if="currentPaths.length > 1"
+        v-if="!isStorageRoot"
         model-value
-        v-model="isOpen"
+        v-model="isPathMenuOpen"
         :ripple="false"
+        :label="getShortName(currentPath[currentPath.length - 1], 20)"
         dropdown-icon="arrow_drop_down"
         class="files-dropdown"
         dense
         no-caps
         flat
-        :label="getShortName(currentPaths[currentPaths.length - 1].name, 20)"
       >
         <q-list>
-          <div v-for="(path, index) in currentPaths" :key="path.path">
-            <q-item v-if="currentPaths.length - 1 !== index" @click="openPath(path)" clickable dense v-close-popup>
+          <div v-for="(path, index) in currentPath" :key="path">
+            <q-item v-if="currentPath.length - 1 !== index" @click="openPath(index)" clickable dense v-close-popup>
               <div class="files-dropdown__item">
-                {{ getShortName(path.name, 20) }}
+                {{ getShortName(path, 20) }}
               </div>
             </q-item>
           </div>
@@ -52,57 +52,45 @@ export default {
   name: 'DefaultHeader',
   data() {
     return {
-      isOpen: false,
+      isPathMenuOpen: false,
     }
   },
   computed: {
-    ...mapGetters('filesmobile', ['currentPaths', 'currentStorage']),
+    ...mapGetters('filesmobile', [
+      'currentPath',
+      'currentStorage'
+    ]),
+    isStorageRoot() {
+      return this.currentPath.length === 0
+    },
     storageName() {
-      if(!this.currentStorage) return ''
-      return this.currentStorage.DisplayName
+      return  this.currentStorage?.DisplayName || ''
     },
   },
   methods: {
     ...mapActions('filesmobile', [
-      'changeCurrentPaths',
-      'asyncGetFiles',
+      'changeCurrentPath',
+      // 'asyncGetFiles',
       'changeCurrentHeader',
-      'changeSearchText'
+      // 'changeSearchText'
     ]),
     getShortName,
-    async openPath(path) {
-      this.isOpen = false
-      await this.changeCurrentPaths({ path, lastStorage: false })
-      await this.asyncGetFiles()
+    async openPath(pathIndex) {
+      this.isPathMenuOpen = false
+      const newPath = this.currentPath.filter((item,index) => index <= pathIndex)
+      this.$router.push({ path: `/files/${this.currentStorage.Type}/${newPath.join('/')}/` })
     },
     showSearchHeader() {
       this.changeCurrentHeader('SearchHeader')
     },
-    async onPreviousPath() {
-      this.changeSearchText('')
-      await this.changeCurrentPaths({
-        path: this.currentPaths[this.currentPaths.length - 2],
-        lastStorage: false,
-      })
-      await this.asyncGetFiles()
+    onPreviousPath() {
+      this.$router.back()
     },
   },
 }
 </script>
 
 <style lang="scss">
-// .header-storage__name {
-//   position: absolute;
-//   top: 35px;
-//   left: calc(50%);
-//   transform: translate(-50%, 0);
-//   font-style: normal;
-//   font-weight: 400;
-//   font-size: 12px;
-//   line-height: 10px;
-//   color: #969494;
-// }
-
 .files-dropdown {
   padding: 0 0 0 24px;
   min-height: auto;

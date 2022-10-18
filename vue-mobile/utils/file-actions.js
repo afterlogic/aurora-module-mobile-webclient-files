@@ -145,9 +145,7 @@ export const fileActions = {
 }
 
 export const getFileActions = () => {
-
   eventBus.$emit('FilesMobileWebClient::getFileActionsList', fileActions)
-
   return fileActions
 }
 

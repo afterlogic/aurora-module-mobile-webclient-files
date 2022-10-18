@@ -37,7 +37,7 @@ export default {
       'currentStorage',
       'currentPath',
       'loadingStatus',
-      'currentPaths',
+      'currentPath',
       'downloadFiles'
     ]),
     isFolder() {
@@ -50,7 +50,7 @@ export default {
         !this.searchText &&
         this.isFolder &&
         !this.downloadFiles.length &&
-        this.currentPaths.length !== 1
+        this.currentPath.length !== 1
       )
     },
     isNothingFound() {
@@ -64,7 +64,7 @@ export default {
     isStorageEmpty() {
       return (
         this.isNoFiles &&
-        this.currentPaths.length === 1 &&
+        this.currentPath.length === 1 &&
         !this.isFolderEmpty &&
         !this.isNothingFound &&
         !this.downloadFiles.length

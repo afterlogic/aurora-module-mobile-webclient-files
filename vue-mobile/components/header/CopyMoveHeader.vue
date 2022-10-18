@@ -1,8 +1,8 @@
 <template>
   <q-toolbar class="app-header bg-primary">
     <div class="col app-header__left">
-      <q-btn icon="close" @click="removeCopiedItems" v-if="currentPaths.length <= 1" color="black" round flat dense />
-      <q-btn icon="chevron_left" @click="onPreviousPath" v-if="currentPaths.length > 1" color="black" round flat dense />
+      <q-btn icon="close" @click="removeCopiedItems" v-if="currentPath.length <= 1" color="black" round flat dense />
+      <q-btn icon="chevron_left" @click="onPreviousPath" v-if="currentPath.length > 1" color="black" round flat dense />
     </div>
     <div class="col app-header__title">
       Move files/folders
@@ -40,13 +40,13 @@ export default {
     ActionIcon
   },
   computed: {
-    ...mapGetters('filesmobile', ['copiedFiles', 'currentPaths', 'storageList']),
+    ...mapGetters('filesmobile', ['copiedFiles', 'currentPath', 'storageList']),
   },
   methods: {
     ...mapActions('filesmobile', [
       'removeCopiedFiles',
       'changeDialogComponent',
-      'changeCurrentPaths',
+      'changeCurrentPath',
       'asyncGetFiles',
     ]),
     removeCopiedItems() {
@@ -56,10 +56,10 @@ export default {
       this.changeDialogComponent({ component: 'CreateFolderDialog' })
     },
     async onPreviousPath() {
-      await this.changeCurrentPaths({
-        path: this.currentPaths[this.currentPaths.length - 2],
-        lastStorage: false,
-      })
+      // await this.changeCurrentPath({
+      //   path: this.currentPath[this.currentPath.length - 2],
+      //   lastStorage: false,
+      // })
       await this.asyncGetFiles()
     },
   },

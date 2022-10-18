@@ -10,8 +10,8 @@ export default function () {
 
     currentStorage: '',
     currentFile: null,
-    currentPath: '',
-    currentPaths: [],
+    // currentPathString: '',
+    currentPath: [],
 
     currentHeader: '',
     isLoading: false,

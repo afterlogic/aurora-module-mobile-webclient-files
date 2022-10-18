@@ -1,9 +1,9 @@
 <template>
-  <q-item class="q-px-lg" v-if="storage" clickable v-ripple @click.prevent="selectStorage">
+  <q-item class="storage" :active="active" clickable v-ripple @click.prevent="selectStorage">
     <q-item-section side>
-      <storage-icon :storage-type="storage.Type" :color="iconColor" />
+      <storage-icon :color="active ? '#469CF8' : '#969494'" :storage-type="storage.Type" />
     </q-item-section>
-    <q-item-section class="storage-name" :style="{color: textColor}">
+    <q-item-section class="storage__name">
       {{ storage.DisplayName }}
     </q-item-section>
   </q-item>
@@ -11,7 +11,7 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
-import eventBus from "src/event-bus";
+import eventBus from 'src/event-bus'
 
 import StorageIcon from './icons/StorageIcon'
 
@@ -22,44 +22,42 @@ export default {
   },
   props: {
     storage: { type: Object, default: null },
+    active: { type: Boolean, default: false },
   },
-  computed: {
-    ...mapGetters('filesmobile', ['currentStorage']),
-    iconColor() {
-      return this.storage.Type === this.currentStorage.Type ? '#469CF8' : '#B6B5B5'
-    },
-    textColor() {
-      return this.storage.Type === this.currentStorage.Type ? '#469CF8' : '#000000'
-    }
-  },
+  // computed: {
+  //   ...mapGetters('filesmobile', ['currentStorage']),
+  // },
   methods: {
     ...mapActions('filesmobile', [
       'changeCurrentStorage',
-      'asyncGetFiles',
-      'changeCurrentPaths'
+      // 'asyncGetFiles',
+      // 'changeCurrentPath'
     ]),
-    async selectStorage() {
+    selectStorage() {
       this.changeCurrentStorage(this.storage)
       const path = {
         path: '',
         name: this.storage.DisplayName,
       }
-      this.changeCurrentPaths({ path, lastStorage: true })
+      this.$router.push(`/files/${this.storage.Type}/`)
+      // this.changeCurrentPath({ path, lastStorage: true })
       eventBus.$emit('closeDrawer')
-      await this.getFiles()
-    },
-    async getFiles() {
-      await this.asyncGetFiles()
+      // await this.asyncGetFiles()
     },
   },
 }
 </script>
 
-<style scoped>
-.storage-name {
-  font-size: 14px;
-  line-height: 16px;
+<style lang="scss" scoped>
+.storage {
+  padding: 0 24px;
 
-  letter-spacing: 0.3px;
+  &__name {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+    letter-spacing: 0.3px;
+  }
 }
 </style>

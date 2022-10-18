@@ -70,8 +70,8 @@ export default {
   },
   methods: {
     ...mapActions('filesmobile', [
-      'changeCurrentPaths',
-      'asyncGetFiles',
+      'changeCurrentPath',
+      // 'asyncGetFiles',
       'changeCurrentHeader',
       'changeSearchText'
     ]),
@@ -81,10 +81,20 @@ export default {
           path: this.folder.fullPath,
           name: this.folder.name,
         }
-        await this.changeSearchText('')
-        this.changeCurrentHeader('')
-        await this.changeCurrentPaths({ path, lastStorage: false })
-        await this.asyncGetFiles()
+
+        const storageId = this.currentStorage?.Type || this.contact?.storage
+        if (storageId) {
+          console.log('router to folder')
+          await this.$router.push({ path: `/files/${storageId}${this.folder.fullPath}/` })
+        }
+
+        // console.log('follow the path', storageId, this.folder.fullPath, this.folder.name)
+        // console.log('follow the path', this.$router.resolve({ path: `/files/${storageId}${this.folder.fullPath}/` }))
+
+        // await this.changeSearchText('')
+        // this.changeCurrentHeader('')
+        // await this.changeCurrentPath({ path, lastStorage: false })
+        // await this.asyncGetFiles()
       } else {
         this.isMoved = false
       }

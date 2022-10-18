@@ -16,22 +16,22 @@ export default {
     if (types.pArray(storages)) {
       commit('setStorageList', storages)
       commit('setCurrentStorage', storages.length ? storages[0] : {})
-      if (storages.length) {
-        const path = {
-          path: '',
-          name: storages[0].DisplayName,
-        }
-        dispatch('changeCurrentPaths', {
-          path,
-          lastStorage: true,
-        })
-      }
+      // if (storages.length) {
+      //   const path = {
+      //     path: '',
+      //     name: storages[0].DisplayName,
+      //   }
+      //   dispatch('changeCurrentPath', {
+      //     path,
+      //     lastStorage: true,
+      //   })
+      // }
     }
   },
   asyncGetFiles: async ({ commit, getters, dispatch }) => {
     dispatch('changeLoadingStatus', true)
     const currentStorage = getters['currentStorage']
-    const currentPath = getters['currentPath']
+    const currentPath = getters['currentPathString']
     const parameters = {
       Type: currentStorage?.Type,
       Path: currentPath,
@@ -63,16 +63,18 @@ export default {
   changeLoadingStatus: ({ commit }, status) => {
     commit('setLoadingStatus', status)
   },
-  changeCurrentPaths: (
-    { state, commit, getters, dispatch },
-    { path, lastStorage = false }
-  ) => {
-    const currentPaths = getters['currentPaths']
-    let index = currentPaths.findIndex((elem) => {
-      return elem?.path === path?.path
-    })
-    commit('setCurrentPath', { path: path?.path })
-    commit('changeCurrentPath', { index, path, lastStorage })
+  changeCurrentPath: ( { commit }, { path } ) => {
+  // changeCurrentPath: (
+  //   { state, commit, getters, dispatch },
+  //   { path, lastStorage = false }
+  // ) => {
+    // const currentPath = getters['currentPath']
+    // let index = currentPath.findIndex((elem) => {
+    //   return elem?.path === path?.path
+    // })
+    // commit('setCurrentPath', { path: path?.path })
+    // commit('changeCurrentPath', { index, path, lastStorage })
+    commit('setCurrentPath', { path: path || [] })
   },
   asyncRenameItem: async ({ state }, { file, itemName }) => {
     const parameters = {

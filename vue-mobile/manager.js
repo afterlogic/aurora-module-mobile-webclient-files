@@ -1,5 +1,7 @@
 import settings from './settings'
 import { defineAsyncComponent } from 'vue'
+
+
 export default {
   moduleName: 'FilesMobileWebclient',
 
@@ -15,16 +17,48 @@ export default {
         pageName: 'files',
         pagePath: '/files',
         pageComponent: () => import('./pages/Files'),
+        pageStrict: true,
         pageHeaderComponent: () => import('./components/header/FilesHeader'),
         pageFooterComponent: () => import('./components/footer/FilesFooter'),
+
+        pageChildren: [
+          {
+            name: 'file-list',
+            path: ':storageId/:path*/',
+            strict: true,
+            component: () => import('./pages/FileList'),
+          },
+          {
+            name: 'file-view',
+            path: ':storageId/:path*/:fileName',
+            component: () => import('./pages/FileInfo'),
+            strict: true,
+          },
+        ]
       },
-      {
-        pageName: 'file',
-        pagePath: '/file/:id',
-        pageComponent: () => import('./pages/FileInfo'),
-        pageHeaderComponent: () => import('./components/header/FileInfoHeader'),
-        pageFooterComponent: () => import('./components/footer/FilesFooter'),
-      },
+      // {
+      //   pageName: 'file-list',
+      //   pagePath: '/files/:path*/',
+      //   pageComponent: () => import('./pages/FileList'),
+      //   pageStrict: true,
+      //   pageHeaderComponent: () => import('./components/header/FilesHeader'),
+      //   pageFooterComponent: () => import('./components/footer/FilesFooter'),
+      // },
+      // {
+      //   pageName: 'file',
+      //   pagePath: '/files/:path*/:file',
+      //   pageComponent: () => import('./pages/FileInfo'),
+      //   pageStrict: false,
+      //   pageHeaderComponent: () => import('./components/header/FilesHeader'),
+      //   pageFooterComponent: () => import('./components/footer/FilesFooter'),
+      // },
+      // {
+      //   pageName: 'file',
+      //   pagePath: '/file/:id',
+      //   pageComponent: () => import('./pages/FileInfo'),
+      //   pageHeaderComponent: () => import('./components/header/FileInfoHeader'),
+      //   pageFooterComponent: () => import('./components/footer/FilesFooter'),
+      // },
     ]
   },
 

@@ -87,7 +87,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('filesmobile', ['copiedFiles', 'isArchive']),
+    ...mapGetters('filesmobile', [
+      'copiedFiles',
+      'isArchive',
+      'currentStorage',
+      'currentPathString',
+    ]),
     fileName() {
       if (this.file) {
         return getShortName(this.file.name, 30)
@@ -117,9 +122,9 @@ export default {
   },
   methods: {
     ...mapActions('filesmobile', [
-      'changeCurrentPaths',
+      'changeCurrentPath',
       'changeCurrentHeader',
-      'asyncGetFiles',
+      // 'asyncGetFiles',
     ]),
     async openFile() {
       if (
@@ -134,16 +139,20 @@ export default {
           name: this.file.name,
         }
         this.changeCurrentHeader('')
-        await this.changeCurrentPaths({ path, lastStorage: false })
-        await this.asyncGetFiles()
+        // await this.changeCurrentPath({ path, lastStorage: false })
+        // await this.asyncGetFiles()
       } else if (
         !this.isSelectMode &&
         !this.isMoved &&
-        !this.file.downloading &&
         !this.copiedFiles.length &&
+        !this.file.downloading &&
         !this.isArchive
       ) {
-        await this.$router.push({ path: `/file/${this.file.id}` })
+        const storageId = this.currentStorage?.Type || this.file?.storage
+        if (storageId) {
+          const path = this.currentPathString !== '/' ? this.currentPathString : ''
+          await this.$router.push({ path: `/files/${storageId}${path}/${this.file.id}` })
+        }
       } else {
         this.isMoved = false
       }
