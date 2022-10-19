@@ -50,20 +50,20 @@ export default {
       return this.copiedFiles.length && !this.isSearchHeader
     },
     isSearchHeader() {
-      return this.currentHeader === 'SearchHeader'
+      return this.routeName === 'file-list' && this.currentHeader === 'SearchHeader'
     },
   },
   methods: {
     ...mapActions('filesmobile', [
-      'changeCurrentHeader',
-      'changeSearchText',
-      'clearItemLists',
+      // 'changeCurrentHeader',
+      // 'changeSearchText',
+      // 'clearItemLists',
     ]),
   },
   beforeUnmount() {
-    this.changeSearchText('')
-    this.changeCurrentHeader('')
-    this.clearItemLists()
+    // this.changeSearchText('')
+    // this.changeCurrentHeader('')
+    // this.clearItemLists()
   },
 }
 </script>

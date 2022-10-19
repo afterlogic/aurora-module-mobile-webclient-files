@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 import { getShortName } from '../utils/common'
 
@@ -69,12 +69,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions('filesmobile', [
-      'changeCurrentPath',
-      // 'asyncGetFiles',
-      'changeCurrentHeader',
-      'changeSearchText'
-    ]),
     async openFolder() {
       if (!this.isSelectMode && !this.folder.isCopied && !this.isMoved) {
         const path = {
@@ -84,17 +78,8 @@ export default {
 
         const storageId = this.currentStorage?.Type || this.contact?.storage
         if (storageId) {
-          console.log('router to folder')
           await this.$router.push({ path: `/files/${storageId}${this.folder.fullPath}/` })
         }
-
-        // console.log('follow the path', storageId, this.folder.fullPath, this.folder.name)
-        // console.log('follow the path', this.$router.resolve({ path: `/files/${storageId}${this.folder.fullPath}/` }))
-
-        // await this.changeSearchText('')
-        // this.changeCurrentHeader('')
-        // await this.changeCurrentPath({ path, lastStorage: false })
-        // await this.asyncGetFiles()
       } else {
         this.isMoved = false
       }

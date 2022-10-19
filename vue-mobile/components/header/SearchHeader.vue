@@ -11,7 +11,7 @@
         <div class="app-header__title-secondary flex no-wrap justify-center full-width">
           <span>{{ currentStorage.DisplayName }}{{currentPath.length ? '/' : ''}}</span>
           <div class="flex" style="direction: rtl; overflow: hidden;">
-            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: -0.6em;">
+            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: -0.3em;">
               i{{currentFolder}}
             </span>
           </div>
@@ -48,21 +48,10 @@ export default {
     ...mapGetters('filesmobile', [
       'currentStorage',
       'searchText',
-      'currentPath'
+      'currentPath',
     ]),
     currentFolder() {
-      // const paths = this.currentPath.split('/')
-      // if (this.currentPath.length > 20) {
-      //   if (paths[paths.length - 1].length > 15) {
-      //     let lastFolder = paths[paths.length - 1]
-      //     return `${this.currentStorage.DisplayName}/.../...${lastFolder.slice(lastFolder.length - 15, lastFolder.length)}`
-      //   }
-      //   return `${this.currentStorage.DisplayName}/.../${paths[paths.length - 1]}`
-      // }
-      // return `${this.currentStorage.DisplayName}${this.currentPath}`
-      const paths = this.currentPath.split('/')
-      if (paths.length < 1) return ''
-      return this.currentPath
+      return this.currentPath.length < 1 ? '' : this.currentPath.join('/')
     }
   },
   mounted() {
@@ -71,29 +60,23 @@ export default {
   watch: {
     text() {
       this.search()
-    }
+    },
+    searchText(v) {
+      this.text = v
+    },
   },
   methods: {
     ...mapActions('filesmobile', [
-      // 'asyncGetFiles',
       'changeCurrentHeader',
       'changeSearchText'
     ]),
     async search() {
       this.changeSearchText(this.text)
-      // const result = await this.asyncGetFiles()
     },
     async onCloseSearch() {
       this.changeSearchText('')
       this.changeCurrentHeader('')
-      // await this.asyncGetFiles()
     },
   },
 }
 </script>
-
-<style scoped>
-/* .search .q-field__control {
-  height: 48px;
-} */
-</style>

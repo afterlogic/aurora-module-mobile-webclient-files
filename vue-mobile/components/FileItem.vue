@@ -94,10 +94,15 @@ export default {
       'currentPathString',
     ]),
     fileName() {
-      if (this.file) {
-        return getShortName(this.file.name, 30)
+      // if (this.file) {
+      //   return getShortName(this.file.name, 30)
+      // }
+      // return ''
+      let name = this.file.name
+      if (this.currentPathString !== this.file.path && this.file.path) {
+        name += ' (' + this.file.path + ')'
       }
-      return ''
+      return getShortName(name, 30)
     },
     filePreview() {
       if (this.file) {
@@ -126,7 +131,7 @@ export default {
       'changeCurrentHeader',
       // 'asyncGetFiles',
     ]),
-    async openFile() {
+    openFile() {
       if (
         !this.isSelectMode &&
         !this.isMoved &&
@@ -150,8 +155,9 @@ export default {
       ) {
         const storageId = this.currentStorage?.Type || this.file?.storage
         if (storageId) {
-          const path = this.currentPathString !== '/' ? this.currentPathString : ''
-          await this.$router.push({ path: `/files/${storageId}${path}/${this.file.id}` })
+          // const path = this.currentPathString !== '/' ? this.currentPathString : ''
+          // await this.$router.push({ path: `/files/${storageId}${path}/${this.file.id}` })
+          this.$router.push({ path: `/files/${storageId}${this.file.path}/${this.file.id}` })
         }
       } else {
         this.isMoved = false

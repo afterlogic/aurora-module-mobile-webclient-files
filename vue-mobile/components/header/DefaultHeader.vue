@@ -70,9 +70,7 @@ export default {
   methods: {
     ...mapActions('filesmobile', [
       'changeCurrentPath',
-      // 'asyncGetFiles',
       'changeCurrentHeader',
-      // 'changeSearchText'
     ]),
     getShortName,
     async openPath(pathIndex) {

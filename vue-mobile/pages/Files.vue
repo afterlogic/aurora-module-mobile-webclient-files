@@ -94,6 +94,7 @@ export default {
     },
     '$route.params.path': {
       handler: function (path) {
+        this.changeSearchText('')
         this.changeCurrentPath({ path })
       },
       immediate: true
@@ -107,6 +108,7 @@ export default {
       'changeLoadingStatus',
       'changeCurrentStorage',
       'changeCurrentPath',
+      'changeSearchText',
     ]),
     showCreateButtonsDialog() {
       if (this.dialogComponent.component === 'CreateButtonsDialogs') {

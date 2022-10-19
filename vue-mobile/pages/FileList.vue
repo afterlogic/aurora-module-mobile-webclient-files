@@ -81,6 +81,7 @@ export default {
       'currentHeader',
       'dialogComponent',
       'currentPathString',
+      'searchText',
     ]),
     isCopied() {
       return !!this.copiedFiles.length
@@ -93,14 +94,21 @@ export default {
   watch: {
     currentStorage: {
       handler: async function () {
-        console.log('watch storage', this.currentStorage)
+        // console.log('watch storage', this.currentStorage)
         this.fetchData()
       },
       immediate: true
     },
     currentPathString: {
       handler: async function () {
-        console.log('watch path', this.currentPathString)
+        // console.log('watch path', this.currentPathString)
+        this.fetchData()
+      },
+      immediate: true
+    },
+    searchText: {
+      handler: async function (v) {
+        // console.log('watch search text', v)
         this.fetchData()
       },
       immediate: true
