@@ -1,9 +1,11 @@
 <template>
   <component
-    :is="component"
+    :is="component()"
+
+    v-model="isShowDialog"
     :file="currentFile"
-    v-model="dialog"
-    :dialog="dialog"
+    :dialog="isShowDialog"
+
     @closeDialog="closeDialog"
     @dialogAction="dialogAction"
   />
@@ -16,35 +18,40 @@ import { mapGetters, mapActions } from 'vuex'
 import _ from 'lodash'
 
 import FileMenuDialog from './dialogs/FileMenuDialog'
+import CreateButtonsDialogs from './dialogs/CreateButtonsDialogs'
+import FileUploader from './dialogs/FileUploader'
+
+// import CreateFolderDialog from './dialogs/CreateFolderDialog'
 // import RenameItemDialog from './dialogs/RenameItemDialog'
 // import DeleteItemsDialog from './dialogs/DeleteItemsDialog'
-// import CreateFolderDialog from './dialogs/CreateFolderDialog'
-import CreateButtonsDialogs from './dialogs/CreateButtonsDialogs'
 // import CreateShareableLinkDialog from './dialogs/CreateShareableLinkDialog'
 // import ShareWithTeammatesDialog from './dialogs/ShareWithTeammatesDialog'
-import FileUploader from './dialogs/FileUploader'
-// import ShareLeaveDialog from "./dialogs/ShareLeaveDialog";
-
+// import ShareLeaveDialog from './dialogs/ShareLeaveDialog'
 
 export default {
   name: 'DialogsList',
+
   components: {
     FileMenuDialog,
+    CreateButtonsDialogs,
+    FileUploader,
+    
+    // CreateFolderDialog,
     // RenameItemDialog,
     // DeleteItemsDialog,
-    // CreateFolderDialog,
-    CreateButtonsDialogs,
     // CreateShareableLinkDialog,
     // ShareWithTeammatesDialog,
-    FileUploader,
     // ShareLeaveDialog
   },
+
   data() {
     return {
-      dialog: false,
-      component: 'FileMenuDialog',
+      isShowDialog: false,
+      component: () => {},
+      // component: 'FileMenuDialog',
     }
   },
+
   computed: {
     ...mapGetters('filesmobile', ['dialogComponent', 'currentFile']),
     // componentInstance() {
@@ -52,14 +59,19 @@ export default {
     //   return defineAsyncComponent(() => import(`./storage/${name}StorageIcon`))
     // }
   },
+
   watch: {
     dialogComponent(val) {
       if (val.component !== 'FileUploader') {
-        if (!val.component) {
-          this.dialog = false
+        if (!val.component && !val.getComponent) {
+          this.isShowDialog = false
         } else {
-          this.component = val.component
-          this.dialog = true
+          if (val.getComponent) {
+            this.component = val.getComponent
+          } else {
+            this.component = () => val.component
+          }
+          this.isShowDialog = true
         }
       }
     },
@@ -68,11 +80,16 @@ export default {
         this.changeDialogComponent({ component: '' })
     },
   },
+
   methods: {
-    ...mapActions('filesmobile', ['changeDialogComponent']),
+    ...mapActions('filesmobile', [
+      'changeDialogComponent'
+    ]),
     dialogAction(action) {
       this.closeDialog()
-      if (action.component) {
+      if (action.getComponent) {
+        this.changeDialogComponent({ getComponent: action.getComponent})
+      } else if (action.component) {
         this.changeDialogComponent({ component: action.component, name: action.name })
       } else if (action.method) {
         action.method(this)
@@ -81,17 +98,14 @@ export default {
     closeDialog(hasChanges) {
       if (_.isFunction(hasChanges)) {
         if (hasChanges()) {
-          this.$root.unsavedChangesDialog(() => this.dialog = false)
+          this.$root.unsavedChangesDialog(() => this.isShowDialog = false)
         } else {
-          this.dialog = false
+          this.isShowDialog = false
         }
       } else {
-        this.dialog = false
+        this.isShowDialog = false
       }
-
     },
   },
 }
 </script>
-
-<style scoped></style>

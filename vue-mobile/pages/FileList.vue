@@ -43,7 +43,6 @@
 import { mapGetters, mapActions } from 'vuex'
 import FolderItem from '../components/FolderItem'
 import FileItem from '../components/FileItem'
-// import DialogsList from '../components/DialogsList'
 import DownloadFileItem from '../components/DownloadFileItem'
 import FilesCaptions from '../components/FilesCaptions'
 
@@ -55,7 +54,6 @@ export default {
   components: {
     FolderItem,
     FileItem,
-    // DialogsList,
     DownloadFileItem,
     FilesCaptions,
     AppPullRefresh

@@ -74,7 +74,6 @@
       <div style="height: 50px"/>
     </div>
   </q-scroll-area>
-  <dialogs-list />
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
@@ -84,7 +83,6 @@ import text from 'src/utils/text'
 import { getApiHost } from 'src/api/helpers'
 import eventBus from 'src/event-bus'
 
-import DialogsList from '../components/DialogsList'
 import FileItemIcon from '../components/icons/FileItemIcon'
 import InputForm from '../components/common/InputForm'
 import EncryptedItemIcon from '../components/icons/item/EncryptedItemIcon'
@@ -98,7 +96,6 @@ export default {
   components: {
     FileItemIcon,
     InputForm,
-    DialogsList,
     EncryptedItemIcon,
     LinkItemIcon,
     SharedItemIcon,

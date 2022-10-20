@@ -1,5 +1,6 @@
 <template>
-  <app-dialog v-model="openDialog" :close="closeDialog">
+  <!-- <app-dialog v-model="openDialog" :close="closeDialog"> -->
+  <app-dialog :close="closeDialog">
     <template v-slot:content>
       <div class="dialog__title-text q-ma-lg">
         <span>{{ title }}</span>
@@ -19,33 +20,33 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
-import AppDialog from "components/common/AppDialog";
+import AppDialog from 'src/components/common/AppDialog'
 import ButtonDialog from 'src/components/common/ButtonDialog'
 
 export default {
   name: 'DeleteItemsDialog',
+
   components: {
     ButtonDialog,
     AppDialog
   },
+
   props: {
-    file: {
-      type: Object,
-      default: null,
-    },
+    file: { type: Object, default: null },
     dialog: { type: Boolean, default: false },
   },
+  
   data() {
     return {
-      openDialog: false,
+      // openDialog: false,
       saving: false,
     }
   },
-  watch: {
-    dialog(val) {
-      this.openDialog = val
-    },
-  },
+  // watch: {
+  //   dialog(val) {
+  //     this.openDialog = val
+  //   },
+  // },
   computed: {
     ...mapGetters('filesmobile', ['selectedFiles']),
     title() {

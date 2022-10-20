@@ -1,10 +1,6 @@
 <template>
-  <q-dialog
-    transition-show="fade"
-    transition-hide="fade"
-    transition-duration="200"
-    v-model="openDialog"
-  >
+  <!-- <q-dialog transition-show="fade" transition-hide="fade" transition-duration="200" v-model="openDialog"> -->
+  <q-dialog transition-show="fade" transition-hide="fade" transition-duration="200">
     <div class="flex column absolute create-buttons">
       <div class="create-buttons__item upload-file" @click="uploadFile">
         <upload-file-icon />
@@ -17,41 +13,41 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue'
 import { mapActions } from 'vuex'
 
 import CreateFolderIcon from '../icons/actions/CreateFolderIcon'
 import UploadFileIcon from '../icons/actions/UploadFileIcon'
 
-import { defineAsyncComponent, shallowRef } from 'vue'
-
 export default {
   name: 'CreateButtonsDialogs',
+
   components: {
     CreateFolderIcon,
     UploadFileIcon,
   },
-  props: {
-    file: { type: Object, default: null },
-    dialog: { type: Boolean, default: false },
-  },
-  data() {
-    return {
-      openDialog: false,
-    }
-  },
-  watch: {
-    dialog(val) {
-      this.openDialog = val
-      if (!val) {
-        this.changeDialogComponent({ component: '' })
-      }
-    },
-  },
+  // props: {
+    // file: { type: Object, default: null },
+    // dialog: { type: Boolean, default: false },
+  // },
+  // data() {
+  //   return {
+  //     openDialog: false,
+  //   }
+  // },
+  // watch: {
+  //   dialog(val) {
+  //     this.openDialog = val
+  //     if (!val) {
+  //       this.changeDialogComponent({ component: '' })
+  //     }
+  //   },
+  // },
   methods: {
     ...mapActions('filesmobile', ['changeDialogComponent']),
     createFolder() {
       this.$emit('closeDialog')
-      this.changeDialogComponent({ component: defineAsyncComponent(() => import('./CreateFolderDialog')) })
+      this.changeDialogComponent({ getComponent: () => { return defineAsyncComponent(() => import('./CreateFolderDialog')) } })
     },
     uploadFile() {
       this.changeDialogComponent({ component: 'FileUploader' })

@@ -40,7 +40,7 @@ export default {
   name: 'CreateFolderDialog',
   components: { AppInput, ButtonDialog, AppDialog },
   props: {
-    file: { type: Object, default: null },
+    // file: { type: Object, default: null },
     dialog: { type: Boolean, default: false },
   },
   data() {

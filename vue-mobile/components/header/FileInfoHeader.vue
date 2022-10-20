@@ -3,20 +3,20 @@
     <div class="col app-header__left">
       <q-btn icon="chevron_left" @click="onPreviousPath" color="black" flat round dense />
     </div>
-    <div class="col app-header__right">
-      <!-- <action-icon
+    <div class="col app-header__right" v-if="actions">
+      <action-icon
           v-if="isShowAction(actions.createShareableLink)"
           class="q-mr-lg"
           icon="SecureLinkIcon"
           @click="onPerformAction(actions.createShareableLink)"
-      /> -->
-      <!-- <action-icon
+      />
+      <action-icon
           v-if="isShowAction(actions.download)"
           class="q-mr-lg"
           icon="DownloadIcon"
           @click="onPerformAction(actions.download)"
-      /> -->
-      <!-- <action-icon
+      />
+      <action-icon
           v-if="isShowAction(actions.delete)"
           class="q-mr-lg"
           icon="DeleteIcon"
@@ -70,7 +70,7 @@
             </q-item>
           </q-list>
         </q-btn-dropdown>
-      </div> -->
+      </div>
     </div>
   </q-toolbar>
 </template>
@@ -79,19 +79,16 @@
 import { mapActions, mapGetters } from 'vuex'
 
 import ActionIcon from '../common/ActionIcon'
-import { getFileActions, fileActions } from '../../utils/file-actions'
-import {  } from '../../utils/file-actions'
+import { getFileActions } from '../../utils/file-actions'
 
 export default {
   name: 'FileInfoHeader',
   components: {
     ActionIcon
   },
-  mounted() {
-    // this.actions = getFileActions()
-    // console.log('actions',  this.actions)
-    this.actions = fileActions
 
+  mounted() {
+    this.actions = getFileActions()
   },
   data() {
     return {
@@ -99,7 +96,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('filesmobile', ['fileList', 'currentFile', 'currentStorage', 'currentPath']),
+    ...mapGetters('filesmobile', [
+      'fileList',
+      'currentFile',
+      'currentStorage',
+      'currentPathString'
+    ]),
     isShowDropdown() {
       return this.currentStorage.Type !== 'shared' || this.isShowAction(this.actions.shareLeave)
     },
@@ -114,12 +116,12 @@ export default {
     onPreviousPath() {
       this.$router.back()
     },
-    shareFile() {
-      this.changeDialogComponent({ component: 'ShareWithTeammatesDialog' })
-    },
-    deleteFile() {
-      this.changeDialogComponent({ component: 'DeleteItemsDialog' })
-    },
+    // shareFile() {
+    //   this.changeDialogComponent({ component: 'ShareWithTeammatesDialog' })
+    // },
+    // deleteFile() {
+    //   this.changeDialogComponent({ component: 'DeleteItemsDialog' })
+    // },
     downloadFile() {
       this.asyncDownloadFile()
     },
@@ -128,9 +130,12 @@ export default {
       this.onPreviousPath()
     },
     onPerformAction(action) {
-      if (action.component) {
+      if (action.getComponent) {
+        this.changeDialogComponent({ getComponent: action.getComponent})
+      } else if (action.component) {
         this.changeDialogComponent({ component: action.component })
-      } else if (action.method) {
+      }
+      else if (action.method) {
         action.method(this)
       }
     },
@@ -139,7 +144,7 @@ export default {
           action.name,
           [this.currentFile],
           this.currentStorage.Type,
-          this.currentPath
+          this.currentPathString
       )
     }
   },

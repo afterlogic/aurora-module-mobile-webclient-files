@@ -7,24 +7,24 @@
       {{ `Selected: ${items.length}` }}
     </div>
     <div class="col app-header__right">
-      <action-icon 
-          @click="copyItems"
-          class="q-mr-md"
-          :icon="actions.copy.icon"
+      <ActionIcon 
+        @click="copyItems"
+        class="q-mr-md"
+        :icon="actions.copy.icon"
       />
       <div v-if="isShowAction(actions.shareLeave) && sharedFiles.length" class="flex no-wrap">
-        <action-icon
-            class="q-mr-xs"
-            @click="onPerformAction(actions.shareLeave)"
-            :icon="actions.shareLeave.icon"
+        <ActionIcon
+          class="q-mr-xs"
+          @click="onPerformAction(actions.shareLeave)"
+          :icon="actions.shareLeave.icon"
         />
         <span class="q-mr-md">{{sharedFiles.length}}</span>
       </div>
       <div v-if="isShowAction(actions.delete) && unsharedFiles.length" class="flex no-wrap">
-        <action-icon
-            class="q-mr-xs"
-            @click="deleteItems"
-            :icon="actions.delete.icon"
+        <ActionIcon
+          class="q-mr-xs"
+          @click="onPerformAction(actions.delete)"
+          :icon="actions.delete.icon"
         />
       </div>
     </div>
@@ -71,12 +71,6 @@ export default {
     resetSelection() {
       this.removeSelectedItems({ items: this.items })
     },
-    deleteItems() {
-      const deleteAction = fileActions.delete
-      if (deleteAction.component) {
-        this.changeDialogComponent({ component: deleteAction.component })
-      }
-    },
     copyItems() {
       this.addCopyItems({ items: this.items })
       this.removeSelectedItems({ items: this.items })
@@ -90,7 +84,9 @@ export default {
       )
     },
     onPerformAction(action) {
-      if (action.component) {
+      if (action.getComponent) {
+        this.changeDialogComponent({ getComponent: action.getComponent})
+      } else if (action.component) {
         this.changeDialogComponent({ component: action.component })
       }
     }

@@ -1,7 +1,6 @@
 import eventBus from 'src/event-bus'
 import store from 'src/store'
-import { defineAsyncComponent } from "vue";
-
+import { defineAsyncComponent } from 'vue'
 
 const i18n = {
   $t: {
@@ -83,7 +82,8 @@ export const fileActions = {
   createShareableLink: {
     method: null,
     name: 'createShareableLink',
-    component: defineAsyncComponent(() => import('../components/dialogs/CreateShareableLinkDialog')),
+    // component: defineAsyncComponent(() => import('../components/dialogs/CreateShareableLinkDialog')),
+    getComponent: () => { return defineAsyncComponent(() => import('../components/dialogs/CreateShareableLinkDialog')) },
     displayName: i18n.$t.OPENPGPFILESWEBCLIENT.HEADING_CREATE_PUBLIC_LINK,
     icon: 'SecureLinkIcon',
     isShowAction: isShowAction,
@@ -91,7 +91,8 @@ export const fileActions = {
   shareWithTeammates: {
     method: null,
     name: 'shareWithTeammates',
-    component: defineAsyncComponent(() => import('../components/dialogs/ShareWithTeammatesDialog')),
+    // component: defineAsyncComponent(() => import('../components/dialogs/ShareWithTeammatesDialog')),
+    getComponent: () => { return defineAsyncComponent(() => import('../components/dialogs/ShareWithTeammatesDialog')) },
     displayName: i18n.$t.SHAREDFILES.ACTION_SHARE,
     icon: 'SharingIcon',
     isShowAction: isShowAction,
@@ -99,7 +100,8 @@ export const fileActions = {
   shareLeave: {
     method: null,
     name: 'shareLeave',
-    component: defineAsyncComponent(() => import('../components/dialogs/ShareLeaveDialog')),
+    // component: defineAsyncComponent(() => import('../components/dialogs/ShareLeaveDialog')),
+    getComponent: () => { return defineAsyncComponent(() => import('../components/dialogs/ShareLeaveDialog')) },
     displayName: 'Leave share ',
     icon: 'LeaveSharingIcon',
     isShowAction: isShowAction,
@@ -129,7 +131,8 @@ export const fileActions = {
   rename: {
     method: null,
     name: 'rename',
-    component: defineAsyncComponent(() => import('../components/dialogs/RenameItemDialog')),
+    // component: defineAsyncComponent(() => import('../components/dialogs/RenameItemDialog')),
+    getComponent: () => { return defineAsyncComponent(() => import('../components/dialogs/RenameItemDialog')) },
     displayName: i18n.$t.FILESWEBCLIENT.ACTION_RENAME,
     icon: 'RenameIcon',
     isShowAction: isShowAction,
@@ -137,7 +140,8 @@ export const fileActions = {
   delete: {
     method: null,
     name: 'delete',
-    component: defineAsyncComponent(() => import('../components/dialogs/DeleteItemsDialog')),
+    // component: defineAsyncComponent(() => import('../components/dialogs/DeleteItemsDialog')),
+    getComponent: () => { return defineAsyncComponent(() => import('../components/dialogs/DeleteItemsDialog')) },
     displayName: 'Delete',
     icon: 'DeleteIcon',
     isShowAction: isShowAction,
@@ -146,13 +150,15 @@ export const fileActions = {
 
 export const getFileActions = () => {
   eventBus.$emit('FilesMobileWebClient::getFileActionsList', fileActions)
+
   return fileActions
 }
 
 export const getFileActionsList = (file) => {
-
   eventBus.$emit('FilesMobileWebClient::getFileActionsList', fileActions)
 
+  //TODO it's not clear what for we need to check id the 'file' is provided.
+  // Without the 'file' empty array will be returned. The function caller could just do not call the function fof the same result
   const actions = []
   if (file) {
     Object.keys(fileActions).forEach((key) => {

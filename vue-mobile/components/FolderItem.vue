@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 import { getShortName } from '../utils/common'
 
@@ -69,6 +69,10 @@ export default {
     }
   },
   methods: {
+    ...mapActions('filesmobile', [
+      'selectFile',
+      'changeDialogComponent',
+    ]),
     async openFolder() {
       if (!this.isSelectMode && !this.folder.isCopied && !this.isMoved) {
         const path = {
@@ -93,10 +97,13 @@ export default {
     },
     menuClick() {
       if (!this.isSelectMode && !this.isCopied) {
-        this.openMenuHandler({
-          file: this.folder,
-          component: 'FileMenuDialog',
-        })
+        this.selectFile(this.folder)
+        this.changeDialogComponent({ component: 'FileMenuDialog' })
+
+        // this.openMenuHandler({
+        //   file: this.folder,
+        //   component: 'FileMenuDialog',
+        // })
       }
     },
   },
