@@ -75,8 +75,8 @@ export default {
         }
       }
     },
-    dialog(val) {
-      if (!val && this.dialogComponent.name === 'createButtonsDialogs')
+    isShowDialog(v) {
+      if (!v && this.dialogComponent?.component === 'CreateButtonsDialogs')
         this.changeDialogComponent({ component: '' })
     },
   },

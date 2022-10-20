@@ -1,5 +1,5 @@
 <template>
-  <main-layout>
+  <MainLayout>
     <template v-slot:drawer>
       <DrawerContent />
     </template>
@@ -8,11 +8,11 @@
     
     <router-view></router-view>
     
-    <app-create-button :rotate="appButtonRotate" @click="showCreateButtonsDialog" v-if="isShowCreateButtons"/>
+    <AppCreateButton :rotate="appButtonRotate" @click="showCreateButtonsDialog" v-if="isShowCreateButtons"/>
     
-    <dialogs-list />
+    <DialogsList />
 
-  </main-layout>
+  </MainLayout>
 </template>
 
 <script>
@@ -30,20 +30,11 @@ export default {
     DrawerContent,
     DialogsList,
     AppCreateButton,
-    // DownloadFileItem,
-    // FilesCaptions,
   },
-
-  // data() {
-  //   return {
-  //     isSelectMode: false,
-  //   }
-  // },
   
   computed: {
     ...mapGetters('filesmobile', [
       'storageList',
-      // 'selectedFiles',
       'copiedFiles',
       'loadingStatus',
       'currentStorage',
@@ -51,7 +42,7 @@ export default {
       'dialogComponent'
     ]),
     appButtonRotate() {
-      return this.dialogComponent?.component === 'CreateButtonsDialogs'
+      return this.dialogComponent.component === 'CreateButtonsDialogs'
     },
     // isCopied() {
     //   return !!this.copiedFiles.length
