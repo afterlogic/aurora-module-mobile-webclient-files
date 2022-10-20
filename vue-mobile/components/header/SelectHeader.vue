@@ -50,7 +50,7 @@ export default {
   computed: {
     ...mapGetters('filesmobile', [
       'currentStorage',
-      'currentPath'
+      'currentPathString',
     ]),
     unsharedFiles() {
       return this.items.filter( item => item.sharedWithMeAccess === 0 )
@@ -86,7 +86,7 @@ export default {
           action.name,
           this.items,
           this.currentStorage.Type,
-          this.currentPath
+          this.currentPathString
       )
     },
     onPerformAction(action) {
