@@ -9,19 +9,13 @@
     :isChoice="isSelectMode"
     @click="listItemClick(file)"
   >
-    <q-item-section class="file_thumb" side>
-      <file-item-icon v-if="file.paranoidKey || !file.isImg" :file="file" />
-      <div v-if="file.isImg && !file.paranoidKey" class="text-primary">
-        <div class="img-preview"
-          :style="{
-            background: `url(${filePreview}) no-repeat center`,
-            'background-size': 'contain',
-            width: '32px',
-            height: '32px',
-          }"
-        />
-        <share-with-me-item-icon v-if="file.sharedWithMeAccess" class="absolute" style="left: 18px; top: -8px" />
-      </div>
+    <q-item-section class="file__thumb" side>
+      <file-item-icon v-if="file.paranoidKey || !file.isImg" :file="file" class="file__thumb-icon" />
+      <div class="file__thumb-image"
+        v-if="file.isImg && !file.paranoidKey"
+        :style="{ 'background-image': `url(${filePreview})`}"
+      />
+      <share-with-me-item-icon v-if="file.sharedWithMeAccess" class="file__thumb-share-icon" />
     </q-item-section>
 
     <q-item-section class="list-item__text">
@@ -182,10 +176,28 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .file {
   // &__name {
   // }
+  &__thumb {
+    position: relative;
+  }
+  
+  &__thumb-image {
+    background-color: #eee;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    width: 32px;
+    height: 32px;
+  }
+  &__thumb-share-icon {
+    position: absolute;
+    right: 6px;
+    top: 0px;
+  }
+
   &__info {
     display: flex;
     align-items: center;

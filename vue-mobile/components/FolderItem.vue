@@ -9,9 +9,9 @@
     :isChoice="isSelectMode"
     @click="listItemClick(folder)"
   >
-    <q-item-section class="folder__metadata" side>
-      <folder-icon color="secondary" />
-      <share-with-me-item-icon v-if="folder.sharedWithMeAccess" class="absolute" style="left: 21px; top: 11px"/>
+    <q-item-section class="folder__thumb" side>
+      <folder-icon class="folder__thumb-icon" />
+      <share-with-me-item-icon v-if="folder.sharedWithMeAccess" class="folder__thumb-share-icon" />
     </q-item-section>
 
     <q-item-section class="list-item__text">
@@ -109,3 +109,22 @@ export default {
   },
 }
 </script>
+
+
+<style lang="scss">
+.folder {
+  &__thumb {
+    position: relative;
+  }
+
+  &__thumb-icon {
+    fill: $secondary;
+  }
+
+  &__thumb-share-icon {
+    position: absolute;
+    right: 6px;
+    top: 0px;
+  }
+}
+</style>
