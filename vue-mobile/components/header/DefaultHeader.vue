@@ -1,10 +1,10 @@
 <template>
   <q-toolbar class="app-header">
     <div class="col app-header__left">
-      <q-btn icon="menu" @click="$emit('openDrawer')" v-if="isStorageRoot" color="black" round flat dense />
+      <q-btn icon="menu" @click="openDrawer" v-if="isStorageRoot" color="black" round flat dense />
       <q-btn icon="chevron_left" @click="onPreviousPath" v-if="!isStorageRoot" color="black" round flat dense />
     </div>
-    
+
     <div class="col app-header__title" _style="flex-grow: 1">
       <span class="app-header__title-main" v-if="isStorageRoot">
         {{ $t('FILESWEBCLIENT.HEADING_BROWSER_TAB') }}
@@ -46,6 +46,8 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
+import eventBus from 'src/event-bus'
+
 import { getShortName } from '../../utils/common'
 
 export default {
@@ -56,26 +58,20 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('filesmobile', [
-      'currentPath',
-      'currentStorage'
-    ]),
+    ...mapGetters('filesmobile', ['currentPath', 'currentStorage']),
     isStorageRoot() {
       return this.currentPath.length === 0
     },
     storageName() {
-      return  this.currentStorage?.DisplayName || ''
+      return this.currentStorage?.DisplayName || ''
     },
   },
   methods: {
-    ...mapActions('filesmobile', [
-      'changeCurrentPath',
-      'changeCurrentHeader',
-    ]),
+    ...mapActions('filesmobile', ['changeCurrentPath', 'changeCurrentHeader']),
     getShortName,
     async openPath(pathIndex) {
       this.isPathMenuOpen = false
-      const newPath = this.currentPath.filter((item,index) => index <= pathIndex)
+      const newPath = this.currentPath.filter((item, index) => index <= pathIndex)
       this.$router.push({ path: `/files/${this.currentStorage.Type}/${newPath.join('/')}/` })
     },
     showSearchHeader() {
@@ -83,6 +79,9 @@ export default {
     },
     onPreviousPath() {
       this.$router.back()
+    },
+    openDrawer() {
+      eventBus.$emit('openDrawer')
     },
   },
 }

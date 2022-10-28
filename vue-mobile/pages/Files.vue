@@ -1,24 +1,29 @@
 <template>
   <MainLayout>
+    <template v-slot:header>
+      <FilesHeader />
+    </template>
+
     <template v-slot:drawer>
       <DrawerContent />
     </template>
 
-    <q-linear-progress v-if="loadingStatus" class="full-width" indeterminate track-color="grey-1" color="primary"/>
-    
-    <router-view></router-view>
-    
-    <AppCreateButton :rotate="appButtonRotate" @click="showCreateButtonsDialog" v-if="isShowCreateButtons"/>
-    
-    <DialogsList />
+    <q-linear-progress v-if="loadingStatus" class="full-width" indeterminate track-color="grey-1" color="primary" />
 
+    <router-view></router-view>
+
+    <AppCreateButton :rotate="appButtonRotate" @click="showCreateButtonsDialog" v-if="isShowCreateButtons" />
+
+    <DialogsList />
   </MainLayout>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+
 import MainLayout from 'src/layouts/MainLayout'
 import AppCreateButton from 'src/components/common/AppCreateButton'
+import FilesHeader from '../components/header/FilesHeader'
 import DrawerContent from '../components/DrawerContent'
 import DialogsList from '../components/DialogsList'
 
@@ -27,11 +32,12 @@ export default {
 
   components: {
     MainLayout,
+    FilesHeader,
     DrawerContent,
     DialogsList,
     AppCreateButton,
   },
-  
+
   computed: {
     ...mapGetters('filesmobile', [
       'storageList',
@@ -39,7 +45,7 @@ export default {
       'loadingStatus',
       'currentStorage',
       'currentHeader',
-      'dialogComponent'
+      'dialogComponent',
     ]),
     appButtonRotate() {
       return this.dialogComponent.component === 'CreateButtonsDialogs'
@@ -54,7 +60,7 @@ export default {
     fileListHeight() {
       if (this.currentHeader === 'SearchHeader') return 'files__list-search'
       return 'files__list-default'
-    }
+    },
   },
 
   watch: {
@@ -75,20 +81,20 @@ export default {
           //TODO add detection of a default storage
           this.$router.push(`/files/${this.storageList[0].Type}/`)
         } else {
-          const storage = this.storageList.length ? this.storageList.find(storage => storage.Type === storageId) : {}
+          const storage = this.storageList.length ? this.storageList.find((storage) => storage.Type === storageId) : {}
           if (storage) {
             this.changeCurrentStorage(storage)
           }
         }
       },
-      immediate: true
+      immediate: true,
     },
     '$route.params.path': {
       handler: function (path) {
         this.changeSearchText('')
         this.changeCurrentPath({ path })
       },
-      immediate: true
+      immediate: true,
     },
   },
 
