@@ -149,8 +149,6 @@ export default {
       ) {
         const storageId = this.currentStorage?.Type || this.file?.storage
         if (storageId) {
-          // const path = this.currentPathString !== '/' ? this.currentPathString : ''
-          // await this.$router.push({ path: `/files/${storageId}${path}/${this.file.id}` })
           this.$router.push({ path: `/files/${storageId}${this.file.path}/${this.file.id}` })
         }
       } else {

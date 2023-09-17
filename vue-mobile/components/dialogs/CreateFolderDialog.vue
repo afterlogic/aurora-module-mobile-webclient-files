@@ -31,10 +31,14 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { i18n } from 'boot/i18n'
 
 import AppDialog from "components/common/AppDialog";
 import AppInput from 'src/components/common/AppInput'
 import ButtonDialog from 'src/components/common/ButtonDialog'
+import notification from 'src/utils/notification'
+
+import { validateFileOrFolderName } from '../../utils/common'
 
 export default {
   name: 'CreateFolderDialog',
@@ -59,11 +63,15 @@ export default {
     ...mapActions('filesmobile', ['asyncCreateFolder', 'asyncGetFiles']),
     async createFolder() {
       if (!this.saving) {
-        this.saving = true
-        const result = await this.asyncCreateFolder({ name: this.folderName })
-        if (result) {
-          this.$emit('closeDialog')
-          await this.asyncGetFiles()
+        if (validateFileOrFolderName(this.folderName)) {
+          this.saving = true
+          const result = await this.asyncCreateFolder({ name: this.folderName })
+          if (result) {
+            this.$emit('closeDialog')
+            await this.asyncGetFiles()
+          }
+        } else {
+          notification.showError(i18n.global.tc('FILESWEBCLIENT.ERROR_INVALID_FOLDER_NAME'))
         }
       }
     },

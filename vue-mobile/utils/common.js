@@ -185,3 +185,8 @@ export const getPreviewIconName = (file) => {
   }
   return 'FileIcon'
 }
+
+export const validateFileOrFolderName = (sName) => {
+  sName = ('' + sName).trim();
+	return '' !== sName && !/["\/\\*?<>|:]/.test(sName);
+}

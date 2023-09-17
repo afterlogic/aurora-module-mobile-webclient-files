@@ -152,7 +152,7 @@ export default {
     const currentStorage = getters['currentStorage']
     const parameters = {
       Type: currentStorage.Type,
-      Path: getters['currentPath'],
+      Path: getters['currentPathString'],
       FolderName: name,
     }
     return await filesWebApi.createFolder(parameters)
