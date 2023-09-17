@@ -8,6 +8,7 @@ import VueCookies from 'vue-cookies'
 import { getApiHost } from 'src/api/helpers'
 import { parseUploadedFile } from '../../utils/common'
 import eventBus from 'src/event-bus'
+import modulesManager from 'src/modules-manager'
 
 export default {
   name: 'FileUploader',
@@ -21,6 +22,7 @@ export default {
     ...mapGetters('filesmobile', [
       'currentStorage',
       'currentPath',
+      'currentPathString',
       'dialogComponent',
     ]),
   },
@@ -39,8 +41,11 @@ export default {
           storage: this.currentStorage.Type,
           getParentComponent: this.$root._getParentComponent
         }
-        eventBus.$emit('OnFileAdded', params)
-
+        if (modulesManager.isModuleAvailable('CoreParanoidEncryptionWebclientPlugin')) {
+          eventBus.$emit('OnFileAdded', params)
+        } else {
+          eventBus.$emit('onUploadFiles', methods)
+        }
       }
     },
   },
@@ -75,7 +80,7 @@ export default {
               value: JSON.stringify({
                 Type: this.currentStorage.Type,
                 SubPath: '',
-                Path: this.currentPath,
+                Path: this.currentPathString,
                 Overwrite: false,
               }),
             },
