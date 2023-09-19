@@ -22,8 +22,7 @@ export default {
     const folders = getFilteredItems(state.folderList, 'isSelected')
     return folders.concat(files)
   },
-  dialogComponent: (state) =>
-    state.dialogComponent ? state.dialogComponent : { component: '' },
+  dialogComponent: (state) => state.dialogComponent ? state.dialogComponent : { component: '' },
   copiedFiles: (state) => state.copyItems,
   getCopyMoveParameters: (state) => {
     const copiedFile = state.copyItems[0]

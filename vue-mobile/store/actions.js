@@ -99,7 +99,7 @@ export default {
   
   asyncDeleteItems: async ({ state, commit, getters, dispatch }, { items }) => {
     const currentStorage = getters['currentStorage']
-    const currentPath = getters['currentPath']
+    const currentPath = getters['currentPathString']
     const parameters = {
       Type: currentStorage?.Type,
       Path: currentPath,
@@ -275,7 +275,7 @@ export default {
   asyncLeaveShare: async ({ getters, dispatch }) => {
     const selectedItems = getters['selectedFiles']
     const currentStorage = getters['currentStorage']
-    const currentPath = getters['currentPath']
+    const currentPath = getters['currentPathString']
 
     const items = []
 
