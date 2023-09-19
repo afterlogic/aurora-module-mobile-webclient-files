@@ -20,6 +20,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
+import { SHARING_LEVELS } from '../../enums'
 import AppDialog from 'src/components/common/AppDialog'
 import ButtonDialog from 'src/components/common/ButtonDialog'
 
@@ -72,7 +73,7 @@ export default {
       const items = []
       if (this.selectedFiles.length > 1) {
         this.selectedFiles.forEach((file) => {
-          if (file.sharedWithMeAccess === 0) {
+          if (file.sharedWithMeAccess === SHARING_LEVELS.NOACCESS) {
             items.push({
               Path: file.path,
               Name: file.name,

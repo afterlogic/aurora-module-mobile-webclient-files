@@ -33,6 +33,8 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
+
+import { SHARING_LEVELS } from '../../enums'
 import { fileActions } from '../../utils/file-actions'
 import ActionIcon from '../common/ActionIcon'
 
@@ -53,10 +55,10 @@ export default {
       'currentPathString',
     ]),
     unsharedFiles() {
-      return this.items.filter( item => item.sharedWithMeAccess === 0 )
+      return this.items.filter( item => item.sharedWithMeAccess === SHARING_LEVELS.NOACCESS )
     },
     sharedFiles() {
-      return this.items.filter( item => item.sharedWithMeAccess !== 0 )
+      return this.items.filter( item => item.sharedWithMeAccess !== SHARING_LEVELS.NOACCESS )
     },
     actions() {
       return fileActions

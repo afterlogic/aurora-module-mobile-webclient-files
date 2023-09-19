@@ -2,6 +2,8 @@ import eventBus from 'src/event-bus'
 import store from 'src/store'
 import { defineAsyncComponent } from 'vue'
 
+import { SHARING_LEVELS } from '../enums'
+
 const i18n = {
   $t: {
     OPENPGPFILESWEBCLIENT: {
@@ -36,11 +38,11 @@ const isShowAction = (action, items = [], storage, path) => {
       case 'createShareableLink':
         if (storage === 'shared') result = false
         if (isArchiveElement(path)) result = false
-        if (items[0].sharedWithMeAccess !== 0) result = false
+        if (items[0].sharedWithMeAccess !== SHARING_LEVELS.NOACCESS) result = false
         break
       case 'shareWithTeammates':
         if (storage === 'corporate') result = false
-        if (items[0].sharedWithMeAccess !== 3 && items[0].sharedWithMeAccess !== 0) result = false
+        if (items[0].sharedWithMeAccess !== SHARING_LEVELS.RESHARE && items[0].sharedWithMeAccess !== SHARING_LEVELS.NOACCESS) result = false
         if (isArchiveElement(path)) result = false
         break
       case 'download':
@@ -65,7 +67,7 @@ const isShowAction = (action, items = [], storage, path) => {
 }
 
 const getSharedWithMeItems = (items) => {
-  return items.filter( item => item.sharedWithMeAccess !== 0 )
+  return items.filter( item => item.sharedWithMeAccess !== SHARING_LEVELS.NOACCESS )
 }
 
 export const fileActions = {

@@ -23,9 +23,9 @@
         {{ fileName }}
       </q-item-label>
       <q-item-label v-if="!file.downloading" class="list-item__text_secondary file__info">
-        <encrypted-item-icon v-if="file.paranoidKey" class="file__info-icon_encrypted"/>
-        <shared-item-icon v-if="isShared" class="file__info-icon_shared" width="14" height="14" />
-        <link-item-icon v-if="file.publicLink" class="file__info-icon_link"/>
+        <EncryptedItemIcon v-if="file.paranoidKey" class="file__info-icon_encrypted"/>
+        <SharedItemIcon v-if="isShared" class="file__info-icon_shared" width="14" height="14" />
+        <LinkItemIcon v-if="file.publicLink" class="file__info-icon_link"/>
         <span class="file__size">{{ fileSize }}</span>
         <span class="file__separator">|</span>
         <span class="file__date">{{ fileDate }}</span>
@@ -49,6 +49,7 @@ import { getApiHost } from 'src/api/helpers'
 
 import { getShortName } from '../utils/common'
 
+import { SHARING_LEVELS } from '../enums'
 import AppItem from 'src/components/common/AppItem'
 import FileItemIcon from './icons/FileItemIcon'
 import DownloadingProgress from './common/DownloadingProgress'
@@ -115,8 +116,7 @@ export default {
       return date.getDate(this.file.lastModified)
     },
     isShared() {
-      if (this.file.sharedWithMeAccess) return false
-      return !!this.file.shares.length || this.file.sharedWithMeAccess
+      return !!this.file.shares.length || this.file.sharedWithMeAccess === SHARING_LEVELS.RESHARE
     },
   },
   methods: {

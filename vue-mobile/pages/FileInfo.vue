@@ -1,5 +1,5 @@
 <template>
-  <share-with-me-info-icon v-if="currentFile?.sharedWithMeAccess" class="absolute" style="right: 0; position: fixed; z-index: 1"/>
+  <ShareWithMeInfoIcon v-if="currentFile?.sharedWithMeAccess" class="absolute" style="right: 0; position: fixed; z-index: 1"/>
   <q-scroll-area :thumb-style="{ width: '5px', 'z-index': 2 }" class="file-info__info">
     <div v-if="currentFile">
       <div class="flex items-center justify-center">
@@ -14,7 +14,7 @@
               !currentFile.decryptViewUrl"
             class="file-info__preview q-my-xl"
         >
-          <file-item-icon
+          <FileItemIcon
               v-if="currentFile.paranoidKey || !currentFile.thumbnailUrl"
               :file="currentFile"
               :height="64"
@@ -22,7 +22,7 @@
           />
           <div
               v-if="isShowDecryptAction"
-              class="text-primary q-mt-md view-action flex items-center justify-center"
+              class="view-action text-primary q-mt-md flex items-center justify-center"
               @click="onDecrypt"
           >
             <span>Show</span>
@@ -31,8 +31,7 @@
         <div
             class="q-my-lg"
             style="height: 100%; width: 100%"
-            v-if="(currentFile.thumbnailUrl && !currentFile.paranoidKey) ||
-              currentFile.decryptViewUrl"
+            v-if="(currentFile.thumbnailUrl && !currentFile.paranoidKey) || currentFile.decryptViewUrl"
         >
           <div style="display:flex; justify-content:center; align-items:center; min-height: 250px;">
             <img :src="filePreview" style="max-height: 400px; max-width: 100%;" />
@@ -52,10 +51,10 @@
             <div style="flex-grow: 1">
               <input-form :border="false" readonly :value="currentFile.name" label="File name" />
             </div>
-            <div class="flex items-end q-mb-xs">
-              <encrypted-item-icon v-if="currentFile.paranoidKey" class="q-mx-xs"/>
-              <shared-item-icon v-if="isShared" width="14" height="14" class="q-mx-xs"/>
-              <link-item-icon v-if="currentFile.publicLink" class="q-mx-xs"/>
+            <div class="file__info flex items-end q-mb-xs">
+              <EncryptedItemIcon v-if="currentFile.paranoidKey" class="file__info-icon_encrypted q-mx-xs"/>
+              <SharedItemIcon v-if="isShared" width="14" height="14" class="file__info-icon_shared q-mx-xs"/>
+              <LinkItemIcon v-if="currentFile.publicLink" class="file__info-icon_link q-mx-xs"/>
             </div>
           </div>
         </div>
@@ -83,6 +82,7 @@ import text from 'src/utils/text'
 import { getApiHost } from 'src/api/helpers'
 import eventBus from 'src/event-bus'
 
+import { SHARING_LEVELS } from '../enums'
 import FileItemIcon from '../components/icons/FileItemIcon'
 import InputForm from '../components/common/InputForm'
 import EncryptedItemIcon from '../components/icons/item/EncryptedItemIcon'
@@ -133,8 +133,7 @@ export default {
       return text.getFriendlySize(this.currentFile.size)
     },
     isShared() {
-      if (this.currentFile?.sharedWithMeAccess) return false
-      return !!this.currentFile.shares.length || this.currentFile.sharedWithMeAccess
+      return !!this.currentFile.shares.length || this.currentFile.sharedWithMeAccess === SHARING_LEVELS.RESHARE
     },
   },
   watch: {
@@ -183,27 +182,14 @@ export default {
   &__info .q-scrollarea__content {
     width: 100%;
   }
-  /*&__img .absolute-full {
-    position: relative;
+
+}
+.file {
+  &__info-icon_encrypted,
+  &__info-icon_shared,
+  &__info-icon_link {
+    fill: $secondary;
   }
-  &__img div:first-child {
-    display: none;
-  }
-  &__img .q-img__container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    max-height: 400px;
-    min-height: 250px;
-    max-width: 100%;
-  }
-  &__img .q-img__container img {
-    object-position: unset !important;
-    object-fit: unset !important;
-    width: auto;
-    height: auto;
-    max-width: 100%;
-  }*/
 }
 .view-action {
   font-weight: normal;
@@ -212,6 +198,5 @@ export default {
 
   letter-spacing: 0.3px;
   text-decoration-line: underline;
-
 }
 </style>

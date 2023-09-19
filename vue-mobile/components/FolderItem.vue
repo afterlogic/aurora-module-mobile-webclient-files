@@ -11,13 +11,13 @@
   >
     <q-item-section class="folder__thumb" side>
       <folder-icon class="folder__thumb-icon" />
-      <share-with-me-item-icon v-if="folder.sharedWithMeAccess" class="folder__thumb-share-icon" />
+      <ShareWithMeItemIcon v-if="folder.sharedWithMeAccess" class="folder__thumb-share-icon" />
     </q-item-section>
 
     <q-item-section class="list-item__text">
       <q-item-label class="list-item__text_primary folder__name">{{ folderName }}</q-item-label>
       <q-item-label v-if="isShared" class="list-item__text_secondary folder__info">
-        <shared-item-icon />
+        <SharedItemIcon class="folder__info-icon_shared" />
       </q-item-label>
     </q-item-section>
 
@@ -32,6 +32,7 @@ import { mapGetters, mapActions } from 'vuex'
 
 import { getShortName } from '../utils/common'
 
+import { SHARING_LEVELS } from '../enums'
 import FolderIcon from './icons/FolderIcon'
 import SharedItemIcon from './icons/item/SharedItemIcon'
 import ShareWithMeItemIcon from './icons/ShareWithMeItemIcon'
@@ -60,7 +61,7 @@ export default {
       return this.folder ? getShortName(this.folder.name, 50) : ''
     },
     isShared() {
-      return !!this.folder.shares.length || this.folder.sharedWithMeAccess
+      return !!this.folder.shares.length || this.folder.sharedWithMeAccess === SHARING_LEVELS.RESHARE
     }
   },
   data() {
@@ -126,5 +127,12 @@ export default {
     right: 6px;
     top: 0px;
   }
+
+  &__info-icon_encrypted,
+  &__info-icon_shared,
+  &__info-icon_link {
+    fill: $secondary;
+  }
 }
+
 </style>
