@@ -55,7 +55,11 @@ export default {
     // },
     isShowCreateButtons() {
       //TODO remove copiedFiles from here
-      return this.currentStorage?.Type !== 'shared' && !this.copiedFiles.length && this.currentHeader !== 'SearchHeader'
+      return this.currentHeader !== 'SearchHeader'
+      // && !this.isSelectMode
+      && !this.copiedFiles.length
+      && this.$route.name === 'file-list'
+      && this.currentStorage?.Type !== 'shared'
     },
     fileListHeight() {
       if (this.currentHeader === 'SearchHeader') return 'files__list-search'
