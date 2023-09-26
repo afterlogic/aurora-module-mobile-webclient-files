@@ -100,14 +100,7 @@ export default {
       return getShortName(name, 30)
     },
     filePreview() {
-      if (this.file) {
-        const api = getApiHost()
-        if (this.file.thumbnailUrl) {
-          return api + this.file.thumbnailUrl
-        }
-        return ''
-      }
-      return ''
+      return this.file?.thumbnailUrl ? getApiHost() + (this.file?.thumbnailUrl) : ''
     },
     fileSize() {
       return text.getFriendlySize(this.file.size)

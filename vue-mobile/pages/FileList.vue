@@ -2,7 +2,7 @@
   <q-scroll-area :thumb-style="{ width: '5px' }" :class="fileListHeight" 
     v-if="!loadingStatus && (folderList.length || downloadFiles.length || fileList.length)"
   >
-    <app-pull-refresh :refresh-action="asyncGetFiles">
+    <AppPullRefresh :refresh-action="asyncGetFiles">
       <folder-item
         class="folder"
         v-for="folder in folderList"
@@ -34,9 +34,9 @@
         :openMenuHandler="openMenu"
       />
       <div style="height: 70px" class="full-width" />
-    </app-pull-refresh>
+    </AppPullRefresh>
   </q-scroll-area>
-  <files-captions v-if="!loadingStatus && !folderList.length && !downloadFiles.length && !fileList.length"/>
+  <FilesCaptions v-if="!loadingStatus && !folderList.length && !downloadFiles.length && !fileList.length"/>
 </template>
 
 <script>

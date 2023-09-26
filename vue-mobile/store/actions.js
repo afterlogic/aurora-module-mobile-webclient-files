@@ -16,16 +16,6 @@ export default {
     if (types.pArray(storages)) {
       commit('setStorageList', storages)
       commit('setCurrentStorage', storages.length ? storages[0] : {})
-      // if (storages.length) {
-      //   const path = {
-      //     path: '',
-      //     name: storages[0].DisplayName,
-      //   }
-      //   dispatch('changeCurrentPath', {
-      //     path,
-      //     lastStorage: true,
-      //   })
-      // }
     }
   },
   asyncGetFiles: async ({ commit, getters, dispatch }) => {
