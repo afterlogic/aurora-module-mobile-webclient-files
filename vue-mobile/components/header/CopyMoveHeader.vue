@@ -28,7 +28,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'pinia'
+import { useFilesStore } from '../../store/index-pinia'
 
 import StorageItem from '../StorageItem'
 import ActionIcon from '../common/ActionIcon'
@@ -40,13 +41,12 @@ export default {
     ActionIcon
   },
   computed: {
-    ...mapGetters('filesmobile', ['copiedFiles', 'currentPath', 'storageList']),
+    ...mapGetters(useFilesStore, ['copiedFiles', 'currentPath', 'storageList']),
   },
   methods: {
-    ...mapActions('filesmobile', [
+    ...mapActions(useFilesStore, [
       'removeCopiedFiles',
       'changeDialogComponent',
-      'changeCurrentPath',
       'asyncGetFiles',
     ]),
     removeCopiedItems() {
@@ -56,10 +56,6 @@ export default {
       this.changeDialogComponent({ component: 'CreateFolderDialog' })
     },
     async onPreviousPath() {
-      // await this.changeCurrentPath({
-      //   path: this.currentPath[this.currentPath.length - 2],
-      //   lastStorage: false,
-      // })
       await this.asyncGetFiles()
     },
   },

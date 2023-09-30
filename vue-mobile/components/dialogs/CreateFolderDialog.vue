@@ -30,7 +30,9 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions } from 'pinia'
+import { useFilesStore } from '../../store/index-pinia'
+
 import { i18n } from 'boot/i18n'
 
 import AppDialog from "components/common/AppDialog";
@@ -44,7 +46,6 @@ export default {
   name: 'CreateFolderDialog',
   components: { AppInput, ButtonDialog, AppDialog },
   props: {
-    // file: { type: Object, default: null },
     dialog: { type: Boolean, default: false },
   },
   data() {
@@ -60,7 +61,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('filesmobile', ['asyncCreateFolder', 'asyncGetFiles']),
+    ...mapActions(useFilesStore, ['asyncCreateFolder', 'asyncGetFiles']),
     async createFolder() {
       if (!this.saving) {
         if (validateFileOrFolderName(this.folderName)) {
@@ -81,5 +82,3 @@ export default {
   },
 }
 </script>
-
-<style scoped></style>

@@ -44,7 +44,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'pinia'
+import { useFilesStore } from '../../store/index-pinia'
 
 import eventBus from 'src/event-bus'
 
@@ -58,7 +59,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('filesmobile', ['currentPath', 'currentStorage']),
+    ...mapGetters(useFilesStore, ['currentPath', 'currentStorage']),
     isStorageRoot() {
       return this.currentPath.length === 0
     },
@@ -67,7 +68,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('filesmobile', ['changeCurrentPath', 'changeCurrentHeader']),
+    ...mapActions(useFilesStore, ['changeCurrentHeader']),
     getShortName,
     async openPath(pathIndex) {
       this.isPathMenuOpen = false

@@ -18,10 +18,11 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'pinia'
+import { useFilesStore } from '../../store/index-pinia'
 
-import AppDialog from "components/common/AppDialog";
-import ButtonDialog from "components/common/ButtonDialog";
-import { mapGetters, mapActions } from "vuex";
+import AppDialog from 'components/common/AppDialog'
+import ButtonDialog from 'components/common/ButtonDialog'
 
 export default {
   name: "ShareLeaveDialog",
@@ -30,14 +31,14 @@ export default {
     ButtonDialog
   },
   computed: {
-    ...mapGetters('filesmobile', ['currentFile', 'selectedFiles']),
+    ...mapGetters(useFilesStore, ['currentFile', 'selectedFiles']),
   },
   data: () => ({
     openDialog: false,
     saving: false
   }),
   methods: {
-    ...mapActions('filesmobile', ['asyncLeaveShare', 'changeItemsLists', 'selectFile']),
+    ...mapActions(useFilesStore, ['asyncLeaveShare', 'changeItemsLists', 'selectFile']),
     leaveShare() {
       const result = this.asyncLeaveShare()
       if (result) {

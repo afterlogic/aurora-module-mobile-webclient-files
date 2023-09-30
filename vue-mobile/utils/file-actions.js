@@ -1,5 +1,5 @@
 import eventBus from 'src/event-bus'
-import store from 'src/store'
+import { useFilesStore} from '../store/index-pinia'
 import { defineAsyncComponent } from 'vue'
 
 import { SHARING_LEVELS } from '../enums'
@@ -73,8 +73,9 @@ const getSharedWithMeItems = (items) => {
 export const fileActions = {
   copy: {
     method: async () => {
-      const currentFile = store.getters['filesmobile/currentFile']
-      await store.dispatch('filesmobile/addCopyItems', { items: [currentFile] })
+      const filesStore = useFilesStore()
+      const currentFile = filesStore.currentFile
+      await filesStore.addCopyItems({ items: [currentFile] })
     },
     name: 'copy',
     displayName: 'Copy/Move',
@@ -84,7 +85,6 @@ export const fileActions = {
   createShareableLink: {
     method: null,
     name: 'createShareableLink',
-    // component: defineAsyncComponent(() => import('../components/dialogs/CreateShareableLinkDialog')),
     getComponent: () => { return defineAsyncComponent(() => import('../components/dialogs/CreateShareableLinkDialog')) },
     displayName: i18n.$t.OPENPGPFILESWEBCLIENT.HEADING_CREATE_PUBLIC_LINK,
     icon: 'SecureLinkIcon',
@@ -93,7 +93,6 @@ export const fileActions = {
   shareWithTeammates: {
     method: null,
     name: 'shareWithTeammates',
-    // component: defineAsyncComponent(() => import('../components/dialogs/ShareWithTeammatesDialog')),
     getComponent: () => { return defineAsyncComponent(() => import('../components/dialogs/ShareWithTeammatesDialog')) },
     displayName: i18n.$t.SHAREDFILES.ACTION_SHARE,
     icon: 'SharingIcon',
@@ -102,7 +101,6 @@ export const fileActions = {
   shareLeave: {
     method: null,
     name: 'shareLeave',
-    // component: defineAsyncComponent(() => import('../components/dialogs/ShareLeaveDialog')),
     getComponent: () => { return defineAsyncComponent(() => import('../components/dialogs/ShareLeaveDialog')) },
     displayName: 'Leave share ',
     icon: 'LeaveSharingIcon',
@@ -110,8 +108,9 @@ export const fileActions = {
   },
   download: {
     method: (vue) => {
-      const file = store.getters['filesmobile/currentFile']
-      store.dispatch('filesmobile/changeItemProperty', {
+      const filesStore = useFilesStore()
+      const file = filesStore.currentFile
+      filesStore.changeItemProperty({
         item: file,
         property: 'downloading',
         value: true,
@@ -122,7 +121,7 @@ export const fileActions = {
           getParentComponent: vue.$root._getParentComponent
         })
       } else {
-        store.dispatch('filesmobile/asyncDownloadFile')
+        filesStore.asyncDownloadFile()
       }
     },
     name: 'download',

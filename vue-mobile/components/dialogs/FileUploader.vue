@@ -2,7 +2,9 @@
   <div />
 </template>
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'pinia'
+import { useFilesStore } from '../../store/index-pinia'
+
 import VueCookies from 'vue-cookies'
 
 import { getApiHost } from 'src/api/helpers'
@@ -19,7 +21,7 @@ export default {
     eventBus.$on('onUploadFiles', this.onUploadFiles)
   },
   computed: {
-    ...mapGetters('filesmobile', [
+    ...mapGetters(useFilesStore, [
       'currentStorage',
       'currentPath',
       'currentPathString',
@@ -28,7 +30,7 @@ export default {
   },
   watch: {
     dialogComponent(val) {
-      if (val.component === 'FileUploader') {
+      if (val?.component === 'FileUploader') {
         const methods = {
           factory: this.addedFiles,
           added: this.onFileAdded,
@@ -50,7 +52,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('filesmobile', [
+    ...mapActions(useFilesStore, [
       'addDownloadsFiles',
       'removeUploadedFiles',
       'asyncGetFiles',

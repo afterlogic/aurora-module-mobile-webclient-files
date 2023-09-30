@@ -35,7 +35,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'pinia'
+import { useFilesStore } from '../../store/index-pinia'
 
 export default {
   name: 'SearchHeader',
@@ -45,7 +46,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('filesmobile', [
+    ...mapGetters(useFilesStore, [
       'currentStorage',
       'searchText',
       'currentPath',
@@ -66,7 +67,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('filesmobile', [
+    ...mapActions(useFilesStore, [
       'changeCurrentHeader',
       'changeSearchText'
     ]),

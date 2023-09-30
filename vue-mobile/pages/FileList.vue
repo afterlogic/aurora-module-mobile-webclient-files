@@ -40,7 +40,9 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'pinia'
+import { useFilesStore } from '../store/index-pinia'
+
 import FolderItem from '../components/FolderItem'
 import FileItem from '../components/FileItem'
 import DownloadFileItem from '../components/DownloadFileItem'
@@ -67,17 +69,15 @@ export default {
   },
   
   computed: {
-    ...mapGetters('filesmobile', [
+    ...mapGetters(useFilesStore, [
       'folderList',
       'fileList',
       'selectedFiles',
       'copiedFiles',
       'downloadFiles',
-      // 'currentFile',
       'loadingStatus',
       'currentStorage',
       'currentHeader',
-      'dialogComponent',
       'currentPathString',
       'searchText',
     ]),
@@ -92,21 +92,18 @@ export default {
   watch: {
     currentStorage: {
       handler: async function () {
-        // console.log('watch storage', this.currentStorage)
         this.fetchData()
       },
       immediate: true
     },
     currentPathString: {
       handler: async function () {
-        // console.log('watch path', this.currentPathString)
         this.fetchData()
       },
       immediate: true
     },
     searchText: {
       handler: async function (v) {
-        // console.log('watch search text', v)
         this.fetchData()
       },
       immediate: true
@@ -118,13 +115,11 @@ export default {
     },
   },
   methods: {
-    ...mapActions('filesmobile', [
+    ...mapActions(useFilesStore, [
       'asyncGetFiles',
       'selectFile',
       'changeDialogComponent',
-      'changeSelectStatus',
       'changeLoadingStatus',
-      'changeCurrentPath',
     ]),
     async fetchData() {
       if (this.currentStorage && this.currentPathString) {
@@ -142,7 +137,7 @@ export default {
       this.changeDialogComponent({ component })
     },
     selectItem(item) {
-      this.changeSelectStatus(item)
+      item.isSelected = !item.isSelected
     },
     longPress(item) {
       this.isSelectMode = true

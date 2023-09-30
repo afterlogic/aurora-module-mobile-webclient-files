@@ -38,21 +38,24 @@
   </q-btn-dropdown>
 </template>
 <script>
-import PlusIcon from "src/components/common/icons/PlusIcon";
-import {mapGetters} from "vuex";
+import { mapGetters } from 'pinia'
+import { useFilesStore } from '../../store/index-pinia'
+
+import PlusIcon from 'src/components/common/icons/PlusIcon'
+
 export default {
   name: "DropdownContactStatus",
+  components: {
+    PlusIcon
+  },
   props: {
     action: { type: Function, require: true },
     currentUser: { type: Object, default: null },
     menuOffset: { type: Array, default: [0, 0] },
     statuses: { type: Object, default: null }
   },
-  components: {
-    PlusIcon
-  },
   computed: {
-    ...mapGetters('filesmobile', ['currentFile']),
+    ...mapGetters(useFilesStore, ['currentFile']),
   }
 }
 </script>

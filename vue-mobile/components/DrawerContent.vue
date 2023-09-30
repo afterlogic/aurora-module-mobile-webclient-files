@@ -19,7 +19,10 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'pinia'
+import { useFilesStore } from '../store/index-pinia'
+import { useCoreStore } from 'src/stores/index-pinia'
+
 import StorageItem from '../components/StorageItem'
 
 export default {
@@ -29,11 +32,11 @@ export default {
     StorageItem,
   },
   computed: {
-    ...mapGetters('filesmobile', [
+    ...mapGetters(useFilesStore, [
       'storageList',
       'currentStorage',
     ]),
-    ...mapGetters('core', [
+    ...mapGetters(useCoreStore, [
       'userData',
       'userPublicId'
     ]),

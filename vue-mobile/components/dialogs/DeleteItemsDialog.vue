@@ -18,7 +18,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'pinia'
+import { useFilesStore } from '../../store/index-pinia'
 
 import { SHARING_LEVELS } from '../../enums'
 import AppDialog from 'src/components/common/AppDialog'
@@ -49,7 +50,7 @@ export default {
   //   },
   // },
   computed: {
-    ...mapGetters('filesmobile', ['selectedFiles']),
+    ...mapGetters(useFilesStore, ['selectedFiles']),
     title() {
       if (this.selectedFiles.length > 1) {
         return this.$tc(
@@ -64,7 +65,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('filesmobile', ['asyncDeleteItems', 'changeItemsLists', 'selectFile']),
+    ...mapActions(useFilesStore, ['asyncDeleteItems', 'changeItemsLists', 'selectFile']),
     closeDialog() {
       this.$emit('closeDialog')
     },

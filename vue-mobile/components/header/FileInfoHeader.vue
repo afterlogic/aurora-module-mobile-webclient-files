@@ -76,7 +76,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'pinia'
+import { useFilesStore } from '../../store/index-pinia'
 
 import ActionIcon from '../common/ActionIcon'
 import { getFileActions } from '../../utils/file-actions'
@@ -96,7 +97,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('filesmobile', [
+    ...mapGetters(useFilesStore, [
       'fileList',
       'currentFile',
       'currentStorage',
@@ -112,7 +113,7 @@ export default {
     // },
   },
   methods: {
-    ...mapActions('filesmobile', ['changeDialogComponent', 'asyncDownloadFile']),
+    ...mapActions(useFilesStore, ['changeDialogComponent', 'asyncDownloadFile']),
     onPreviousPath() {
       this.$router.back()
     },

@@ -1,15 +1,16 @@
 <template>
   <div>
-    <default-header v-if="routeName === 'file-list' && isDefaultHeader" @openDrawer="$emit('openDrawer')" />
-    <select-header v-if="routeName === 'file-list' && isSelectHeader" :items="selectedFiles" />
-    <copy-move-header v-if="routeName === 'file-list' && isCopyMoveHeader" />
-    <search-header v-if="isSearchHeader" />
+    <DefaultHeader v-if="isDefaultHeader" @openDrawer="$emit('openDrawer')" />
+    <SelectHeader v-if="isSelectHeader" :items="selectedFiles" />
+    <CopyMoveHeader v-if="isCopyMoveHeader" />
+    <SearchHeader v-if="isSearchHeader" />
     <FileInfoHeader v-if="$router.currentRoute.value.name === 'file-view'" />
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapGetters } from 'pinia'
+import { useFilesStore } from '../../store/index-pinia'
 
 import DefaultHeader from './DefaultHeader'
 import SelectHeader from './SelectHeader'
@@ -28,37 +29,28 @@ export default {
   },
 
   computed: {
-    ...mapGetters('filesmobile', ['selectedFiles', 'copiedFiles', 'currentHeader']),
+    ...mapGetters(useFilesStore, ['selectedFiles', 'copiedFiles', 'currentHeader']),
     routeName() {
       return this.$router.currentRoute.value.name
     },
     isDefaultHeader() {
-      return (
-        !this.selectedFiles.length &&
-        !this.copiedFiles.length &&
-        !this.isSearchHeader
-      )
+      return this.routeName === 'file-list'
+        && !this.selectedFiles.length
+        && !this.copiedFiles.length
+        && !this.isSearchHeader
     },
     isSelectHeader() {
-      return (
-        this.selectedFiles.length &&
-        !this.copiedFiles.length &&
-        !this.isSearchHeader
-      )
+      return this.routeName === 'file-list'
+        && !!this.selectedFiles.length
+        && !this.copiedFiles.length
+        && !this.isSearchHeader
     },
     isCopyMoveHeader() {
-      return this.copiedFiles.length && !this.isSearchHeader
+      return this.routeName === 'file-list' && this.copiedFiles.length && !this.isSearchHeader
     },
     isSearchHeader() {
       return this.routeName === 'file-list' && this.currentHeader === 'SearchHeader'
     },
-  },
-  methods: {
-    ...mapActions('filesmobile', [
-      // 'changeCurrentHeader',
-      // 'changeSearchText',
-      // 'clearItemLists',
-    ]),
   },
   beforeUnmount() {
     // this.changeSearchText('')

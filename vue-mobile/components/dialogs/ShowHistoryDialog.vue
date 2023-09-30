@@ -105,7 +105,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions } from 'pinia'
+import { useFilesStore } from '../../store/index-pinia'
 
 import date from 'src/utils/date'
 
@@ -131,7 +132,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('filesmobile', ['asyncGetHistory', 'asyncClearHistory']),
+    ...mapActions(useFilesStore, ['asyncGetHistory', 'asyncClearHistory']),
     changePage(page) {
       this.currentPage = page
       this.offset = (page - 1) * 10

@@ -41,7 +41,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'pinia'
+import { useFilesStore } from '../store/index-pinia'
 
 import text from 'src/utils/text'
 import date from 'src/utils/date'
@@ -82,7 +83,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('filesmobile', [
+    ...mapGetters(useFilesStore, [
       'copiedFiles',
       'isArchive',
       'currentStorage',
@@ -113,10 +114,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions('filesmobile', [
-      'changeCurrentPath',
+    ...mapActions(useFilesStore, [
       'changeCurrentHeader',
-      // 'asyncGetFiles',
     ]),
     openFile() {
       if (
@@ -126,13 +125,11 @@ export default {
         !this.file.downloading &&
         this.file.isArchive
       ) {
-        const path = {
-          path: this.file.fullPath,
-          name: this.file.name,
-        }
+        // const path = {
+        //   path: this.file.fullPath,
+        //   name: this.file.name,
+        // }
         this.changeCurrentHeader('')
-        // await this.changeCurrentPath({ path, lastStorage: false })
-        // await this.asyncGetFiles()
       } else if (
         !this.isSelectMode &&
         !this.isMoved &&

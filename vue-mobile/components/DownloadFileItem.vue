@@ -11,7 +11,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'pinia'
+import { useFilesStore } from '../store/index-pinia'
 
 import FileItemIcon from './icons/FileItemIcon'
 
@@ -29,7 +30,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('filesmobile', ['currentPath', 'currentStorage']),
+    ...mapGetters(useFilesStore, ['currentPath', 'currentStorage']),
     isShowFile() {
       if (!this.file) return false
       return (
@@ -43,7 +44,7 @@ export default {
     this.getProgressPercent()
   },
   methods: {
-    ...mapActions('filesmobile', ['changeUploadingStatus']),
+    ...mapActions(useFilesStore, ['changeUploadingStatus']),
     getProgressPercent() {
       if (this.file) {
         if (this.file.file?.__progress !== 1) {

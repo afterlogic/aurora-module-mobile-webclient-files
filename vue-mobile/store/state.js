@@ -10,7 +10,6 @@ export default function () {
 
     currentStorage: '',
     currentFile: null,
-    // currentPathString: '',
     currentPath: [],
 
     currentHeader: '',

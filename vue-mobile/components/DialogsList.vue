@@ -1,6 +1,6 @@
 <template>
   <component
-    :is="component()"
+    :is="currentComponent"
 
     v-model="isShowDialog"
     :file="currentFile"
@@ -13,7 +13,8 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'pinia'
+import { useFilesStore } from '../store/index-pinia'
 
 import _ from 'lodash'
 
@@ -47,42 +48,37 @@ export default {
   data() {
     return {
       isShowDialog: false,
-      component: () => {},
+      currentComponent: null,
       // component: 'FileMenuDialog',
     }
   },
 
   computed: {
-    ...mapGetters('filesmobile', ['dialogComponent', 'currentFile']),
-    // componentInstance() {
-    //   const name = this.dialogComponent
-    //   return defineAsyncComponent(() => import(`./storage/${name}StorageIcon`))
-    // }
+    ...mapGetters(useFilesStore, ['dialogComponent', 'currentFile']),
   },
 
   watch: {
-    dialogComponent(val) {
-      if (val.component !== 'FileUploader') {
-        if (!val.component && !val.getComponent) {
-          this.isShowDialog = false
-        } else {
-          if (val.getComponent) {
-            this.component = val.getComponent
-          } else {
-            this.component = () => val.component
-          }
+    dialogComponent(value) {
+      if (value && value?.component !== 'FileUploader') {
+        if (value?.getComponent) {
+          this.currentComponent = value.getComponent()
           this.isShowDialog = true
+        } else if (value?.component) {
+          this.currentComponent = value.component
+          this.isShowDialog = true
+        } else {
+          this.isShowDialog = false
         }
       }
     },
     isShowDialog(v) {
       if (!v && this.dialogComponent?.component === 'CreateButtonsDialogs')
-        this.changeDialogComponent({ component: '' })
+        this.changeDialogComponent(null)
     },
   },
 
   methods: {
-    ...mapActions('filesmobile', [
+    ...mapActions(useFilesStore, [
       'changeDialogComponent'
     ]),
     dialogAction(action) {
@@ -96,12 +92,8 @@ export default {
       }
     },
     closeDialog(hasChanges) {
-      if (_.isFunction(hasChanges)) {
-        if (hasChanges()) {
-          this.$root.unsavedChangesDialog(() => this.isShowDialog = false)
-        } else {
-          this.isShowDialog = false
-        }
+      if (typeof hasChanges === 'function' && hasChanges()) {
+        this.$root.unsavedChangesDialog(() => this.isShowDialog = false)
       } else {
         this.isShowDialog = false
       }

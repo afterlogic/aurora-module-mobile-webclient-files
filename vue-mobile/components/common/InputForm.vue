@@ -6,19 +6,10 @@
 export default {
   name: 'InputForm',
   props: {
-    value: {
-      type: [String, Number],
-      default: '',
-    },
-    label: {
-      type: String,
-      default: '',
-    },
-    border: {
-      type: Boolean,
-      default: () => true
-    }
-  },
+    value: { type: [String, Number], default: '' },
+    label: { type: String, default: '' },
+    border: { type: Boolean, default: () => true }
+  }
 }
 </script>
 

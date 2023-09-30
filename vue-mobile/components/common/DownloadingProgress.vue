@@ -33,7 +33,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
 export default {
   name: 'DownloadingProgress',
   props: {
@@ -41,12 +40,10 @@ export default {
   },
   methods: {
     cancelDownloading() {
-      if (_.isFunction(this.file.cancelToken)) {
+      if (typeof this.file.cancelToken === 'function') {
         this.file.cancelToken()
       }
     },
   },
 }
 </script>
-
-<style scoped></style>

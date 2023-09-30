@@ -17,7 +17,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'pinia'
+import { useFilesStore } from '../store/index-pinia'
 
 import BoxIcon from './icons/BoxIcon'
 import EmptyFolderIcon from "./icons/EmptyFolderIcon";
@@ -29,13 +30,12 @@ export default {
     EmptyFolderIcon
   },
   computed: {
-    ...mapGetters('filesmobile', [
+    ...mapGetters(useFilesStore, [
       'downloadFiles',
       'fileList',
       'folderList',
       'searchText',
       'currentStorage',
-      'currentPath',
       'loadingStatus',
       'currentPath',
       'downloadFiles'

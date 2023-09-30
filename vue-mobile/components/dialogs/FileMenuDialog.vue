@@ -25,7 +25,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'pinia'
+import { useFilesStore } from '../../store/index-pinia'
 
 import { getFileActionsList } from '../../utils/file-actions'
 import ActionIcon from '../common/ActionIcon'
@@ -43,7 +44,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters('filesmobile', [
+    ...mapGetters(useFilesStore, [
       'currentStorage',
       'currentPathString'
     ]),

@@ -14,7 +14,8 @@
 
 <script>
 import { defineAsyncComponent } from 'vue'
-import { mapActions } from 'vuex'
+import { mapActions } from 'pinia'
+import { useFilesStore } from '../../store/index-pinia'
 
 import CreateFolderIcon from '../icons/actions/CreateFolderIcon'
 import UploadFileIcon from '../icons/actions/UploadFileIcon'
@@ -44,7 +45,7 @@ export default {
   //   },
   // },
   methods: {
-    ...mapActions('filesmobile', ['changeDialogComponent']),
+    ...mapActions(useFilesStore, ['changeDialogComponent']),
     createFolder() {
       this.$emit('closeDialog')
       this.changeDialogComponent({ getComponent: () => { return defineAsyncComponent(() => import('./CreateFolderDialog')) } })

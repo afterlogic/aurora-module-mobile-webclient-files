@@ -1,9 +1,7 @@
 import types from 'src/utils/types'
-import store from 'src/store'
+import { useFilesStore} from '../store/index-pinia'
 import { getApiHost } from 'src/api/helpers'
-
 import { fileFormats } from './formats'
-
 
 const getFormatFile = (name) => {
   return name.split('.')[name.split('.').length - 1]
@@ -16,7 +14,10 @@ const isImg = (name) => {
   })
 }
 const isCopied = (hash) => {
-  const copiedFiles = store.getters['filesmobile/copiedFiles']
+  return false
+  const filesStore = useFilesStore()
+  const copiedFiles = filesStore.copiedFiles
+  console.log('copiedFiles', copiedFiles)
   const index = copiedFiles.findIndex((file) => file.hash === hash)
   return !!(index + 1)
 }

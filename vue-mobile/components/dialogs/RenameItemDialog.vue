@@ -26,7 +26,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions } from 'pinia'
+import { useFilesStore } from '../../store/index-pinia'
 
 import AppDialog from "components/common/AppDialog";
 import AppDialogInput from 'components/common/AppDialogInput'
@@ -62,7 +63,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('filesmobile', ['asyncRenameItem', 'changeFileName']),
+    ...mapActions(useFilesStore, ['asyncRenameItem', 'changeFileName']),
     async renameItem() {
       if (this.itemName.length) {
         if (!this.saving) {

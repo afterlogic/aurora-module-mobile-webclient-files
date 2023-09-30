@@ -10,7 +10,8 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from 'vuex'
+import {mapActions, mapGetters} from 'pinia'
+import { useFilesStore } from '../store/index-pinia'
 import eventBus from 'src/event-bus'
 
 import StorageIcon from './icons/StorageIcon'
@@ -24,25 +25,14 @@ export default {
     storage: { type: Object, default: null },
     active: { type: Boolean, default: false },
   },
-  // computed: {
-  //   ...mapGetters('filesmobile', ['currentStorage']),
-  // },
   methods: {
-    ...mapActions('filesmobile', [
+    ...mapActions(useFilesStore, [
       'changeCurrentStorage',
-      // 'asyncGetFiles',
-      // 'changeCurrentPath'
     ]),
     selectStorage() {
       this.changeCurrentStorage(this.storage)
-      const path = {
-        path: '',
-        name: this.storage.DisplayName,
-      }
       this.$router.push(`/files/${this.storage.Type}/`)
-      // this.changeCurrentPath({ path, lastStorage: true })
       eventBus.$emit('closeDrawer')
-      // await this.asyncGetFiles()
     },
   },
 }

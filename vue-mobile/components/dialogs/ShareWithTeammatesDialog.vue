@@ -119,22 +119,23 @@
 
 <script>
 import _ from 'lodash'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'pinia'
+import { useFilesStore } from '../../store/index-pinia'
 
 import { getContactsSelectOptions, getAllContactsSelectOptions } from 'src/utils/contacts/utils'
 
 import { getParametersForShare } from '../../utils/common'
 
-import AppDialog from "components/common/AppDialog";
-import DropdownContactStatus from "../common/DropdownContactStatus";
+import AppDialog from 'components/common/AppDialog'
+import DropdownContactStatus from '../common/DropdownContactStatus'
 import ShowHistoryDialog from './ShowHistoryDialog'
 import ButtonDialog from 'src/components/common/ButtonDialog'
 import PlusIcon from 'src/components/common/icons/PlusIcon'
-import NotAddedUserDialog from "./NotAddedUserDialog";
-import ShareWarningDialog from "./ShareWarningDialog";
-import CorporateIcon from "../icons/group/CorporateIcon";
-import TeamIcon from "../icons/group/TeamIcon";
-import AllStorageIcon from "../../../../ContactsMobileWebclient/vue-mobile/components/icons/storage/AllStorageIcon";
+import NotAddedUserDialog from './NotAddedUserDialog'
+import ShareWarningDialog from './ShareWarningDialog'
+import CorporateIcon from '../icons/group/CorporateIcon'
+import TeamIcon from '../icons/group/TeamIcon'
+import AllStorageIcon from '../../../../ContactsMobileWebclient/vue-mobile/components/icons/storage/AllStorageIcon'
 
 export default {
   name: 'ShareWithTeammatesDialog',
@@ -180,7 +181,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters('filesmobile', ['currentStorage']),
+    ...mapGetters(useFilesStore, ['currentStorage']),
     statuses() {
       const statuses = {
         2: 'read',
@@ -206,7 +207,7 @@ export default {
   },
   methods: {
     ...mapActions('contactsmobile', ['asyncGetContactsSuggestions']),
-    ...mapActions('filesmobile', ['asyncUpdateShare', 'changeItemProperty', 'asyncGetExtendedPropsShares']),
+    ...mapActions(useFilesStore, ['asyncUpdateShare', 'changeItemProperty', 'asyncGetExtendedPropsShares']),
     isGroup(scope) {
       return scope.opt?.isGroup
     },

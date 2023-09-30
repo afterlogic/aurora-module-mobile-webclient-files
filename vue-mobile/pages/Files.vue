@@ -19,7 +19,8 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'pinia'
+import { useFilesStore } from '../store/index-pinia'
 
 import MainLayout from 'src/layouts/MainLayout'
 import AppCreateButton from 'src/components/common/AppCreateButton'
@@ -39,7 +40,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters('filesmobile', [
+    ...mapGetters(useFilesStore, [
       'storageList',
       'copiedFiles',
       'loadingStatus',
@@ -48,11 +49,8 @@ export default {
       'dialogComponent',
     ]),
     appButtonRotate() {
-      return this.dialogComponent.component === 'CreateButtonsDialogs'
+      return this.dialogComponent?.component === 'CreateButtonsDialogs'
     },
-    // isCopied() {
-    //   return !!this.copiedFiles.length
-    // },
     isShowCreateButtons() {
       //TODO remove copiedFiles from here
       return this.currentHeader !== 'SearchHeader'
@@ -103,7 +101,7 @@ export default {
   },
 
   methods: {
-    ...mapActions('filesmobile', [
+    ...mapActions(useFilesStore, [
       'asyncGetStorages',
       'changeDialogComponent',
       'changeLoadingStatus',
@@ -112,8 +110,8 @@ export default {
       'changeSearchText',
     ]),
     showCreateButtonsDialog() {
-      if (this.dialogComponent.component === 'CreateButtonsDialogs') {
-        this.changeDialogComponent({ component: '' })
+      if (this.dialogComponent?.component === 'CreateButtonsDialogs') {
+        this.changeDialogComponent(null)
       } else {
         this.changeDialogComponent({ component: 'CreateButtonsDialogs' })
       }

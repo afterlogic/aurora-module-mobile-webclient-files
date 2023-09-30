@@ -121,7 +121,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions } from 'pinia'
+import { useFilesStore } from '../../store/index-pinia'
 import eventBus from 'src/event-bus'
 
 import notification from 'src/utils/notification'
@@ -179,7 +180,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('filesmobile', [
+    ...mapActions(useFilesStore, [
       'asyncCreateShareableLink',
       'asyncDeletePublicLink',
       'changeItemProperty',

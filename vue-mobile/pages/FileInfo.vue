@@ -75,7 +75,8 @@
   </q-scroll-area>
 </template>
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'pinia'
+import { useFilesStore } from '../store/index-pinia'
 
 import date from 'src/utils/date'
 import text from 'src/utils/text'
@@ -107,7 +108,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters('filesmobile', [
+    ...mapGetters(useFilesStore, [
       'currentFile',
       'currentStorage',
       'fileList',
@@ -147,7 +148,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('filesmobile', [
+    ...mapActions(useFilesStore, [
       'asyncGetFiles',
       'selectFile',
     ]),

@@ -4,7 +4,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'pinia'
+import { useFilesStore } from '../../store/index-pinia'
 
 import DefaultFooter from 'src/components/main/DefaultFooter'
 import CopiedFooter from './CopiedFooter'
@@ -18,7 +19,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters('filesmobile', ['copiedFiles']),
+    ...mapGetters(useFilesStore, ['copiedFiles']),
 
     isCopiedFiles() {
       return !!this.copiedFiles.length

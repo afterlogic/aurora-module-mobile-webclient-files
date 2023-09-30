@@ -33,7 +33,8 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from 'vuex'
+import {mapActions, mapGetters} from 'pinia'
+import { useFilesStore } from '../../store/index-pinia'
 
 import AppButton from 'components/common/AppButton'
 
@@ -43,13 +44,13 @@ export default {
     AppButton,
   },
   computed: {
-    ...mapGetters('filesmobile', ['currentStorage', 'copiedFiles']),
+    ...mapGetters(useFilesStore, ['currentStorage', 'copiedFiles']),
     showMoveAction() {
       return this.currentStorage.Type !== 'shared' && this.copiedFiles[0].type !== 'shared'
     }
   },
   methods: {
-    ...mapActions('filesmobile', ['removeCopiedFiles', 'copyItems', 'moveItems']),
+    ...mapActions(useFilesStore, ['removeCopiedFiles', 'copyItems', 'moveItems']),
     cancel() {
       this.removeCopiedFiles()
     },

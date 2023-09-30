@@ -28,7 +28,8 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'pinia'
+import { useFilesStore } from '../store/index-pinia'
 
 import { getShortName } from '../utils/common'
 
@@ -54,7 +55,7 @@ export default {
     openMenuHandler: { type: Function, default: null, require: true },
   },
   computed: {
-    ...mapGetters('filesmobile', [
+    ...mapGetters(useFilesStore, [
       'currentStorage'
     ]),
     folderName() {
@@ -70,7 +71,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('filesmobile', [
+    ...mapActions(useFilesStore, [
       'selectFile',
       'changeDialogComponent',
     ]),

@@ -32,7 +32,8 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from 'vuex'
+import { mapActions, mapGetters } from 'pinia'
+import { useFilesStore } from '../../store/index-pinia'
 
 import { SHARING_LEVELS } from '../../enums'
 import { fileActions } from '../../utils/file-actions'
@@ -50,7 +51,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters('filesmobile', [
+    ...mapGetters(useFilesStore, [
       'currentStorage',
       'currentPathString',
     ]),
@@ -65,17 +66,17 @@ export default {
     },
   },
   methods: {
-    ...mapActions('filesmobile', [
-      'removeSelectedItems',
+    ...mapActions(useFilesStore, [
+      'resetSelectedItems',
       'changeDialogComponent',
       'addCopyItems',
     ]),
     resetSelection() {
-      this.removeSelectedItems({ items: this.items })
+      this.resetSelectedItems({ items: this.items })
     },
     copyItems() {
       this.addCopyItems({ items: this.items })
-      this.removeSelectedItems({ items: this.items })
+      this.resetSelectedItems({ items: this.items })
     },
     isShowAction(action) {
       return action.isShowAction(
