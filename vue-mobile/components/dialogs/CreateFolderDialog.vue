@@ -7,7 +7,7 @@
     </template>
     <template v-slot:content>
       <q-item class="q-px-lg">
-        <app-input
+        <AppInput
             placeholder="Enter folder name"
             outlined
             autofocus
