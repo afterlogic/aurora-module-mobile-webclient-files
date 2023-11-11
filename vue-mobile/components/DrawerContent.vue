@@ -9,7 +9,7 @@
       </div>
     </q-item>
     <q-separator />
-    <storage-item
+    <StorageItem
       v-for="storage in storageList"
       :key="storage"
       :active="storage.Type === currentStorage?.Type"

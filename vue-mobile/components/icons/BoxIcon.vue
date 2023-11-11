@@ -33,5 +33,3 @@ export default {
   name: 'BoxIcon',
 }
 </script>
-
-<style scoped></style>

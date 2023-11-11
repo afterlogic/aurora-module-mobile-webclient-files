@@ -1,5 +1,5 @@
 <template>
-  <app-dialog v-model="openDialog" :close="cancelDialog">
+  <AppDialog v-model="openDialog" :close="cancelDialog">
     <template v-slot:title>
       <div>
         <span>{{ $t('MAILWEBCLIENT.ACTION_ADD_NEW_FOLDER') }}</span>
@@ -19,14 +19,14 @@
       </q-item>
     </template>
     <template v-slot:actions>
-      <button-dialog
+      <ButtonDialog
           class="q-ma-sm"
           :saving="saving"
           :action="createFolder"
           :label="$t('COREWEBCLIENT.ACTION_CREATE')"
       />
     </template>
-  </app-dialog>
+  </AppDialog>
 </template>
 
 <script>
@@ -44,7 +44,11 @@ import { validateFileOrFolderName } from '../../utils/common'
 
 export default {
   name: 'CreateFolderDialog',
-  components: { AppInput, ButtonDialog, AppDialog },
+  components: {
+    AppInput,
+    ButtonDialog,
+    AppDialog
+  },
   props: {
     dialog: { type: Boolean, default: false },
   },

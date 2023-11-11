@@ -2,13 +2,13 @@
   <div class="caption full-height flex items-center justify-center">
     <div class="flex column caption__box" v-if="isStorageEmpty">
       <div class="q-mb-md">
-        <box-icon />
+        <BoxIcon />
       </div>
       <div>This storage is empty</div>
     </div>
     <div class="flex column caption__box" v-if="isFolderEmpty">
       <div class="q-mb-md">
-        <empty-folder-icon />
+        <EmptyFolderIcon />
       </div>
       <div>Folder is empty</div>
     </div>

@@ -1,5 +1,5 @@
 <template>
-  <app-item
+  <AppItem
     v-if="folder"
     :item="folder"
     :isSelected="folder.isSelected"
@@ -10,7 +10,7 @@
     @click="listItemClick(folder)"
   >
     <q-item-section class="folder__thumb" side>
-      <folder-icon class="folder__thumb-icon" />
+      <StorageIcon class="folder__thumb-icon" />
       <ShareWithMeItemIcon v-if="folder.sharedWithMeAccess" class="folder__thumb-share-icon" />
     </q-item-section>
 
@@ -24,7 +24,7 @@
     <q-item-section v-if="!isSelectMode" class="folder__menu" side>
       <q-btn icon="more_vert" @click.stop="menuClick" color="grey" flat round />
     </q-item-section>
-  </app-item>
+  </AppItem>
 </template>
 
 <script>

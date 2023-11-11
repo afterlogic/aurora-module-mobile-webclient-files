@@ -3,7 +3,7 @@
     v-if="!loadingStatus && (folderList.length || downloadFiles.length || fileList.length)"
   >
     <AppPullRefresh :refresh-action="asyncGetFiles">
-      <folder-item
+      <FolderItem
         class="folder"
         v-for="folder in folderList"
         :key="folder.Hash"
@@ -15,13 +15,13 @@
         :selectItemHandler="selectItem"
         :openMenuHandler="openMenu"
       />
-      <download-file-item
+      <DownloadFileItem
         v-for="file in downloadFiles"
         :key="file.name"
         :file="file"
         class="file"
       />
-      <file-item
+      <FileItem
         class="file"
         v-for="file in fileList"
         :key="file"

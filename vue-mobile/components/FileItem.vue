@@ -1,5 +1,5 @@
 <template>
-  <app-item
+  <AppItem
     v-if="file"
     :item="file"
     :isSelected="file.isSelected"
@@ -10,12 +10,12 @@
     @click="listItemClick(file)"
   >
     <q-item-section class="file__thumb" side>
-      <file-item-icon v-if="file.paranoidKey || !file.isImg" :file="file" class="file__thumb-icon" />
+      <FileItemIcon v-if="file.paranoidKey || !file.isImg" :file="file" class="file__thumb-icon" />
       <div class="file__thumb-image"
         v-if="file.isImg && !file.paranoidKey"
         :style="{ 'background-image': `url(${filePreview})`}"
       />
-      <share-with-me-item-icon v-if="file.sharedWithMeAccess" class="file__thumb-share-icon" />
+      <ShareWithMeItemIcon v-if="file.sharedWithMeAccess" class="file__thumb-share-icon" />
     </q-item-section>
 
     <q-item-section class="list-item__text">
@@ -31,13 +31,13 @@
         <span class="file__date">{{ fileDate }}</span>
       </q-item-label>
       <q-item-label v-if="file.downloading" class="file__download-progress">
-        <downloading-progress :file="file" />
+        <DownloadingProgress :file="file" />
       </q-item-label>
     </q-item-section>
     <q-item-section v-if="!isSelectMode" class="file__menu" side>
       <q-btn icon="more_vert" @click.stop="menuClick" color="grey" flat round />
     </q-item-section>
-  </app-item>
+  </AppItem>
 </template>
 
 <script>

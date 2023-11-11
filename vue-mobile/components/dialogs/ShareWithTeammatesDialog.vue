@@ -1,5 +1,5 @@
 <template>
-  <app-dialog :close="cancel" width="calc(100vw - 20px)" >
+  <AppDialog :close="cancel" width="calc(100vw - 20px)" >
     <template v-slot:content>
       <div class="q-px-lg q-pb-md dialog__title-text">
         <span>{{ $t('SHAREDFILES.ACTION_SHARE') }}</span>
@@ -14,15 +14,14 @@
               outlined
               v-model="currentUser"
               :options="selectOptions"
-
           >
             <template v-slot:option="scope">
               <q-item v-bind="scope.itemProps">
                 <q-item-section class="non-selectable">
                   <q-item-label class="flex">
                     <div v-if="isGroup(scope)" class="q-mr-sm">
-                      <team-icon v-if="scope.opt.isAll" width="16" height="16" />
-                      <corporate-icon v-if="!scope.opt.isAll" width="16" height="16" />
+                      <TeamIcon v-if="scope.opt.isAll" width="16" height="16" />
+                      <CorporateIcon v-if="!scope.opt.isAll" width="16" height="16" />
                     </div>
                     <span class="q-mr-sm">
                       {{ scope.opt.label }}
@@ -34,19 +33,19 @@
           </q-select>
         </div>
         <div class="flex col-2 justify-center items-center dropdown-plus">
-          <dropdown-contact-status
+          <DropdownContactStatus
               ref="dropdown"
               :current-user="currentUser"
               :action="selectUser"
               :statuses="dropdownStatuses"
           >
             <template v-slot:label>
-              <plus-icon
+              <PlusIcon
                   class="text-center items-center justify-center"
                   style="fill: #d0d0d0"
               />
             </template>
-          </dropdown-contact-status>
+          </DropdownContactStatus>
         </div>
       </div>
       <div
@@ -71,18 +70,16 @@
               </p>
             </div>
             <div class="flex items-start col-4">
-              <dropdown-contact-status
+              <DropdownContactStatus
                   :menu-offset="[85, 0]"
                   :current-user="contact"
                   :action="changeStatus"
                   :statuses="statuses"
               >
                 <template v-slot:label>
-                  <span class="contact-status text-primary">{{
-                      statuses[contact.status]
-                    }}</span>
+                  <span class="contact-status text-primary">{{ statuses[contact.status] }}</span>
                 </template>
-              </dropdown-contact-status>
+              </DropdownContactStatus>
             </div>
             <div v-if="!loading" class="flex col-1 items-center" @click="removeContact(contact)">
               <q-icon color="grey-5" name="close" />
@@ -92,13 +89,13 @@
       </div>
     </template>
     <template v-slot:actions>
-      <button-dialog
+      <ButtonDialog
           class="q-ma-sm"
           :saving="saving"
           :action="showHistory"
           :label="$t('SHAREDFILES.ACTION_SHOW_HISTORY')"
       />
-      <button-dialog
+      <ButtonDialog
           class="q-ma-sm"
           :saving="saving"
           :action="save"
@@ -106,15 +103,15 @@
       />
     </template>
     <template v-slot:dialogs>
-      <show-history-dialog ref="showHistoryDialog" />
-      <not-added-user-dialog
+      <ShowHistoryDialog ref="showHistoryDialog" />
+      <NotAddedUserDialog
           @onContinueSaving="onContinueSaving"
           @cancel="onContinueTyping"
           ref="notAddedUserDialog"
       />
-      <share-warning-dialog ref="shareWarningDialog"/>
+      <ShareWarningDialog ref="shareWarningDialog"/>
     </template>
-  </app-dialog>
+  </AppDialog>
 </template>
 
 <script>

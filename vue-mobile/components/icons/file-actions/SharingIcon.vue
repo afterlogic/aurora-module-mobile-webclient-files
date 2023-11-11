@@ -5,7 +5,6 @@
     <circle cx="12" cy="13" r="1.5" fill="black" stroke="black"/>
     <path d="M12 3L4 8L12 13" stroke="black"/>
   </svg>
-
 </template>
 
 <script>
@@ -17,7 +16,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

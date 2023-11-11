@@ -1,7 +1,7 @@
 <template>
   <q-item v-if="isShowFile" clickable>
     <q-item-section class="q-ml-lg" avatar>
-      <file-item-icon :file="file" />
+      <FileItemIcon :file="file" />
     </q-item-section>
     <q-item-section class="q-mr-sm">
       <q-item-label class="file__name">{{ file.name }}</q-item-label>
@@ -62,5 +62,3 @@ export default {
   },
 }
 </script>
-
-<style scoped></style>

@@ -12,10 +12,10 @@
       <div class="dropdown-more flex justify-center items-center">
         <q-btn-dropdown v-close-popup :menu-offset="[8, -45]" flat unelevated dense>
           <template v-slot:label>
-            <action-icon class="q-mr-md" icon="SelectStorageIcon" />
+            <ActionIcon class="q-mr-md" icon="SelectStorageIcon" />
           </template>
           <q-list v-close-popup style="width: 205px; min-height: 55px">
-            <storage-item
+            <StorageItem
                 v-for="storage in storageList"
                 :key="storage"
                 :storage="storage"

@@ -37,11 +37,11 @@
             style="border-bottom: 1px solid #d5d9dc"
           >
             <q-item-section>
-              <q-item-label
-                ><div style="text-align: center">
+              <q-item-label>
+                <div style="text-align: center">
                   There is no history yet
-                </div></q-item-label
-              >
+                </div>
+              </q-item-label>
             </q-item-section>
           </q-item>
           <q-item
@@ -65,20 +65,20 @@
             </q-item-section>
           </q-item>
         </div>
-        <app-paginator
+        <AppPaginator
           :currentPage="currentPage"
           :itemsPerPage="10"
           :itemsCount="itemsCount"
           :changePage="changePage"
           :border="false"
-        ></app-paginator>
+        ></AppPaginator>
         <q-card-actions align="right">
-          <button-dialog
+          <ButtonDialog
             :disable="!historyList.length"
             label="Clear"
             :action="openClearDialog"
           />
-          <button-dialog label="Cancel" :action="cancel" />
+          <ButtonDialog label="Cancel" :action="cancel" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -86,18 +86,12 @@
       <q-card class="q-dialog-size" style="min-width: 300px">
         <q-item class="q-mt-md">
           <q-item-section>
-            <q-item-label
-              >Are you sure you want to clear the entire activity
-              history?</q-item-label
-            >
+            <q-item-label>Are you sure you want to clear the entire activity history?</q-item-label>
           </q-item-section>
         </q-item>
         <q-card-actions align="right">
-          <button-dialog :action="clearHistory" label="Ok" />
-          <button-dialog
-            :action="() => (this.confirmClearDialog = false)"
-            label="Cancel"
-          />
+          <ButtonDialog :action="clearHistory" label="Ok" />
+          <ButtonDialog :action="() => (this.confirmClearDialog = false)" label="Cancel" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -183,5 +177,3 @@ export default {
   },
 }
 </script>
-
-<style scoped></style>

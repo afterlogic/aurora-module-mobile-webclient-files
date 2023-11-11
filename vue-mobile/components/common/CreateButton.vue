@@ -1,5 +1,5 @@
 <template>
-  <plus-btn-icon @click="showDialog" :class="`create-btn ${classes}`" />
+  <PlusBtnIcon @click="showDialog" :class="`create-btn ${classes}`" />
 </template>
 
 <script>

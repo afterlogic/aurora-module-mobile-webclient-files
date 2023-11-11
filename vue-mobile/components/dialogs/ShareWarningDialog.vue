@@ -1,20 +1,18 @@
 <template>
-  <app-dialog v-model="showDialog" :showCross="false" :close="closeDialog">
+  <AppDialog v-model="showDialog" :showCross="false" :close="closeDialog">
     <template v-slot:content>
       <div class="dialog__header-text q-mx-lg">
-        <span>
-          {{$t('SHAREDFILES.WARNING_SHARES_CHANGED_BY_OTHER_USER')}}
-        </span>
+        <span>{{$t('SHAREDFILES.WARNING_SHARES_CHANGED_BY_OTHER_USER')}}</span>
       </div>
     </template>
     <template v-slot:actions>
-      <button-dialog
+      <ButtonDialog
           class="q-ma-sm"
           :action="closeDialog"
           label="Ok"
       />
     </template>
-  </app-dialog>
+  </AppDialog>
 </template>
 
 <script>
@@ -40,7 +38,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

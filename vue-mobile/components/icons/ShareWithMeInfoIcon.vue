@@ -10,7 +10,3 @@ export default {
   name: "ShareWithMeInfoIcon"
 }
 </script>
-
-<style scoped>
-
-</style>

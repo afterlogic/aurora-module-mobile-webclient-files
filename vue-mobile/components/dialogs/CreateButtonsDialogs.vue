@@ -3,10 +3,10 @@
   <q-dialog transition-show="fade" transition-hide="fade" transition-duration="200">
     <div class="flex column absolute create-buttons">
       <div class="create-buttons__item upload-file" @click="uploadFile">
-        <upload-file-icon />
+        <UploadFileIcon />
       </div>
       <div class="create-buttons__item create-folder" @click="createFolder">
-        <create-folder-icon />
+        <CreateFolderIcon />
       </div>
     </div>
   </q-dialog>

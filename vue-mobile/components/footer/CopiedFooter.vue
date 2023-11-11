@@ -2,7 +2,7 @@
   <q-footer elevated class="bg-white">
     <q-toolbar style="height: 60px" class="full-width">
       <div class="full-width flex no-wrap justify-between">
-        <app-button
+        <AppButton
             size="15px"
             flat
             class="q-px-md items-start"
@@ -10,7 +10,7 @@
             label="Cancel"
             @click="cancel"
         />
-        <app-button
+        <AppButton
             size="15px"
             flat
             :class="showMoveAction ? 'q-px-sm' : 'q-px-md items-end'"
@@ -18,7 +18,7 @@
             label="Copy"
             @click="copy"
         />
-        <app-button
+        <AppButton
             v-if="showMoveAction"
             size="15px"
             flat
@@ -63,5 +63,3 @@ export default {
   },
 }
 </script>
-
-<style scoped></style>

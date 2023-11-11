@@ -1,6 +1,6 @@
 <template>
-  <copied-footer v-if="isCopiedFiles"></copied-footer>
-  <default-footer v-else></default-footer>
+  <CopiedFooter v-if="isCopiedFiles"></CopiedFooter>
+  <DefaultFooter v-else></DefaultFooter>
 </template>
 
 <script>
@@ -27,5 +27,3 @@ export default {
   },
 }
 </script>
-
-<style scoped></style>

@@ -1,12 +1,10 @@
 <template>
-  <app-dialog v-model="openDialog" :close="cancelDialog">
+  <AppDialog v-model="openDialog" :close="cancelDialog">
     <template v-slot:content>
       <div class="q-px-lg q-pb-sm dialog__title-text">
-            <span>{{
-                placeholder
-              }}</span>
+        <span>{{ placeholder }}</span>
       </div>
-      <app-dialog-input
+      <AppDialogInput
           class="q-mx-lg"
           v-model="itemName"
           autofocus
@@ -15,14 +13,14 @@
       />
     </template>
     <template v-slot:actions>
-      <button-dialog
+      <ButtonDialog
           class="q-mb-sm q-mr-sm"
           :saving="saving"
           :action="renameItem"
           :label="$t('FILESWEBCLIENT.ACTION_RENAME')"
       />
     </template>
-  </app-dialog>
+  </AppDialog>
 </template>
 
 <script>
@@ -86,5 +84,3 @@ export default {
   },
 }
 </script>
-
-<style scoped></style>

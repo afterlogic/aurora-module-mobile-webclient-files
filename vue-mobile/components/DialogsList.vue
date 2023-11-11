@@ -9,7 +9,7 @@
     @closeDialog="closeDialog"
     @dialogAction="dialogAction"
   />
-  <file-uploader />
+  <FileUploader />
 </template>
 
 <script>

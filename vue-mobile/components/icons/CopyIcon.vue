@@ -10,7 +10,3 @@ export default {
   name: "CopyIcon"
 }
 </script>
-
-<style scoped>
-
-</style>

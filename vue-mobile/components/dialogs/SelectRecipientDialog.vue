@@ -1,10 +1,8 @@
 <template>
-  <app-dialog  :close="close">
+  <AppDialog :close="close">
     <template v-slot:title>
       <div>
-        <span>
-          {{ $t('OPENPGPFILESWEBCLIENT.HEADING_SEND_ENCRYPTED_FILE') }}
-        </span>
+        <span>{{ $t('OPENPGPFILESWEBCLIENT.HEADING_SEND_ENCRYPTED_FILE') }}</span>
       </div>
       <q-input
           v-model="searchText"
@@ -31,7 +29,7 @@
         </div>
         <q-scroll-area v-else class="full-width" :thumb-style="{width: '0'}" style="height: 300px">
           <div>
-            <app-contact-item
+            <AppContactItem
                 v-for="contact in contacts"
                 :contact="contact"
                 :key="contact.ETag"
@@ -42,7 +40,7 @@
         </q-scroll-area>
       </div>
     </template>
-  </app-dialog>
+  </AppDialog>
 </template>
 <script>
 import AppDialog from "components/common/AppDialog";

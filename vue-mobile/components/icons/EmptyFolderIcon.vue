@@ -12,7 +12,3 @@ export default {
   name: "EmptyFolderIcon"
 }
 </script>
-
-<style scoped>
-
-</style>

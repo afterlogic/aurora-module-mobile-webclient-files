@@ -1,32 +1,26 @@
 <template>
-  <app-dialog :style="{display : !showSelectRecipientDialog ? '' : 'none'}" head-max-height="60vh" :close="cancelDialog">
+  <AppDialog :style="{display : !showSelectRecipientDialog ? '' : 'none'}" head-max-height="60vh" :close="cancelDialog">
     <template v-slot:title>
       <div v-if="file && (!file.paranoidKey || file.publicLink)">
         <div v-if="!file.publicLink">
-            <span>{{
-                $t('OPENPGPFILESWEBCLIENT.HEADING_CREATE_PUBLIC_LINK')
-              }}</span>
+          <span>{{ $t('OPENPGPFILESWEBCLIENT.HEADING_CREATE_PUBLIC_LINK') }}</span>
         </div>
         <div v-if="file.publicLink">
-              <span>{{
-                  file.linkPassword ? 'Protected public link' : $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK')
-                }}</span>
+          <span>{{ file.linkPassword ? 'Protected public link' : $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK') }}</span>
         </div>
       </div>
       <div v-else class="q-mb-lg">
-        <span>
-          {{ $t('OPENPGPFILESWEBCLIENT.HEADING_SEND_ENCRYPTED_FILE') }}
-        </span>
+        <span>{{ $t('OPENPGPFILESWEBCLIENT.HEADING_SEND_ENCRYPTED_FILE') }}</span>
       </div>
     </template>
     <template v-slot:content>
       <div v-if="file && (!file.paranoidKey || file.publicLink)">
         <div v-if="!file.publicLink">
-          <app-checkbox
-              class="q-pl-lg q-py-lg q-pr-md"
-              v-model="withPassword"
-              leftLabel
-              label="Protect public link with password"
+          <AppCheckbox
+            class="q-pl-lg q-py-lg q-pr-md"
+            v-model="withPassword"
+            leftLabel
+            label="Protect public link with password"
           />
         </div>
         <div v-if="file.publicLink">
@@ -35,13 +29,13 @@
               <div class="q-mb-sm recipient">
                 <span>{{ $t('OPENPGPFILESWEBCLIENT.LABEL_RECIPIENT') }}:</span>
               </div>
-              <app-contact-item :contact="recipient"/>
+              <AppContactItem :contact="recipient" />
             </div>
             <div class="q-mb-md q-mt-lg" @click.stop="copyText(file.publicLink, $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK'))">
               <div class="q-mb-sm field__title">Link text</div>
               <div class="flex no-wrap">
                 <div class="flex justify-center items-center q-mr-sm">
-                  <copy-icon/>
+                  <CopyIcon />
                 </div>
                 <div class="text__caption flex items-center">
                   <span>{{ file.publicLink }}</span>
@@ -55,7 +49,7 @@
               <div class="q-mb-sm field__title">{{ $t('COREWEBCLIENT.LABEL_PASSWORD') }}</div>
               <div class="flex no-wrap">
                 <div class="q-mt-xs q-mr-sm">
-                  <copy-icon/>
+                  <CopyIcon />
                 </div>
                 <div class="text__caption flex items-center">
                   <span>{{ file.linkPassword }}</span>
@@ -63,9 +57,9 @@
               </div>
             </div>
             <div v-if="file.linkPassword" class="q-my-md">
-                <span class="inscription">
-                  {{$t('OPENPGPFILESWEBCLIENT.HINT_STORE_PASSWORD')}}
-                </span>
+              <span class="inscription">
+                {{$t('OPENPGPFILESWEBCLIENT.HINT_STORE_PASSWORD')}}
+              </span>
             </div>
           </div>
         </div>
@@ -81,20 +75,20 @@
     <template v-slot:actions>
       <div v-if="file && (!file.paranoidKey || file.publicLink)" class="full-width q-mx-lg q-mb-sm">
         <div v-if="!file.publicLink" class="flex justify-end q-pr-sm">
-          <button-dialog
+          <ButtonDialog
               :saving="saving"
               :action="createShareableLink"
               :label="createBtnLabel"
           />
         </div>
         <div v-if="file.publicLink" :class="`full-width flex ${isCreatingLink ? 'justify-end' : 'justify-between'} q-px-sm`">
-          <button-dialog
+          <ButtonDialog
               v-if="!isCreatingLink"
               :saving="saving"
               :action="removeLink"
               :label="$t('FILESWEBCLIENT.ACTION_REMOVE_PUBLIC_LINK')"
           />
-          <button-dialog
+          <ButtonDialog
               :disabled="recipient.empty || (isCreatingLink && !recipient?.HasPgpPublicKey && file.linkPassword)"
               :saving="saving"
               :action="sendViaMessage"
@@ -110,14 +104,14 @@
       </div>
     </template>
     <template v-slot:dialogs>
-      <select-recipient-dialog
+      <SelectRecipientDialog
           v-model="showSelectRecipientDialog"
           :onGetContacts="getContacts"
           @close="closeSelectRecipientDialog"
           @selectContact="selectContact"
       />
     </template>
-  </app-dialog>
+  </AppDialog>
 </template>
 
 <script>
@@ -127,13 +121,13 @@ import eventBus from 'src/event-bus'
 
 import notification from 'src/utils/notification'
 
-import AppDialog from "components/common/AppDialog";
+import AppDialog from 'components/common/AppDialog'
 import AppDialogInput from 'src/components/common/AppDialogInput'
 import ButtonDialog from 'src/components/common/ButtonDialog'
-import AppCheckbox from "src/components/common/AppCheckbox";
-import CopyIcon from "../icons/CopyIcon";
-import AppContactItem from "src/components/common/AppContactItem";
-import SelectRecipientDialog from "./SelectRecipientDialog";
+import AppCheckbox from 'src/components/common/AppCheckbox'
+import CopyIcon from '../icons/CopyIcon'
+import AppContactItem from 'src/components/common/AppContactItem'
+import SelectRecipientDialog from './SelectRecipientDialog'
 
 export default {
   name: 'CreateShareableLinkDialog',

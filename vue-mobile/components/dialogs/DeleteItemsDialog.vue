@@ -1,20 +1,20 @@
 <template>
   <!-- <app-dialog v-model="openDialog" :close="closeDialog"> -->
-  <app-dialog :close="closeDialog">
+  <AppDialog :close="closeDialog">
     <template v-slot:content>
       <div class="dialog__title-text q-ma-lg">
         <span>{{ title }}</span>
       </div>
     </template>
     <template v-slot:actions>
-      <button-dialog
+      <ButtonDialog
           class="q-mr-sm q-mb-sm"
           :saving="saving"
           :action="deleteItems"
           :label="$t('COREWEBCLIENT.ACTION_DELETE')"
       />
     </template>
-  </app-dialog>
+  </AppDialog>
 </template>
 
 <script>
@@ -30,7 +30,7 @@ export default {
 
   components: {
     ButtonDialog,
-    AppDialog
+    AppDialog,
   },
 
   props: {
@@ -40,15 +40,10 @@ export default {
   
   data() {
     return {
-      // openDialog: false,
       saving: false,
     }
   },
-  // watch: {
-  //   dialog(val) {
-  //     this.openDialog = val
-  //   },
-  // },
+  
   computed: {
     ...mapGetters(useFilesStore, ['selectedFiles']),
     title() {
@@ -102,5 +97,3 @@ export default {
   },
 }
 </script>
-
-<style scoped></style>

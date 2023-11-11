@@ -49,7 +49,7 @@
         <div class="q-mx-md">
           <div class="flex" style="border-bottom: 1px solid #C6C6C6;">
             <div style="flex-grow: 1">
-              <input-form :border="false" readonly :value="currentFile.name" label="File name" />
+              <InputForm :border="false" readonly :value="currentFile.name" label="File name" />
             </div>
             <div class="file__info flex items-end q-mb-xs">
               <EncryptedItemIcon v-if="currentFile.paranoidKey" class="file__info-icon_encrypted q-mx-xs"/>
@@ -59,15 +59,15 @@
           </div>
         </div>
         <div class="flex no-wrap justify-between q-ma-md">
-          <input-form readonly :value="fileSize" label="Size" style="width:100%" />
+          <InputForm readonly :value="fileSize" label="Size" style="width:100%" />
           <div style="width:60px;"></div>
-          <input-form readonly :value="fileDate" label="Created" style="width:100%" />
+          <InputForm readonly :value="fileDate" label="Created" style="width:100%" />
         </div>
         <div class="q-ma-md">
-          <input-form readonly :value="filePatch" label="Location" />
+          <InputForm readonly :value="filePatch" label="Location" />
         </div>
         <div class="q-ma-md">
-          <input-form readonly :value="currentFile.owner" label="Owner" />
+          <InputForm readonly :value="currentFile.owner" label="Owner" />
         </div>
       </div>
       <div style="height: 50px"/>

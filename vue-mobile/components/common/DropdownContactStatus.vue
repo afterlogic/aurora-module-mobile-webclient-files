@@ -41,13 +41,8 @@
 import { mapGetters } from 'pinia'
 import { useFilesStore } from '../../store/index-pinia'
 
-import PlusIcon from 'src/components/common/icons/PlusIcon'
-
 export default {
   name: "DropdownContactStatus",
-  components: {
-    PlusIcon
-  },
   props: {
     action: { type: Function, require: true },
     currentUser: { type: Object, default: null },
