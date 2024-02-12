@@ -117,7 +117,7 @@
 <script>
 import _ from 'lodash'
 import { mapActions, mapGetters } from 'pinia'
-import { useFilesStore } from '../../store/index-pinia'
+import { useFilesStore, useContactsStore } from 'src/stores/index-all'
 
 import { getContactsSelectOptions, getAllContactsSelectOptions } from 'src/utils/contacts/utils'
 
@@ -203,7 +203,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('contactsmobile', ['asyncGetContactsSuggestions']),
+    ...mapActions(useContactsStore, ['asyncGetContactsSuggestions']),
     ...mapActions(useFilesStore, ['asyncUpdateShare', 'changeItemProperty', 'asyncGetExtendedPropsShares']),
     isGroup(scope) {
       return scope.opt?.isGroup
