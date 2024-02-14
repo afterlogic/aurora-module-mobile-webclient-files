@@ -29,10 +29,10 @@ export default {
     const data = await filesWebApi.getFiles(parameters)
     if (_.isArray(data?.Items)) {
       this.folderList = getParseFolders(data.Items)
-      this.filesList = getParsedFiles(data.Items)
+      this.fileList = getParsedFiles(data.Items)
     } else {
       this.folderList = []
-      this.filesList = []
+      this.fileList = []
     }
     if (types.pObject(data?.Quota)) {
       this.filesQuota = data.Quota
@@ -41,7 +41,7 @@ export default {
   },
   clearItemLists() {
     this.folderList = []
-    this.filesList = []
+    this.fileList = []
   },
   changeCurrentStorage(storage) {
     this.currentStorage = storage
