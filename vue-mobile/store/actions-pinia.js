@@ -54,7 +54,7 @@ export default {
   },
   async asyncRenameItem({ file, itemName }) {
     const parameters = {
-      Type: state.currentStorage.Type,
+      Type: this.currentStorage?.Type,
       Path: file.path,
       Name: file.name,
       NewName: itemName,
@@ -64,7 +64,27 @@ export default {
     return await filesWebApi.renameItem(parameters)
   },
   changeFileName(fileName) {
-    this.currentFile.name = fileName
+    const file = this.currentFile
+    if (!file) {
+      return
+    }
+
+    const oldName = file.name
+    file.name = fileName
+
+    if (file.fullPath) {
+      if (file.fullPath.endsWith('/' + oldName)) {
+        file.fullPath = file.fullPath.slice(0, -(oldName.length + 1)) + '/' + fileName
+      } else if (file.fullPath === '/' + oldName) {
+        file.fullPath = '/' + fileName
+      } else if (file.fullPath.endsWith(oldName)) {
+        file.fullPath = file.fullPath.slice(0, -oldName.length) + fileName
+      }
+    }
+
+    if (file.id === oldName) {
+      file.id = fileName
+    }
   },
   selectFile(file) {
     this.currentFile = file
