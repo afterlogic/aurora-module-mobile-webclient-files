@@ -1,8 +1,8 @@
 <template>
   <q-toolbar class="app-header bg-primary">
     <div class="col app-header__left">
-      <q-btn icon="close" @click="removeCopiedItems" v-if="currentPath.length <= 1" color="black" round flat dense />
-      <q-btn icon="chevron_left" @click="onPreviousPath" v-if="currentPath.length > 1" color="black" round flat dense />
+      <q-btn icon="close" @click="removeCopiedItems" v-if="!currentPath?.length" color="black" round flat dense />
+      <q-btn icon="chevron_left" @click="onPreviousPath" v-if="currentPath?.length" color="black" round flat dense />
     </div>
     <div class="col app-header__title">
       Move files/folders
@@ -56,7 +56,7 @@ export default {
       this.changeDialogComponent({ component: 'CreateFolderDialog' })
     },
     async onPreviousPath() {
-      await this.asyncGetFiles()
+      this.$router.back()
     },
   },
 }

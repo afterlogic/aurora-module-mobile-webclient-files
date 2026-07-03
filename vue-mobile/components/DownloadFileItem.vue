@@ -30,11 +30,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(useFilesStore, ['currentPath', 'currentStorage']),
+    ...mapGetters(useFilesStore, ['currentPathString', 'currentStorage']),
     isShowFile() {
       if (!this.file) return false
       return (
-        this.file.path === this.currentPath &&
+        this.file.path === this.currentPathString &&
         this.file.storage === this.currentStorage.Type &&
         this.file.isUploading
       )

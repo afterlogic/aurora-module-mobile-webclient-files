@@ -1,7 +1,11 @@
 import { getFilteredItems } from '../utils/common'
+import { pathSegmentsToApiPath } from '../utils/path'
 
 export default {
-  currentPathString: (state) => ( '/' + (state.currentPath.length > 0 ? state.currentPath.join('/') : '') ),
+  // Do not add getters with the same name as state (e.g. currentPath):
+  // Pinia then shadows state and assignments like this.currentPath = ... break.
+  currentPathString: (state) => pathSegmentsToApiPath(state.currentPath),
+  loadingStatus: (state) => state.isLoading,
   isArchive: (state) => {
     return false
     // return state.currentPath.split('.')[state.currentPath.split('.').length - 1] === 'zip'
@@ -11,11 +15,15 @@ export default {
     const folders = getFilteredItems(state.folderList, 'isSelected')
     return folders.concat(files)
   },
-  copiedFiles: (state) => state.copyItems,
+  copiedFiles: (state) => state.itemsToCopy,
   copyMoveParameters: (state) => {
-    const copiedFile = state.copyItems[0]
+    if (!state.itemsToCopy.length) {
+      return null
+    }
+
+    const copiedFile = state.itemsToCopy[0]
     const items = []
-    state.copyItems.forEach((file) => {
+    state.itemsToCopy.forEach((file) => {
       items.push({
         FromPath: file.path,
         FromType: file.type,
@@ -23,9 +31,10 @@ export default {
         IsFolder: file.isFolder,
       })
     })
+    const toPath = pathSegmentsToApiPath(state.currentPath)
     return {
       ToType: state.currentStorage.Type,
-      ToPath: state.currentPath,
+      ToPath: toPath,
       FromType: copiedFile.type,
       FromPath: copiedFile.path,
       Files: items,

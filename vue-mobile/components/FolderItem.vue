@@ -4,7 +4,7 @@
     :item="folder"
     :isSelected="folder.isSelected"
     :disable="folder.isCopied"
-    :clickable="!isCopied"
+    :clickable="!folder.isCopied"
     :active="folder.isSelected"
     :isChoice="isSelectMode"
     @click="listItemClick(folder)"
@@ -21,7 +21,7 @@
       </q-item-label>
     </q-item-section>
 
-    <q-item-section v-if="!isSelectMode" class="folder__menu" side>
+    <q-item-section v-if="!isSelectMode && !isCopied" class="folder__menu" side>
       <q-btn icon="more_vert" @click.stop="menuClick" color="grey" flat round />
     </q-item-section>
   </AppItem>

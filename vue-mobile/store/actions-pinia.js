@@ -9,6 +9,9 @@ import {
   getFiles,
   getFolders,
 } from '../utils/common'
+import { normalizeRoutePath } from '../utils/path'
+
+let getFilesRequestId = 0
 
 export default {
   async asyncGetStorages() {
@@ -19,14 +22,25 @@ export default {
     }
   },
   async asyncGetFiles() {
-    this.changeLoadingStatus(true)
+    if (!this.currentStorage?.Type) {
+      return
+    }
+
+    const requestId = ++getFilesRequestId
+    this.isLoading = true
+
     const parameters = {
-      Type: this.currentStorage?.Type,
+      Type: this.currentStorage.Type,
       Path: this.currentPathString,
       Pattern: this.searchText,
       PathRequired: false,
     }
     const data = await filesWebApi.getFiles(parameters)
+
+    if (requestId !== getFilesRequestId) {
+      return
+    }
+
     if (_.isArray(data?.Items)) {
       this.folderList = getParseFolders(data.Items)
       this.fileList = getParsedFiles(data.Items)
@@ -37,7 +51,7 @@ export default {
     if (types.pObject(data?.Quota)) {
       this.filesQuota = data.Quota
     }
-    this.changeLoadingStatus(false)
+    this.isLoading = false
   },
   clearItemLists() {
     this.folderList = []
@@ -46,11 +60,11 @@ export default {
   changeCurrentStorage(storage) {
     this.currentStorage = storage
   },
-  changeLoadingStatus() {
-    this.isLoading = true
+  changeLoadingStatus(status) {
+    this.isLoading = !!status
   },
   changeCurrentPath({ path }) {
-    this.currentPath = path || []
+    this.currentPath = normalizeRoutePath(path)
   },
   async asyncRenameItem({ file, itemName }) {
     const parameters = {
@@ -127,18 +141,20 @@ export default {
   changeDialogComponent(dialogComponent) {
     this.dialogComponent = dialogComponent
   },
-  //TODO make copyItems computed
   addCopyItems({ items }) {
     items.forEach((item) => { item.isCopied = true })
-    this.copyItems = items
+    this.itemsToCopy = items
   },
   removeCopiedFiles() {
     this.fileList.forEach((item) => { item.isCopied = false })
     this.folderList.forEach((item) => { item.isCopied = false })
-    this.copyItems = []
+    this.itemsToCopy = []
   },
   async copyItems() {
     const parameters = this.copyMoveParameters
+    if (!parameters) {
+      return
+    }
     const result = await filesWebApi.copyMoveItems(parameters, 'Copy')
     if (result) {
       this.removeCopiedFiles()
@@ -147,6 +163,9 @@ export default {
   },
   async moveItems() {
     const parameters = this.copyMoveParameters
+    if (!parameters) {
+      return
+    }
     const result = await filesWebApi.copyMoveItems(parameters, 'Move')
     if (result) {
       this.removeCopiedFiles()

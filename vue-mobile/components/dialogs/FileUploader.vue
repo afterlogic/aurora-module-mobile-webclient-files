@@ -94,7 +94,7 @@ export default {
       const parsedFiles = files.map((file) => {
         return parseUploadedFile(
           file,
-          this.currentPath,
+          this.currentPathString,
           this.currentStorage.Type
         )
       })

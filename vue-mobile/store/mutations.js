@@ -62,7 +62,7 @@ export default {
 
   setDialogComponent: (state, dialogComponent) => { state.dialogComponent = dialogComponent },
 
-  setCopyItems: (state, items) => { state.copyItems = items },
+  setCopyItems: (state, items) => { state.itemsToCopy = items },
   
   setItemsCopyStatus: (state, { items, status }) => {
     items.forEach((item) => {
@@ -84,7 +84,7 @@ export default {
   },
 
   setItemProperty: (state, { item, property, value }) => { item[property] = value },
-  removeCopiedFiles: (state) => { state.copyItems = [] },
+  removeCopiedFiles: (state) => { state.itemsToCopy = [] },
   setDownloadFiles: (state, files) => { state.downloadFiles = state.downloadFiles.concat(files) },
   removeUploadedFiles: (state) => {
     const downloadableFiles = []

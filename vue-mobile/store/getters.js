@@ -1,4 +1,5 @@
 import { getFilteredItems } from '../utils/common'
+import { pathSegmentsToApiPath } from '../utils/path'
 
 export default {
   storageList: (state) => state.storageList,
@@ -7,7 +8,7 @@ export default {
   filesQuota: (state) => state.filesQuota,
   currentStorage: (state) => state.currentStorage,
   loadingStatus: (state) => state.isLoading,
-  currentPathString: (state) => ( '/' + (state.currentPath.length > 0 ? state.currentPath.join('/') : '') ),
+  currentPathString: (state) => pathSegmentsToApiPath(state.currentPath),
   currentPath: (state) => state.currentPath,
   currentFile: (state) => state.currentFile,
   downloadFiles: (state) => state.downloadFiles,
@@ -23,11 +24,11 @@ export default {
     return folders.concat(files)
   },
   dialogComponent: (state) => state.dialogComponent ? state.dialogComponent : { component: '' },
-  copiedFiles: (state) => state.copyItems,
+  copiedFiles: (state) => state.itemsToCopy,
   getCopyMoveParameters: (state) => {
-    const copiedFile = state.copyItems[0]
+    const copiedFile = state.itemsToCopy[0]
     const items = []
-    state.copyItems.forEach((file) => {
+    state.itemsToCopy.forEach((file) => {
       items.push({
         FromPath: file.path,
         FromType: file.type,
@@ -35,9 +36,10 @@ export default {
         IsFolder: file.isFolder,
       })
     })
+    const toPath = pathSegmentsToApiPath(state.currentPath)
     return {
       ToType: state.currentStorage.Type,
-      ToPath: state.currentPath,
+      ToPath: toPath,
       FromType: copiedFile.type,
       FromPath: copiedFile.path,
       Files: items,

@@ -41,7 +41,7 @@ export default {
       'downloadFiles'
     ]),
     isFolder() {
-      return !!this.currentPath
+      return Array.isArray(this.currentPath)
     },
     isFolderEmpty() {
       return (
@@ -50,7 +50,7 @@ export default {
         !this.searchText &&
         this.isFolder &&
         !this.downloadFiles.length &&
-        this.currentPath.length !== 1
+        this.currentPath.length > 0
       )
     },
     isNothingFound() {
@@ -64,7 +64,7 @@ export default {
     isStorageEmpty() {
       return (
         this.isNoFiles &&
-        this.currentPath.length === 1 &&
+        this.currentPath?.length === 0 &&
         !this.isFolderEmpty &&
         !this.isNothingFound &&
         !this.downloadFiles.length

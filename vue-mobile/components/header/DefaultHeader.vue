@@ -61,7 +61,7 @@ export default {
   computed: {
     ...mapGetters(useFilesStore, ['currentPath', 'currentStorage']),
     isStorageRoot() {
-      return this.currentPath.length === 0
+      return !this.currentPath?.length
     },
     storageName() {
       return this.currentStorage?.DisplayName || ''

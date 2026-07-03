@@ -64,7 +64,6 @@ export default {
   data() {
     return {
       isSelectMode: false,
-      isLoading: false,
     }
   },
   
@@ -119,18 +118,12 @@ export default {
       'asyncGetFiles',
       'selectFile',
       'changeDialogComponent',
-      'changeLoadingStatus',
     ]),
     async fetchData() {
-      if (this.currentStorage && this.currentPathString) {
-        this.changeLoadingStatus(true)
-        if (!this.isLoading) {
-          this.isLoading = true
-          await this.asyncGetFiles()
-          this.isLoading = false
-        }
-        this.changeLoadingStatus(false)
+      if (!this.currentStorage?.Type) {
+        return
       }
+      await this.asyncGetFiles()
     },
     openMenu({ file, component }) {
       this.selectFile(file)

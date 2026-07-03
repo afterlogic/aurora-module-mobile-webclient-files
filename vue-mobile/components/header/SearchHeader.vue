@@ -9,7 +9,7 @@
           Search
         </span>
         <div class="app-header__title-secondary flex no-wrap justify-center full-width">
-          <span>{{ currentStorage.DisplayName }}{{currentPath.length ? '/' : ''}}</span>
+          <span>{{ currentStorage.DisplayName }}{{currentPath?.length ? '/' : ''}}</span>
           <div class="flex" style="direction: rtl; overflow: hidden;">
             <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: -0.3em;">
               i{{currentFolder}}
@@ -52,7 +52,7 @@ export default {
       'currentPath',
     ]),
     currentFolder() {
-      return this.currentPath.length < 1 ? '' : this.currentPath.join('/')
+      return !this.currentPath?.length ? '' : this.currentPath.join('/')
     }
   },
   mounted() {
