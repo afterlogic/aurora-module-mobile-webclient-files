@@ -12,8 +12,13 @@ export default {
   },
   computed: {
     componentInstance() {
-      const name = this.storageType[0].toUpperCase() + this.storageType.slice(1)
-      return defineAsyncComponent(() => import(`./storage/${name}StorageIcon`))
+      const type = typeof this.storageType === 'string' && this.storageType.length
+        ? this.storageType
+        : 'personal'
+      const name = type[0].toUpperCase() + type.slice(1)
+      return defineAsyncComponent(() =>
+        import(`./storage/${name}StorageIcon`).catch(() => import('./storage/PersonalStorageIcon'))
+      )
     }
   }
 }
