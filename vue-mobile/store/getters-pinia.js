@@ -1,10 +1,11 @@
-import { getFilteredItems } from '../utils/common'
+import { getFilteredItems, getStorageIconName } from '../utils/common'
 import { pathSegmentsToApiPath } from '../utils/path'
 
 export default {
   // Do not add getters with the same name as state (e.g. currentPath):
   // Pinia then shadows state and assignments like this.currentPath = ... break.
   currentPathString: (state) => pathSegmentsToApiPath(state.currentPath),
+  currentStorageIconName: (state) => getStorageIconName(state.currentStorage?.Type),
   loadingStatus: (state) => state.isLoading,
   isArchive: (state) => {
     return false

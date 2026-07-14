@@ -116,6 +116,7 @@ export default {
   methods: {
     ...mapActions(useFilesStore, [
       'changeCurrentHeader',
+      'selectFile',
     ]),
     openFile() {
       if (
@@ -139,6 +140,7 @@ export default {
       ) {
         const storageId = this.currentStorage?.Type || this.file?.storage
         if (storageId) {
+          this.selectFile(this.file)
           this.$router.push({ path: `/files/${storageId}${this.file.path}/${this.file.id}` })
         }
       } else {

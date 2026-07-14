@@ -1,7 +1,11 @@
 <template>
   <q-item class="storage" :active="active" clickable v-ripple @click.prevent="selectStorage">
     <q-item-section side>
-      <StorageIcon :color="active ? '#469CF8' : '#969494'" :storage-type="storage.Type" />
+      <StorageIcon
+        :color="active ? '#469CF8' : '#969494'"
+        :icon="storage.iconName"
+        :storage-type="storage.Type"
+      />
     </q-item-section>
     <q-item-section class="storage__name">
       {{ storage.DisplayName }}

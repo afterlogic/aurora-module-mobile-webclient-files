@@ -1,25 +1,26 @@
 <template>
-  <component :is="componentInstance" />
+  <component :is="componentInstance" :color="color" />
 </template>
 
 <script>
-import { defineAsyncComponent } from "vue";
+import { defineAsyncComponent } from 'vue'
+
+import { getStorageIconName } from '../../utils/common'
 
 export default {
   name: 'StorageIcon',
   props: {
-    storageType: { type: String, default: 'Personal' }
+    storageType: { type: String, default: 'personal' },
+    icon: { type: String, default: '' },
+    color: { type: String, default: '#B6B5B5' },
   },
   computed: {
     componentInstance() {
-      const type = typeof this.storageType === 'string' && this.storageType.length
-        ? this.storageType
-        : 'personal'
-      const name = type[0].toUpperCase() + type.slice(1)
+      const name = this.icon || getStorageIconName(this.storageType)
       return defineAsyncComponent(() =>
         import(`./storage/${name}StorageIcon`).catch(() => import('./storage/PersonalStorageIcon'))
       )
-    }
-  }
+    },
+  },
 }
 </script>

@@ -10,7 +10,7 @@
     @click="listItemClick(folder)"
   >
     <q-item-section class="folder__thumb" side>
-      <StorageIcon class="folder__thumb-icon" />
+      <FolderIcon class="folder__thumb-icon" />
       <ShareWithMeItemIcon v-if="folder.sharedWithMeAccess" class="folder__thumb-share-icon" />
     </q-item-section>
 

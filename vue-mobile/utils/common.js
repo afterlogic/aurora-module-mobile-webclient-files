@@ -1,10 +1,47 @@
 import types from 'src/utils/types'
-import { useFilesStore} from '../store/index-pinia'
 import { getApiHost } from 'src/api/helpers'
 import { fileFormats } from './formats'
+import { STORAGE_ICON_NAMES } from '../enums'
+
+export const getStorageIconName = (storageType) => {
+  const key = (storageType || '').toLowerCase()
+  return STORAGE_ICON_NAMES[key] || 'Personal'
+}
 
 const getFormatFile = (name) => {
   return name.split('.')[name.split('.').length - 1]
+}
+
+export const getPreviewIconName = (file) => {
+  if (file.paranoidKey) return 'FileLockIcon'
+
+  const name = file.name
+  const format = getFormatFile(name)
+  if (!format) return 'FileIcon'
+  for (let type in fileFormats) {
+    const index = fileFormats[type].findIndex(
+      (currentFormat) => currentFormat === format.toLowerCase()
+    )
+    if (index + 1) {
+      switch (type) {
+        case 'media':
+          return 'FileMediaIcon'
+        case 'text':
+          return 'FileTextIcon'
+        case 'archive':
+          return 'FileArchiveIcon'
+        case 'image':
+          return 'FileImageIcon'
+        case 'link':
+          return 'FileLinkIcon'
+        case 'pdf':
+          return 'FilePdfIcon'
+        default:
+          return 'FileIcon'
+      }
+    }
+  }
+  return 'FileIcon'
 }
 
 const isImg = (name) => {
@@ -13,13 +50,8 @@ const isImg = (name) => {
     return format === formatFile.toLowerCase()
   })
 }
-const isCopied = (hash) => {
+const isCopied = () => {
   return false
-  const filesStore = useFilesStore()
-  const copiedFiles = filesStore.copiedFiles
-  console.log('copiedFiles', copiedFiles)
-  const index = copiedFiles.findIndex((file) => file.hash === hash)
-  return !!(index + 1)
 }
 
 const getPublicLink = (link) => {
@@ -61,11 +93,12 @@ const parseFile = (file) => {
     downloading: false,
     percentDownloading: 0,
     isSelected: false,
-    isCopied: isCopied(types.pString(file.Hash)),
+    isCopied: isCopied(),
     isImg: isImg(types.pString(file.Name)),
     isArchive: !!file?.Actions?.list,
     sharedWithMeAccess: types.pInt(file?.ExtendedProps?.SharedWithMeAccess),
-    decryptionProgress: false
+    decryptionProgress: false,
+    iconName: file.IsFolder ? 'Folder' : getPreviewIconName({ name: types.pString(file.Name), paranoidKey: types.pString(file?.ExtendedProps?.ParanoidKey) }),
   }
 }
 
@@ -155,39 +188,19 @@ export const getParametersForShare = (items, file) => {
   }
 }
 
-export const getPreviewIconName = (file) => {
-  if (file.paranoidKey) return 'FileLockIcon'
-
-  const name = file.name
-  const format = getFormatFile(name)
-  if (!format) return 'FileIcon'
-  for (let type in fileFormats) {
-    const index = fileFormats[type].findIndex(
-      (currentFormat) => currentFormat === format.toLowerCase()
-    )
-    if (index + 1) {
-      switch (type) {
-        case 'media':
-          return 'FileMediaIcon'
-        case 'text':
-          return 'FileTextIcon'
-        case 'archive':
-          return 'FileArchiveIcon'
-        case 'image':
-          return 'FileImageIcon'
-        case 'link':
-          return 'FileLinkIcon'
-        case 'pdf':
-          return 'FilePdfIcon'
-        default:
-          return 'FileIcon'
-      }
-    }
-  }
-  return 'FileIcon'
-}
-
 export const validateFileOrFolderName = (sName) => {
   sName = ('' + sName).trim();
 	return '' !== sName && !/["\/\\*?<>|:]/.test(sName);
+}
+
+export const formatHintText = (text) => {
+  if (!text) {
+    return ''
+  }
+
+  return text
+    .replace(/<br\s*\/?>/gi, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
 }

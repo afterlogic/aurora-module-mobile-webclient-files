@@ -116,8 +116,8 @@
 
 <script>
 import _ from 'lodash'
-import { mapActions, mapGetters } from 'pinia'
-import { useFilesStore, useContactsStore } from 'src/stores/index-all'
+import { mapActions, mapGetters, mapState } from 'pinia'
+import { useFilesStore, useContactsStore, useCoreStore } from 'src/stores/index-all'
 
 import { getContactsSelectOptions, getAllContactsSelectOptions } from 'src/utils/contacts/utils'
 
@@ -178,6 +178,7 @@ export default {
     },
   },
   computed: {
+    ...mapState(useCoreStore, ['userPublicId']),
     ...mapGetters(useFilesStore, ['currentStorage']),
     statuses() {
       const statuses = {
@@ -322,7 +323,7 @@ export default {
       update(async () => {
         this.selectOptions = this.allContactsSelectOptions.filter(
           (option) => {
-            const currentUserEmail = this.$store.getters['core/userPublicId']
+            const currentUserEmail = this.userPublicId
             const indexSearch = option.email.indexOf(search) + 1
             const indexSelectedContact = this.contactsList.findIndex((contact) => {
               return contact.email === option.email

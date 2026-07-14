@@ -159,7 +159,7 @@ export default {
           await this.asyncGetFiles();
         }
         const fileName = this.$route.params.fileName
-        const file = this.fileList.find((item) => item.name === fileName)
+        const file = this.fileList.find((item) => item.name === fileName || item.id === fileName)
   
         if (file) {
           this.selectFile(file)

@@ -1,6 +1,5 @@
 import types from 'src/utils/types'
 import { getApiHost } from 'src/api/helpers'
-import OpenPgp from "../../../OpenPgpMobileWebclient/vue-mobile/openpgp-helper";
 import _ from 'lodash'
 import filesWebApi from '../files-web-api'
 import {
@@ -8,7 +7,13 @@ import {
   getParseFolders,
   getFiles,
   getFolders,
+  getStorageIconName,
 } from '../utils/common'
+import {
+  parseContactSuggestion,
+  enrichContactSuggestionsWithPgpKeys,
+} from '../../../ContactsMobileWebclient/vue-mobile/utils/common'
+import openpgpWebApi from '../../../OpenPgpMobileWebclient/vue-mobile/openpgp-web-api'
 import { normalizeRoutePath } from '../utils/path'
 
 let getFilesRequestId = 0
@@ -17,8 +22,11 @@ export default {
   async asyncGetStorages() {
     const storages = await filesWebApi.getStorages()
     if (types.pArray(storages)) {
-      this.storageList = storages
-      this.currentStorage = storages.length ? storages[0] : {}
+      this.storageList = storages.map((storage) => ({
+        ...storage,
+        iconName: getStorageIconName(storage.Type),
+      }))
+      this.currentStorage = this.storageList.length ? this.storageList[0] : {}
     }
   },
   async asyncGetFiles() {
@@ -185,6 +193,11 @@ export default {
 
   async asyncCreateShareableLink({ withPassword }) {
     const currentFile = this.currentFile
+    let password = ''
+    if (withPassword) {
+      const OpenPgp = (await import('../../../OpenPgpMobileWebclient/vue-mobile/openpgp-helper')).default
+      password = OpenPgp.generatePassword()
+    }
     const parameters = {
       Type: currentFile.type,
       Path: currentFile.path,
@@ -194,7 +207,7 @@ export default {
       RecipientEmail: '',
       PgpEncryptionMode: '',
       LifetimeHrs: 0,
-      Password: withPassword ? OpenPgp.generatePassword() : '',
+      Password: password,
     }
     const module = 'OpenPgpFilesWebclient'
     const result = await filesWebApi.createShareableLink(parameters, module)
@@ -321,7 +334,17 @@ export default {
     this.searchText = text
   },
   async getContactSuggestions(params) {
-    return await filesWebApi.getContactSuggestions(params)
+    const list = await filesWebApi.getContactSuggestions(params)
+    if (!Array.isArray(list) || !list.length) {
+      return []
+    }
+
+    let contacts = list.map(parseContactSuggestion)
+    contacts = await enrichContactSuggestionsWithPgpKeys(
+      contacts,
+      openpgpWebApi.getPublicKeysByContactUUIDs
+    )
+    return contacts
   },
   async asyncUpdateExtendedProps({ type, path, name, paranoidKey }) {
     const parameters = {
