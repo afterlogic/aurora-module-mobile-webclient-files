@@ -24,7 +24,7 @@
           <q-item-label>{{ statuses[1] }}</q-item-label>
         </q-item-section>
       </q-item>
-      <q-item v-if="!currentFile.paranoidKey" dense clickable v-close-popup @click="action(3, currentUser)">
+      <q-item v-if="!file?.paranoidKey" dense clickable v-close-popup @click="action(3, currentUser)">
         <q-item-section>
           <q-item-label>{{ statuses[3] }}</q-item-label>
         </q-item-section>
@@ -38,20 +38,15 @@
   </q-btn-dropdown>
 </template>
 <script>
-import { mapGetters } from 'pinia'
-import { useFilesStore } from '../../store/index-pinia'
-
 export default {
   name: "DropdownContactStatus",
   props: {
     action: { type: Function, require: true },
     currentUser: { type: Object, default: null },
+    file: { type: Object, default: null },
     menuOffset: { type: Array, default: [0, 0] },
     statuses: { type: Object, default: null }
   },
-  computed: {
-    ...mapGetters(useFilesStore, ['currentFile']),
-  }
 }
 </script>
 

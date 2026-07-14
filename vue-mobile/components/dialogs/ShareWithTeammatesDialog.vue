@@ -36,6 +36,7 @@
           <DropdownContactStatus
               ref="dropdown"
               :current-user="currentUser"
+              :file="file"
               :action="selectUser"
               :statuses="dropdownStatuses"
           >
@@ -73,6 +74,7 @@
               <DropdownContactStatus
                   :menu-offset="[85, 0]"
                   :current-user="contact"
+                  :file="file"
                   :action="changeStatus"
                   :statuses="statuses"
               >
@@ -116,8 +118,8 @@
 
 <script>
 import _ from 'lodash'
-import { mapActions, mapGetters, mapState } from 'pinia'
-import { useFilesStore, useContactsStore, useCoreStore } from 'src/stores/index-all'
+import { mapActions, mapState } from 'pinia'
+import { useFilesStore, useCoreStore } from 'src/stores/index-all'
 
 import { getContactsSelectOptions, getAllContactsSelectOptions } from 'src/utils/contacts/utils'
 
@@ -179,7 +181,6 @@ export default {
   },
   computed: {
     ...mapState(useCoreStore, ['userPublicId']),
-    ...mapGetters(useFilesStore, ['currentStorage']),
     statuses() {
       const statuses = {
         2: 'read',
@@ -204,8 +205,12 @@ export default {
     },
   },
   methods: {
-    ...mapActions(useContactsStore, ['asyncGetContactsSuggestions']),
-    ...mapActions(useFilesStore, ['asyncUpdateShare', 'changeItemProperty', 'asyncGetExtendedPropsShares']),
+    ...mapActions(useFilesStore, [
+      'asyncUpdateShare',
+      'changeItemProperty',
+      'asyncGetExtendedPropsShares',
+      'getContactSuggestions',
+    ]),
     isGroup(scope) {
       return scope.opt?.isGroup
     },
@@ -268,7 +273,7 @@ export default {
       if (userIndex !== -1) this.selectOptions.splice(userIndex, 1)
     },
     async init() {
-      if (this.file.shares.length) {
+      if (this.file?.shares?.length) {
         this.setContactList(this.file.shares)
       }
 
@@ -291,10 +296,10 @@ export default {
         WithUserGroups: true,
         WithoutTeamContactsDuplicates: true,
       }
-      const contacts = await this.asyncGetContactsSuggestions(parameters)
+      const contacts = await this.getContactSuggestions(parameters)
 
-      this.selectOptions = getContactsSelectOptions(contacts?.List, this.contactsList)
-      this.allContactsSelectOptions = getAllContactsSelectOptions(contacts?.List)
+      this.selectOptions = getContactsSelectOptions(contacts, this.contactsList)
+      this.allContactsSelectOptions = getAllContactsSelectOptions(contacts)
       this.defaultSelectOptions = _.cloneDeep(this.selectOptions)
       if (this.contactsList.length) {
         this.contactsList.forEach((contact) => this.removeFindContact(contact))
@@ -320,8 +325,11 @@ export default {
       })
     },
     filterContacts(search, update) {
-      update(async () => {
-        this.selectOptions = this.allContactsSelectOptions.filter(
+      update(() => {
+        const options = Array.isArray(this.allContactsSelectOptions)
+          ? this.allContactsSelectOptions
+          : []
+        this.selectOptions = options.filter(
           (option) => {
             const currentUserEmail = this.userPublicId
             const indexSearch = option.email.indexOf(search) + 1
