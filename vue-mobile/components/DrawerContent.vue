@@ -1,14 +1,10 @@
 <template>
   <div>
-    <q-item class="user-info flex column q-mb-xs">
-      <div v-if="userName" class="user-name q-mx-md q-mb-xs">
-        {{ userName }}
-      </div>
-      <div :class="`q-mx-md ${!userName ? 'user-name q-mb-xs' : 'user-email'}`">
-        {{ userEmail }}
-      </div>
-    </q-item>
-    <q-separator />
+    <div class="contacts__drawer-head q-pl-lg" style="padding-top: 32px">
+      {{ $t('FILESMOBILEWEBCLIENT.LABEL_STORAGES') }}
+    </div>
+    <q-separator spaced class="separator-color"/>
+
     <StorageItem
       v-for="storage in storageList"
       :key="storage"
@@ -21,7 +17,6 @@
 <script>
 import { mapGetters } from 'pinia'
 import { useFilesStore } from '../store/index-pinia'
-import { useCoreStore } from 'src/stores/index-pinia'
 
 import StorageItem from '../components/StorageItem'
 
@@ -36,17 +31,6 @@ export default {
       'storageList',
       'currentStorage',
     ]),
-    ...mapGetters(useCoreStore, [
-      'userData',
-      'userPublicId'
-    ]),
-    userName() {
-      if (this.userData) return this.userData.Name
-      return ''
-    },
-    userEmail() {
-      return this.userPublicId
-    },
   },
 };
 </script>
