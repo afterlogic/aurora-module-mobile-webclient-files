@@ -4,25 +4,6 @@ import { defineAsyncComponent } from 'vue'
 
 import { SHARING_LEVELS } from '../enums'
 
-const i18n = {
-  $t: {
-    OPENPGPFILESWEBCLIENT: {
-      HEADING_CREATE_PUBLIC_LINK: 'Create shareable link',
-    },
-    SHAREDFILES: {
-      ACTION_SHARE: 'Share with teammates',
-    },
-    COREWEBCLIENT: {
-      ACTION_SHARE: 'Share',
-      ACTION_DOWNLOAD_FILE: 'Download',
-      ACTION_REMOVE: 'Remove',
-    },
-    FILESWEBCLIENT: {
-      ACTION_RENAME: 'Rename',
-    },
-  },
-}
-
 const isArchiveElement = (path) => {
   return path.split('.')[path.split('.').length - 1] === 'zip'
 }
@@ -78,7 +59,7 @@ export const fileActions = {
       await filesStore.addCopyItems({ items: [currentFile] })
     },
     name: 'copy',
-    displayName: 'Copy/Move',
+    displayNameKey: 'FILESWEBCLIENT.ACTION_COPY_MOVE',
     icon: 'CopyMoveIcon',
     isShowAction: isShowAction,
   },
@@ -86,7 +67,7 @@ export const fileActions = {
     method: null,
     name: 'createShareableLink',
     getComponent: () => { return defineAsyncComponent(() => import('../components/dialogs/CreateShareableLinkDialog')) },
-    displayName: i18n.$t.OPENPGPFILESWEBCLIENT.HEADING_CREATE_PUBLIC_LINK,
+    displayNameKey: 'OPENPGPFILESWEBCLIENT.HEADING_CREATE_PUBLIC_LINK',
     icon: 'SecureLinkIcon',
     isShowAction: isShowAction,
   },
@@ -94,7 +75,7 @@ export const fileActions = {
     method: null,
     name: 'shareWithTeammates',
     getComponent: () => { return defineAsyncComponent(() => import('../components/dialogs/ShareWithTeammatesDialog')) },
-    displayName: i18n.$t.SHAREDFILES.ACTION_SHARE,
+    displayNameKey: 'SHAREDFILES.ACTION_SHARE',
     icon: 'SharingIcon',
     isShowAction: isShowAction,
   },
@@ -102,7 +83,7 @@ export const fileActions = {
     method: null,
     name: 'shareLeave',
     getComponent: () => { return defineAsyncComponent(() => import('../components/dialogs/ShareLeaveDialog')) },
-    displayName: 'Leave share ',
+    displayNameKey: 'SHAREDFILES.ACTION_LEAVE_SHARE',
     icon: 'LeaveSharingIcon',
     isShowAction: isShowAction,
   },
@@ -125,7 +106,7 @@ export const fileActions = {
       }
     },
     name: 'download',
-    displayName: i18n.$t.COREWEBCLIENT.ACTION_DOWNLOAD_FILE,
+    displayNameKey: 'COREWEBCLIENT.ACTION_DOWNLOAD_FILE',
     icon: 'DownloadIcon',
     isShowAction: isShowAction,
   },
@@ -134,7 +115,7 @@ export const fileActions = {
     name: 'rename',
     // component: defineAsyncComponent(() => import('../components/dialogs/RenameItemDialog')),
     getComponent: () => { return defineAsyncComponent(() => import('../components/dialogs/RenameItemDialog')) },
-    displayName: i18n.$t.FILESWEBCLIENT.ACTION_RENAME,
+    displayNameKey: 'FILESWEBCLIENT.ACTION_RENAME',
     icon: 'RenameIcon',
     isShowAction: isShowAction,
   },
@@ -143,7 +124,7 @@ export const fileActions = {
     name: 'delete',
     // component: defineAsyncComponent(() => import('../components/dialogs/DeleteItemsDialog')),
     getComponent: () => { return defineAsyncComponent(() => import('../components/dialogs/DeleteItemsDialog')) },
-    displayName: 'Delete',
+    displayNameKey: 'COREWEBCLIENT.ACTION_DELETE',
     icon: 'DeleteIcon',
     isShowAction: isShowAction,
   },

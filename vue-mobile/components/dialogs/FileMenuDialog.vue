@@ -14,7 +14,7 @@
             <div class="flex full-width" @click="performAction(action)">
               <ActionIcon :icon="action.icon" />
               <div class="q-pl-md text-subtitle1 flex items-center">
-                <p>{{ action.displayName }}</p>
+                <p>{{ $t(action.displayNameKey) }}</p>
               </div>
             </div>
           </q-item>

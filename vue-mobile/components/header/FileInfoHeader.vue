@@ -36,7 +36,7 @@
             >
               <ActionIcon class="q-mr-md" :icon="actions.shareWithTeammates.icon" />
               <q-item-section>
-                {{ actions.shareWithTeammates.displayName }}
+                {{ $t(actions.shareWithTeammates.displayNameKey) }}
               </q-item-section>
             </q-item>
             <q-item
@@ -47,14 +47,14 @@
             >
               <ActionIcon class="q-mr-md" :icon="actions.shareLeave.icon" />
               <q-item-section>
-                {{ actions.shareLeave.displayName }}
+                {{ $t(actions.shareLeave.displayNameKey) }}
               </q-item-section>
             </q-item>
             <q-item
               v-if="isShowAction(actions.copy)" clickable v-close-popup @click="onCopyMove(actions.copy)">
               <ActionIcon class="q-mr-md" :icon="actions.copy.icon" />
               <q-item-section>
-                {{ actions.copy.displayName }}
+                {{ $t(actions.copy.displayNameKey) }}
               </q-item-section>
             </q-item>
             <q-item
@@ -65,7 +65,7 @@
             >
               <ActionIcon class="q-mr-md" :icon="actions.rename.icon" />
               <q-item-section>
-                {{ actions.rename.displayName }}
+                {{ $t(actions.rename.displayNameKey) }}
               </q-item-section>
             </q-item>
           </q-list>
