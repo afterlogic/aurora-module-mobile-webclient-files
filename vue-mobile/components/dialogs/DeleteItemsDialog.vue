@@ -1,6 +1,6 @@
 <template>
   <!-- <app-dialog v-model="openDialog" :close="closeDialog"> -->
-  <AppDialog :close="closeDialog">
+  <AppDialog data-test-id="files-delete-dialog" :close="closeDialog">
     <template v-slot:content>
       <div class="dialog__title-text q-ma-lg">
         <span>{{ title }}</span>
@@ -8,6 +8,7 @@
     </template>
     <template v-slot:actions>
       <ButtonDialog
+          data-test-id="files-delete-confirm"
           class="q-mr-sm q-mb-sm"
           :saving="saving"
           :action="deleteItems"

@@ -1,8 +1,26 @@
 <template>
-  <q-toolbar class="app-header bg-primary">
+  <q-toolbar data-test-id="files-copymove-header" class="app-header bg-primary">
     <div class="col app-header__left">
-      <q-btn icon="close" @click="removeCopiedItems" v-if="!currentPath?.length" color="black" round flat dense />
-      <q-btn icon="chevron_left" @click="onPreviousPath" v-if="currentPath?.length" color="black" round flat dense />
+      <q-btn
+        data-test-id="files-copymove-close"
+        icon="close"
+        @click="removeCopiedItems"
+        v-if="!currentPath?.length"
+        color="black"
+        round
+        flat
+        dense
+      />
+      <q-btn
+        data-test-id="files-copymove-back"
+        icon="chevron_left"
+        @click="onPreviousPath"
+        v-if="currentPath?.length"
+        color="black"
+        round
+        flat
+        dense
+      />
     </div>
     <div class="col app-header__title">
       Move files/folders

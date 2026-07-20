@@ -1,5 +1,5 @@
 <template>
-  <div class="caption full-height flex items-center justify-center">
+  <div class="caption full-height flex items-center justify-center" data-test-id="files-empty">
     <div class="flex column caption__box" v-if="isStorageEmpty">
       <div class="q-mb-md">
         <BoxIcon />

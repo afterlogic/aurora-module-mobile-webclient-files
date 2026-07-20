@@ -1,10 +1,15 @@
 <template>
-  <AppDialog v-model="openDialog" :close="cancelDialog">
+  <AppDialog
+    data-test-id="files-rename-dialog"
+    v-model="openDialog"
+    :close="cancelDialog"
+  >
     <template v-slot:content>
       <div class="q-px-lg q-pb-sm dialog__title-text">
         <span>{{ placeholder }}</span>
       </div>
       <AppDialogInput
+          data-test-id="files-rename-name"
           class="q-mx-lg"
           v-model="itemName"
           autofocus
@@ -14,6 +19,7 @@
     </template>
     <template v-slot:actions>
       <ButtonDialog
+          data-test-id="files-rename-submit"
           class="q-mb-sm q-mr-sm"
           :saving="saving"
           :action="renameItem"

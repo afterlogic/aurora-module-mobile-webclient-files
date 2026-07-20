@@ -1,8 +1,26 @@
 <template>
   <q-toolbar class="app-header">
     <div class="col app-header__left">
-      <q-btn icon="menu" @click="openDrawer" v-if="isStorageRoot" color="black" round flat dense />
-      <q-btn icon="chevron_left" @click="onPreviousPath" v-if="!isStorageRoot" color="black" round flat dense />
+      <q-btn
+        data-test-id="files-folder-menu"
+        icon="menu"
+        @click="openDrawer"
+        v-if="isStorageRoot"
+        color="black"
+        round
+        flat
+        dense
+      />
+      <q-btn
+        data-test-id="files-path-back"
+        icon="chevron_left"
+        @click="onPreviousPath"
+        v-if="!isStorageRoot"
+        color="black"
+        round
+        flat
+        dense
+      />
     </div>
 
     <div class="col app-header__title" _style="flex-grow: 1">
@@ -32,13 +50,22 @@
           </div>
         </q-list>
       </q-btn-dropdown>
-      <span class="app-header__title-secondary">
+      <span class="app-header__title-secondary" data-test-id="files-storage-name">
         {{ storageName }}
       </span>
     </div>
 
     <div class="col app-header__right">
-      <q-btn icon="search" @click="showSearchHeader" size="15px" color="black" flat round dense />
+      <q-btn
+        data-test-id="files-search"
+        icon="search"
+        @click="showSearchHeader"
+        size="15px"
+        color="black"
+        flat
+        round
+        dense
+      />
     </div>
   </q-toolbar>
 </template>

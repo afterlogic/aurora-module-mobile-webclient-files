@@ -1,4 +1,5 @@
 <template>
+  <div data-test-id="files-list" class="fit column">
   <q-scroll-area :thumb-style="{ width: '5px' }" :class="fileListHeight" 
     v-if="!loadingStatus && (folderList.length || downloadFiles.length || fileList.length)"
   >
@@ -37,6 +38,7 @@
     </AppPullRefresh>
   </q-scroll-area>
   <FilesCaptions v-if="!loadingStatus && !folderList.length && !downloadFiles.length && !fileList.length"/>
+  </div>
 </template>
 
 <script>

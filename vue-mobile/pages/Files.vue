@@ -12,7 +12,12 @@
 
     <router-view></router-view>
 
-    <AppCreateButton :rotate="appButtonRotate" @click="showCreateButtonsDialog" v-if="isShowCreateButtons" />
+    <AppCreateButton
+      data-test-id="files-create-fab"
+      :rotate="appButtonRotate"
+      @click="showCreateButtonsDialog"
+      v-if="isShowCreateButtons"
+    />
 
     <DialogsList />
   </MainLayout>

@@ -1,6 +1,10 @@
 <template>
   <ShareWithMeInfoIcon v-if="currentFile?.sharedWithMeAccess" class="absolute" style="right: 0; position: fixed; z-index: 1"/>
-  <q-scroll-area :thumb-style="{ width: '5px', 'z-index': 2 }" class="file-info__info">
+  <q-scroll-area
+    data-test-id="files-view"
+    :thumb-style="{ width: '5px', 'z-index': 2 }"
+    class="file-info__info"
+  >
     <div v-if="currentFile">
       <div class="flex items-center justify-center">
         <div
@@ -48,7 +52,7 @@
       <div>
         <div class="q-mx-md">
           <div class="flex" style="border-bottom: 1px solid #C6C6C6;">
-            <div style="flex-grow: 1">
+            <div style="flex-grow: 1" data-test-id="files-view-name">
               <InputForm :border="false" readonly :value="currentFile.name" label="File name" />
             </div>
             <div class="file__info flex items-end q-mb-xs">

@@ -1,5 +1,10 @@
 <template>
-  <AppDialog :style="{display : !showSelectRecipientDialog ? '' : 'none'}" head-max-height="60vh" :close="cancelDialog">
+  <AppDialog
+    data-test-id="files-share-link-dialog"
+    :style="{display : !showSelectRecipientDialog ? '' : 'none'}"
+    head-max-height="60vh"
+    :close="cancelDialog"
+  >
     <template v-slot:title>
       <div v-if="file && (!file.paranoidKey || file.publicLink)">
         <div v-if="!file.publicLink">
@@ -25,7 +30,7 @@
         </div>
         <div v-if="file.publicLink">
           <div class="q-px-lg">
-            <div class="q-mb-md q-mt-lg" @click.stop="copyText(file.publicLink, $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK'))">
+            <div class="q-mb-md q-mt-lg" data-test-id="files-share-link-url" @click.stop="copyText(file.publicLink, $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK'))">
               <div class="q-mb-sm field__title">Link text</div>
               <div class="flex no-wrap">
                 <div class="flex justify-center items-center q-mr-sm">
@@ -93,6 +98,7 @@
       <div v-if="file && (!file.paranoidKey || file.publicLink)" class="full-width q-mx-lg q-mb-sm">
         <div v-if="!file.publicLink" class="flex justify-end q-pr-sm">
           <ButtonDialog
+              data-test-id="files-share-link-create"
               :saving="saving"
               :action="createShareableLink"
               :label="createBtnLabel"
@@ -101,11 +107,13 @@
         <div v-if="file.publicLink" :class="`full-width flex ${isCreatingLink ? 'justify-end' : 'justify-between'} q-px-sm`">
           <ButtonDialog
               v-if="!isCreatingLink"
+              data-test-id="files-share-link-remove"
               :saving="saving"
               :action="removeLink"
               :label="$t('FILESWEBCLIENT.ACTION_REMOVE_PUBLIC_LINK')"
           />
           <ButtonDialog
+              data-test-id="files-share-link-send"
               :disabled="recipient.empty || (isCreatingLink && !recipient?.HasPgpPublicKey && file.linkPassword)"
               :saving="saving"
               :action="sendViaMessage"

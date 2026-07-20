@@ -1,6 +1,7 @@
 <template>
   <AppItem
     v-if="file"
+    data-test-id="files-item"
     :item="file"
     :isSelected="file.isSelected"
     :disable="file.isCopied"

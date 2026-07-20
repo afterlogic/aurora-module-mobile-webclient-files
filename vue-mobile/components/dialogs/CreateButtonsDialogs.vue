@@ -1,11 +1,19 @@
 <template>
   <!-- <q-dialog transition-show="fade" transition-hide="fade" transition-duration="200" v-model="openDialog"> -->
   <q-dialog transition-show="fade" transition-hide="fade" transition-duration="200">
-    <div class="flex column absolute create-buttons">
-      <div class="create-buttons__item upload-file" @click="uploadFile">
+    <div data-test-id="files-create-menu" class="flex column absolute create-buttons">
+      <div
+        data-test-id="files-upload-file"
+        class="create-buttons__item upload-file"
+        @click="uploadFile"
+      >
         <UploadFileIcon />
       </div>
-      <div class="create-buttons__item create-folder" @click="createFolder">
+      <div
+        data-test-id="files-create-folder"
+        class="create-buttons__item create-folder"
+        @click="createFolder"
+      >
         <CreateFolderIcon />
       </div>
     </div>

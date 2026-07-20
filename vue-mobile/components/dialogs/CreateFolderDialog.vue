@@ -1,5 +1,9 @@
 <template>
-  <AppDialog v-model="openDialog" :close="cancelDialog">
+  <AppDialog
+    data-test-id="files-create-folder-dialog"
+    v-model="openDialog"
+    :close="cancelDialog"
+  >
     <template v-slot:title>
       <div>
         <span>{{ $t('MAILWEBCLIENT.ACTION_ADD_NEW_FOLDER') }}</span>
@@ -8,22 +12,24 @@
     <template v-slot:content>
       <q-item class="q-px-lg">
         <AppInput
-            placeholder="Enter folder name"
-            outlined
-            autofocus
-            dense
-            v-model="folderName"
-            style="width: 100%"
-            @keyup.enter="createFolder"
+          data-test-id="files-create-folder-name"
+          placeholder="Enter folder name"
+          outlined
+          autofocus
+          dense
+          v-model="folderName"
+          style="width: 100%"
+          @keyup.enter="createFolder"
         />
       </q-item>
     </template>
     <template v-slot:actions>
       <ButtonDialog
-          class="q-ma-sm"
-          :saving="saving"
-          :action="createFolder"
-          :label="$t('COREWEBCLIENT.ACTION_CREATE')"
+        data-test-id="files-create-folder-submit"
+        class="q-ma-sm"
+        :saving="saving"
+        :action="createFolder"
+        :label="$t('COREWEBCLIENT.ACTION_CREATE')"
       />
     </template>
   </AppDialog>
@@ -35,7 +41,7 @@ import { useFilesStore } from '../../store/index-pinia'
 
 import { i18n } from 'boot/i18n'
 
-import AppDialog from "components/common/AppDialog";
+import AppDialog from 'components/common/AppDialog'
 import AppInput from 'src/components/common/AppInput'
 import ButtonDialog from 'src/components/common/ButtonDialog'
 import notification from 'src/utils/notification'
@@ -44,14 +50,17 @@ import { validateFileOrFolderName } from '../../utils/common'
 
 export default {
   name: 'CreateFolderDialog',
+
   components: {
     AppInput,
     ButtonDialog,
-    AppDialog
+    AppDialog,
   },
+
   props: {
     dialog: { type: Boolean, default: false },
   },
+
   data() {
     return {
       folderName: '',
@@ -59,13 +68,16 @@ export default {
       saving: false,
     }
   },
+
   watch: {
     dialog(val) {
       this.openDialog = val
     },
   },
+
   methods: {
     ...mapActions(useFilesStore, ['asyncCreateFolder', 'asyncGetFiles']),
+
     async createFolder() {
       if (!this.saving) {
         if (validateFileOrFolderName(this.folderName)) {
@@ -76,10 +88,13 @@ export default {
             await this.asyncGetFiles()
           }
         } else {
-          notification.showError(i18n.global.tc('FILESWEBCLIENT.ERROR_INVALID_FOLDER_NAME'))
+          notification.showError(
+            i18n.global.tc('FILESWEBCLIENT.ERROR_INVALID_FOLDER_NAME')
+          )
         }
       }
     },
+
     cancelDialog() {
       this.$emit('closeDialog')
     },

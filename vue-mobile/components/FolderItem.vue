@@ -1,6 +1,7 @@
 <template>
   <AppItem
     v-if="folder"
+    data-test-id="files-folder"
     :item="folder"
     :isSelected="folder.isSelected"
     :disable="folder.isCopied"

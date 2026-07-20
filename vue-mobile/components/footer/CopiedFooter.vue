@@ -1,8 +1,9 @@
 <template>
-  <q-footer elevated class="bg-white">
+  <q-footer data-test-id="files-copymove-footer" elevated class="bg-white">
     <q-toolbar style="height: 60px" class="full-width">
       <div class="full-width flex no-wrap justify-between">
         <AppButton
+            data-test-id="files-copymove-cancel"
             size="15px"
             flat
             class="q-px-md items-start"
@@ -11,6 +12,7 @@
             @click="cancel"
         />
         <AppButton
+            data-test-id="files-copymove-copy"
             size="15px"
             flat
             :class="showMoveAction ? 'q-px-sm' : 'q-px-md items-end'"
@@ -20,6 +22,7 @@
         />
         <AppButton
             v-if="showMoveAction"
+            data-test-id="files-copymove-move"
             size="15px"
             flat
             class="q-px-md items-end"
