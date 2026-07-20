@@ -10,18 +10,14 @@
       </div>
     </template>
     <template v-slot:content>
-      <q-item class="q-px-lg">
-        <AppInput
-          data-test-id="files-create-folder-name"
-          placeholder="Enter folder name"
-          outlined
-          autofocus
-          dense
-          v-model="folderName"
-          style="width: 100%"
-          @keyup.enter="createFolder"
-        />
-      </q-item>
+      <AppDialogInput
+        data-test-id="files-create-folder-name"
+        class="q-mx-lg"
+        v-model="folderName"
+        autofocus
+        outlined
+        @keyup.enter.stop="createFolder"
+      />
     </template>
     <template v-slot:actions>
       <ButtonDialog
@@ -42,7 +38,7 @@ import { useFilesStore } from '../../store/index-pinia'
 import { i18n } from 'boot/i18n'
 
 import AppDialog from 'components/common/AppDialog'
-import AppInput from 'src/components/common/AppInput'
+import AppDialogInput from 'components/common/AppDialogInput'
 import ButtonDialog from 'src/components/common/ButtonDialog'
 import notification from 'src/utils/notification'
 
@@ -52,7 +48,7 @@ export default {
   name: 'CreateFolderDialog',
 
   components: {
-    AppInput,
+    AppDialogInput,
     ButtonDialog,
     AppDialog,
   },
