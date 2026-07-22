@@ -1,6 +1,6 @@
 <template>
   <!-- <q-dialog v-model="openDialog" position="bottom"> -->
-  <q-dialog position="bottom">
+  <q-dialog data-test-id="files-item-menu" position="bottom">
     <q-card class="menu card-radius" v-if="file" style="min-height: 301px; overflow: hidden">
       <q-card-section class="row items-center no-wrap" style="min-height: 50px;">
         <div>
@@ -10,8 +10,16 @@
       <q-separator />
       <q-list style="height: 250px" class="scroll">
         <div v-for="action in actions" :key="action.name">
-          <q-item v-if="isShowAction(action)" class="q-my-sm" clickable>
-            <div class="flex full-width" @click="performAction(action)">
+          <q-item
+            v-if="isShowAction(action)"
+            class="q-my-sm"
+            clickable
+          >
+            <div
+              class="flex full-width"
+              :data-test-id="`files-item-menu-${action.name}`"
+              @click="performAction(action)"
+            >
               <ActionIcon :icon="action.icon" />
               <div class="q-pl-md text-subtitle1 flex items-center">
                 <p>{{ $t(action.displayNameKey) }}</p>

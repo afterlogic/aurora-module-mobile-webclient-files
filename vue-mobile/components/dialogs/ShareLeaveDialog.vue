@@ -1,5 +1,9 @@
 <template>
-  <AppDialog v-model="openDialog" :close="cancelDialog">
+  <AppDialog
+    data-test-id="files-share-leave-dialog"
+    v-model="openDialog"
+    :close="cancelDialog"
+  >
     <template v-slot:content>
       <q-item class="dialog__header-text">
         <p>Leave share of the <span class="text-bold">{{ currentFile.name }}</span> file?</p>
@@ -7,6 +11,7 @@
     </template>
     <template v-slot:actions>
       <ButtonDialog
+          data-test-id="files-share-leave-confirm"
           :saving="saving"
           :action="leaveShare"
           :label="$t('SHAREDFILES.ACTION_LEAVE_SHARE')"

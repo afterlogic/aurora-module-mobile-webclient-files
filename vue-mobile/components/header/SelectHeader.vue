@@ -1,19 +1,29 @@
 <template>
-  <q-toolbar class="app-header">
+  <q-toolbar data-test-id="files-select-header" class="app-header">
     <div class="col app-header__left">
-      <q-btn @click="resetSelection" color="black" icon="close" flat round dense />
+      <q-btn
+        data-test-id="files-select-close"
+        @click="resetSelection"
+        color="black"
+        icon="close"
+        flat
+        round
+        dense
+      />
     </div>
-    <div class="col app-header__title">
+    <div class="col app-header__title" data-test-id="files-select-count">
       {{ `Selected: ${items.length}` }}
     </div>
     <div class="col app-header__right">
-      <ActionIcon 
+      <ActionIcon
+        data-test-id="files-select-copy"
         @click="copyItems"
         class="q-mr-md"
         :icon="actions.copy.icon"
       />
       <div v-if="isShowAction(actions.shareLeave) && sharedFiles.length" class="flex no-wrap">
         <ActionIcon
+          data-test-id="files-select-share-leave"
           class="q-mr-xs"
           @click="onPerformAction(actions.shareLeave)"
           :icon="actions.shareLeave.icon"
@@ -22,6 +32,7 @@
       </div>
       <div v-if="isShowAction(actions.delete) && unsharedFiles.length" class="flex no-wrap">
         <ActionIcon
+          data-test-id="files-select-delete"
           class="q-mr-xs"
           @click="onPerformAction(actions.delete)"
           :icon="actions.delete.icon"

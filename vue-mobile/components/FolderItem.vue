@@ -23,7 +23,14 @@
     </q-item-section>
 
     <q-item-section v-if="!isSelectMode && !isCopied" class="folder__menu" side>
-      <q-btn icon="more_vert" @click.stop="menuClick" color="grey" flat round />
+      <q-btn
+        data-test-id="files-folder-more"
+        icon="more_vert"
+        @click.stop="menuClick"
+        color="grey"
+        flat
+        round
+      />
     </q-item-section>
   </AppItem>
 </template>

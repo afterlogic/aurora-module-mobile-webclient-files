@@ -1,11 +1,11 @@
 <template>
-  <AppDialog :close="cancel" width="calc(100vw - 20px)" >
+  <AppDialog data-test-id="files-share-dialog" :close="cancel" width="calc(100vw - 20px)" >
     <template v-slot:content>
       <div class="q-px-lg q-pb-md dialog__title-text">
         <span>{{ $t('SHAREDFILES.ACTION_SHARE') }}</span>
       </div>
       <div class="q-pl-lg q-pr-sm q-mt-md flex full-width row">
-        <div class="col-10 select-contact">
+        <div class="col-10 select-contact" data-test-id="files-share-contact-select">
           <q-select
               use-input
               model-value=""
@@ -92,12 +92,14 @@
     </template>
     <template v-slot:actions>
       <ButtonDialog
+          data-test-id="files-share-history"
           class="q-ma-sm"
           :saving="saving"
           :action="showHistory"
           :label="$t('SHAREDFILES.ACTION_SHOW_HISTORY')"
       />
       <ButtonDialog
+          data-test-id="files-share-save"
           class="q-ma-sm"
           :saving="saving"
           :action="save"

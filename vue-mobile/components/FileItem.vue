@@ -36,7 +36,14 @@
       </q-item-label>
     </q-item-section>
     <q-item-section v-if="!isSelectMode" class="file__menu" side>
-      <q-btn icon="more_vert" @click.stop="menuClick" color="grey" flat round />
+      <q-btn
+        data-test-id="files-item-more"
+        icon="more_vert"
+        @click.stop="menuClick"
+        color="grey"
+        flat
+        round
+      />
     </q-item-section>
   </AppItem>
 </template>
