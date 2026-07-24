@@ -60,7 +60,6 @@
         data-test-id="files-search"
         icon="search"
         @click="showSearchHeader"
-        size="15px"
         color="black"
         flat
         round
