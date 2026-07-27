@@ -1,0 +1,281 @@
+const path = require('path')
+const { sharedHelper, moduleHelper, fixturePath } = require(path.join(
+  process.env.AURORA_MOBILE_E2E_ROOT,
+  'e2e/helpers/paths'
+))
+const { test, expect } = require('@playwright/test')
+const { loginAsTestUser, step, attachScreenshot } = sharedHelper('login')
+const { clickReady } = sharedHelper('ready')
+const {
+  openFiles,
+  waitForFilesList,
+  uploadFileViaFab,
+  openFileByName,
+  deleteOpenedFile,
+  longPressFilesItem,
+  openPersonalStorage,
+  navigateToStorageRoot,
+} = require('./helpers/files')
+
+const hasCredentials = !!(process.env.E2E_LOGIN && process.env.E2E_PASSWORD)
+
+/** Keep under FileItem getShortName(..., 30) so list text matches fully. */
+function uniqueFileName(prefix) {
+  return `${prefix}-${Date.now()}.txt`
+}
+
+test.describe('Mobile files copy, select, share', () => {
+  test.skip(!hasCredentials, 'Set E2E_LOGIN and E2E_PASSWORD in .env.e2e')
+
+  test('copies uploaded file into a folder (original remains)', async ({
+    page,
+  }) => {
+    test.setTimeout(240000)
+    await loginAsTestUser(page)
+    await openFiles(page)
+    await openPersonalStorage(page)
+
+    const folderCount = await page.getByTestId('files-folder').count()
+    test.skip(
+      folderCount === 0,
+      'Need at least one folder as copy destination'
+    )
+
+    const uniqueName = uniqueFileName('e2e-cp')
+    const folderName = (
+      await page
+        .getByTestId('files-folder')
+        .first()
+        .locator('.folder__name')
+        .innerText()
+        .catch(() => '')
+    ).trim()
+
+    await step('Upload file for copy', async () => {
+      await uploadFileViaFab(page, uniqueName)
+    })
+
+    await step('Open file → Copy mode', async () => {
+      await openFileByName(page, uniqueName)
+      await clickReady(page.getByTestId('files-view-more'))
+      await expect(page.getByTestId('files-menu-copy')).toBeVisible({
+        timeout: 10000,
+      })
+      await clickReady(page.getByTestId('files-menu-copy'))
+      await expect(page.getByTestId('files-copymove-header')).toBeVisible({
+        timeout: 15000,
+      })
+      await expect(page.getByTestId('files-copymove-copy')).toBeVisible({
+        timeout: 15000,
+      })
+      await attachScreenshot(page, 'files-copy-01-mode')
+    })
+
+    await step(`Copy into folder "${folderName}"`, async () => {
+      const folder = page
+        .getByTestId('files-folder')
+        .filter({ hasText: folderName })
+        .first()
+      await clickReady(folder)
+      await waitForFilesList(page)
+      await clickReady(page.getByTestId('files-copymove-copy'))
+      await expect(page.getByTestId('files-copymove-header')).toBeHidden({
+        timeout: 45000,
+      })
+      await waitForFilesList(page)
+      await expect(
+        page.getByTestId('files-item').filter({ hasText: uniqueName }).first()
+      ).toBeVisible({ timeout: 60000 })
+      console.log(`  → Copy present in folder: ${folderName}`)
+      await attachScreenshot(page, 'files-copy-02-in-folder')
+    })
+
+    await step('Original still in personal root', async () => {
+      await openPersonalStorage(page)
+      await expect(
+        page.getByTestId('files-item').filter({ hasText: uniqueName }).first()
+      ).toBeVisible({ timeout: 30000 })
+      console.log('  → Original still in source')
+      await attachScreenshot(page, 'files-copy-03-original')
+    })
+
+    await step('Cleanup: delete original', async () => {
+      await openFileByName(page, uniqueName)
+      await deleteOpenedFile(page, uniqueName)
+    })
+  })
+
+  test('multi-select bulk deletes uploaded files', async ({ page }) => {
+    test.setTimeout(240000)
+    await loginAsTestUser(page)
+    await openFiles(page)
+    await openPersonalStorage(page)
+
+    const stamp = Date.now()
+    const nameA = `e2e-ba-${stamp}.txt`
+    const nameB = `e2e-bb-${stamp}.txt`
+
+    await step('Upload two files', async () => {
+      await uploadFileViaFab(page, nameA)
+      await uploadFileViaFab(page, nameB)
+    })
+
+    await step('Long-press first → select mode, tap second', async () => {
+      const itemA = page
+        .getByTestId('files-item')
+        .filter({ hasText: nameA })
+        .first()
+      await longPressFilesItem(page, itemA)
+      await expect(page.getByTestId('files-select-header')).toBeVisible({
+        timeout: 15000,
+      })
+      await expect(page.getByTestId('files-select-count')).toContainText(
+        'Selected: 1',
+        { timeout: 10000 }
+      )
+      await clickReady(
+        page.getByTestId('files-item').filter({ hasText: nameB }).first()
+      )
+      await expect(page.getByTestId('files-select-count')).toContainText(
+        'Selected: 2',
+        { timeout: 10000 }
+      )
+      await attachScreenshot(page, 'files-select-01')
+    })
+
+    await step('Bulk delete → confirm', async () => {
+      await expect(page.getByTestId('files-select-delete')).toBeVisible({
+        timeout: 10000,
+      })
+      await clickReady(page.getByTestId('files-select-delete'))
+      await expect(page.getByTestId('files-delete-dialog')).toBeVisible({
+        timeout: 15000,
+      })
+      await clickReady(page.getByTestId('files-delete-confirm'))
+      await expect(page.getByTestId('files-delete-dialog')).toBeHidden({
+        timeout: 60000,
+      })
+      await expect(page.getByTestId('files-select-header')).toBeHidden({
+        timeout: 30000,
+      })
+      await waitForFilesList(page)
+      await expect(
+        page.getByTestId('files-item').filter({ hasText: nameA })
+      ).toHaveCount(0, { timeout: 30000 })
+      await expect(
+        page.getByTestId('files-item').filter({ hasText: nameB })
+      ).toHaveCount(0, { timeout: 30000 })
+      console.log('  → Both files deleted')
+      await attachScreenshot(page, 'files-select-02-deleted')
+    })
+  })
+
+  test('opens Share with teammates dialog', async ({ page }) => {
+    test.setTimeout(180000)
+    await loginAsTestUser(page)
+    await openFiles(page)
+    await openPersonalStorage(page)
+
+    const uniqueName = uniqueFileName('e2e-tm')
+
+    await step('Upload file', async () => {
+      await uploadFileViaFab(page, uniqueName)
+      await openFileByName(page, uniqueName)
+    })
+
+    await step('Open Share with teammates', async () => {
+      await clickReady(page.getByTestId('files-view-more'))
+      const shareMenu = page.getByTestId('files-menu-share')
+      test.skip(
+        (await shareMenu.count()) === 0,
+        'Share with teammates not available (corporate storage or no rights)'
+      )
+      await clickReady(shareMenu)
+      await expect(page.getByTestId('files-share-dialog')).toBeVisible({
+        timeout: 15000,
+      })
+      await expect(page.getByTestId('files-share-contact-select')).toBeVisible()
+      await expect(page.getByTestId('files-share-save')).toBeVisible()
+      console.log('  → Share with teammates dialog open')
+      await attachScreenshot(page, 'files-teammates-01')
+    })
+
+    await step('Close dialog without saving', async () => {
+      const dialog = page.getByTestId('files-share-dialog')
+      await page.keyboard.press('Escape').catch(() => undefined)
+      if (await dialog.isVisible().catch(() => false)) {
+        await clickReady(page.getByTestId('files-share-save'))
+      }
+      await expect(dialog).toBeHidden({ timeout: 30000 }).catch(() => undefined)
+    })
+
+    await step('Cleanup', async () => {
+      if (await page.getByTestId('files-view').isVisible().catch(() => false)) {
+        await deleteOpenedFile(page, uniqueName)
+      } else {
+        await openFileByName(page, uniqueName)
+        await deleteOpenedFile(page, uniqueName)
+      }
+    })
+  })
+
+  test('leave share action when shared item is available', async ({ page }) => {
+    test.setTimeout(180000)
+    await loginAsTestUser(page)
+    await openFiles(page)
+
+    await step('Open Shared storage if present', async () => {
+      await navigateToStorageRoot(page)
+      await clickReady(page.getByTestId('files-folder-menu'))
+      await expect(page.getByTestId('mail-drawer')).toBeVisible({
+        timeout: 15000,
+      })
+      const shared = page
+        .locator(
+          '[data-test-id="files-storage-item"][data-storage-type="shared"]'
+        )
+        .first()
+      test.skip(
+        (await shared.count()) === 0,
+        'No Shared storage on this stand'
+      )
+      await clickReady(shared)
+      await waitForFilesList(page)
+    })
+
+    const items = page.getByTestId('files-item')
+    test.skip((await items.count()) === 0, 'Shared storage has no files to leave')
+
+    await step('Open item menu → Leave share', async () => {
+      const item = items.first()
+      await clickReady(item.getByTestId('files-item-more'))
+      const menu = page.getByTestId('files-item-menu')
+      await expect(menu).toBeVisible({ timeout: 15000 })
+      await attachScreenshot(page, 'files-leave-00-menu')
+      const leave = page.getByTestId('files-item-menu-shareLeave')
+      const leaveByText = menu.getByText(/Leave share|Отказаться от доступа/i)
+      const hasLeave =
+        (await leave.count()) > 0 || (await leaveByText.count()) > 0
+      if (!hasLeave) {
+        const menuText = (await menu.innerText().catch(() => '')).trim()
+        console.log(`  → Item menu actions:\n${menuText}`)
+        test.skip(true, `Leave share not in item menu. Actions:\n${menuText}`)
+      }
+      if ((await leave.count()) > 0) {
+        await clickReady(leave)
+      } else {
+        await clickReady(leaveByText.first())
+      }
+      await expect(page.getByTestId('files-share-leave-dialog')).toBeVisible({
+        timeout: 15000,
+      })
+      await attachScreenshot(page, 'files-leave-01-dialog')
+      await clickReady(page.getByTestId('files-share-leave-confirm'))
+      await expect(page.getByTestId('files-share-leave-dialog')).toBeHidden({
+        timeout: 45000,
+      })
+      console.log('  → Left share')
+      await attachScreenshot(page, 'files-leave-02-done')
+    })
+  })
+})
