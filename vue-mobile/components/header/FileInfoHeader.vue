@@ -43,7 +43,7 @@
           dense
         >
           <template v-slot:label>
-            <ActionIcon class="q-mr-md" icon="MoreIcon" />
+            <ActionIcon icon="MoreIcon" />
           </template>
           <q-list style="width: 205px; min-height: 55px">
             <q-item
