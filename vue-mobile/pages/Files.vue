@@ -48,7 +48,6 @@ export default {
     ...mapGetters(useFilesStore, [
       'storageList',
       'copiedFiles',
-      'loadingStatus',
       'currentStorage',
       'currentHeader',
       'dialogComponent',
@@ -61,7 +60,7 @@ export default {
       return this.currentHeader !== 'SearchHeader'
       // && !this.isSelectMode
       && !this.copiedFiles.length
-      && this.$route.name === 'file-list'
+      && (this.$route.name === 'file-list' || this.$route.name === 'files')
       && this.currentStorage?.Type !== 'shared'
     },
     fileListHeight() {
@@ -78,15 +77,14 @@ export default {
     // },
     '$route.params.storageId': {
       handler: async function (storageId) {
-        this.changeLoadingStatus(true)
         if (!this.storageList?.length) {
           await this.asyncGetStorages()
         }
-        this.changeLoadingStatus(false)
 
         if (!storageId) {
-          //TODO add detection of a default storage
-          this.$router.push(`/files/${this.storageList[0].Type}/`)
+          if (this.storageList.length) {
+            this.$router.replace(`/files/${this.storageList[0].Type}/`)
+          }
         } else {
           const storage = this.storageList.length ? this.storageList.find((storage) => storage.Type === storageId) : {}
           if (storage) {
@@ -109,7 +107,6 @@ export default {
     ...mapActions(useFilesStore, [
       'asyncGetStorages',
       'changeDialogComponent',
-      'changeLoadingStatus',
       'changeCurrentStorage',
       'changeCurrentPath',
       'changeSearchText',

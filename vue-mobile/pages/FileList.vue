@@ -1,8 +1,10 @@
 <template>
   <div data-test-id="files-list" class="fit column">
-  <AppListLoader v-if="loadingStatus" initial class="col" />
-  <q-scroll-area :thumb-style="{ width: '5px' }" :class="fileListHeight" 
-    v-if="!loadingStatus && (folderList.length || downloadFiles.length || fileList.length)"
+  <AppListLoader v-if="isInitialListLoading" initial class="col" />
+  <q-scroll-area
+    v-else-if="hasListItems"
+    :thumb-style="{ width: '5px' }"
+    :class="fileListHeight"
   >
     <AppPullRefresh :refresh-action="asyncGetFiles">
       <FolderItem
@@ -35,10 +37,11 @@
         :selectItemHandler="selectItem"
         :openMenuHandler="openMenu"
       />
+      <AppListLoader v-if="loadingStatus" />
       <div style="height: 70px" class="full-width" />
     </AppPullRefresh>
   </q-scroll-area>
-  <FilesCaptions v-if="!loadingStatus && !folderList.length && !downloadFiles.length && !fileList.length"/>
+  <FilesCaptions v-else-if="!loadingStatus"/>
   </div>
 </template>
 
@@ -88,6 +91,12 @@ export default {
     isCopied() {
       return !!this.copiedFiles.length
     },
+    hasListItems() {
+      return this.folderList.length > 0 || this.downloadFiles.length > 0 || this.fileList.length > 0
+    },
+    isInitialListLoading() {
+      return this.loadingStatus && !this.hasListItems
+    },
     fileListHeight() {
       if (this.currentHeader === 'SearchHeader') return 'files__list-search'
       return 'files__list-default'
@@ -98,25 +107,25 @@ export default {
       handler: async function () {
         this.fetchData()
       },
-      immediate: true
     },
     currentPathString: {
       handler: async function () {
         this.fetchData()
       },
-      immediate: true
     },
     searchText: {
-      handler: async function (v) {
+      handler: async function () {
         this.fetchData()
       },
-      immediate: true
     },
     selectedFiles(items) {
       if (!items.length) {
         this.isSelectMode = false
       }
     },
+  },
+  mounted() {
+    this.fetchData()
   },
   methods: {
     ...mapActions(useFilesStore, [

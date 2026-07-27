@@ -33,23 +33,26 @@ export default {
     routeName() {
       return this.$router.currentRoute.value.name
     },
+    isFileListRoute() {
+      return this.routeName === 'file-list' || this.routeName === 'files'
+    },
     isDefaultHeader() {
-      return this.routeName === 'file-list'
+      return this.isFileListRoute
         && !this.selectedFiles.length
         && !this.copiedFiles.length
         && !this.isSearchHeader
     },
     isSelectHeader() {
-      return this.routeName === 'file-list'
+      return this.isFileListRoute
         && !!this.selectedFiles.length
         && !this.copiedFiles.length
         && !this.isSearchHeader
     },
     isCopyMoveHeader() {
-      return this.routeName === 'file-list' && this.copiedFiles.length && !this.isSearchHeader
+      return this.isFileListRoute && this.copiedFiles.length && !this.isSearchHeader
     },
     isSearchHeader() {
-      return this.routeName === 'file-list' && this.currentHeader === 'SearchHeader'
+      return this.isFileListRoute && this.currentHeader === 'SearchHeader'
     },
   },
   beforeUnmount() {
