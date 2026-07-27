@@ -8,9 +8,9 @@
       <DrawerContent />
     </template>
 
-    <q-linear-progress v-if="loadingStatus" class="full-width" indeterminate track-color="grey-1" color="primary" />
-
-    <router-view></router-view>
+    <div class="column fit">
+      <router-view class="col fit"></router-view>
+    </div>
 
     <AppCreateButton
       data-test-id="files-create-fab"

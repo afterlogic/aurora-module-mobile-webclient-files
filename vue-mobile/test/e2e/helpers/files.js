@@ -11,7 +11,10 @@ const { waitForListReady, clickReady } = sharedHelper('ready')
 const listReadyOptions = {
   itemTestIds: ['files-item', 'files-folder'],
   emptyTestId: 'files-empty',
-  spinnerSelectors: ['.q-linear-progress'],
+  spinnerSelectors: [
+    '.app-list-loader_initial',
+    '.app-list-loader_initial .q-spinner-dots',
+  ],
   timeout: 60000,
 }
 

@@ -1,14 +1,10 @@
 <template>
   <q-toolbar data-test-id="files-select-header" class="app-header">
     <div class="col app-header__left">
-      <q-btn
+      <AppHeaderButton
         data-test-id="files-select-close"
-        @click="resetSelection"
-        color="black"
         icon="close"
-        flat
-        round
-        dense
+        @click="resetSelection"
       />
     </div>
     <div class="col app-header__title" data-test-id="files-select-count">
@@ -49,12 +45,14 @@ import { useFilesStore } from '../../store/index-pinia'
 import { SHARING_LEVELS } from '../../enums'
 import { fileActions } from '../../utils/file-actions'
 import ActionIcon from '../common/ActionIcon'
+import AppHeaderButton from 'src/components/common/AppHeaderButton'
 
 export default {
   name: 'SelectHeader',
 
   components: {
     ActionIcon,
+    AppHeaderButton,
   },
 
   props: {

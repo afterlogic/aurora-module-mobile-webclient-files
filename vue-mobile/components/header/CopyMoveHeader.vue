@@ -1,32 +1,24 @@
 <template>
   <q-toolbar data-test-id="files-copymove-header" class="app-header bg-primary">
     <div class="col app-header__left">
-      <q-btn
+      <AppHeaderButton
         data-test-id="files-copymove-close"
         icon="close"
         @click="removeCopiedItems"
         v-if="!currentPath?.length"
-        color="black"
-        round
-        flat
-        dense
       />
-      <q-btn
+      <AppHeaderButton
         data-test-id="files-copymove-back"
         icon="chevron_left"
         @click="onPreviousPath"
         v-if="currentPath?.length"
-        color="black"
-        round
-        flat
-        dense
       />
     </div>
     <div class="col app-header__title">
       Move files/folders
     </div>
     <div class="col app-header__right">
-      <q-btn icon="create_new_folder" @click="createFolder" color="black" round flat dense />
+      <AppHeaderButton icon="create_new_folder" @click="createFolder" />
       <div class="dropdown-more flex justify-center items-center">
         <q-btn-dropdown v-close-popup :menu-offset="[8, -45]" flat unelevated dense>
           <template v-slot:label>
@@ -51,12 +43,14 @@ import { useFilesStore } from '../../store/index-pinia'
 
 import StorageItem from '../StorageItem'
 import ActionIcon from '../common/ActionIcon'
+import AppHeaderButton from 'src/components/common/AppHeaderButton'
 
 export default {
   name: 'CopyMoveHeader',
   components: {
     StorageItem,
-    ActionIcon
+    ActionIcon,
+    AppHeaderButton,
   },
   computed: {
     ...mapGetters(useFilesStore, ['copiedFiles', 'currentPath', 'storageList']),

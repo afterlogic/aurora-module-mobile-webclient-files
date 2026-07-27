@@ -1,25 +1,17 @@
 <template>
   <q-toolbar class="app-header">
     <div class="col app-header__left">
-      <q-btn
+      <AppHeaderButton
         data-test-id="files-folder-menu"
         icon="menu"
         @click="openDrawer"
         v-if="isStorageRoot"
-        color="black"
-        round
-        flat
-        dense
       />
-      <q-btn
+      <AppHeaderButton
         data-test-id="files-path-back"
         icon="chevron_left"
         @click="onPreviousPath"
         v-if="!isStorageRoot"
-        color="black"
-        round
-        flat
-        dense
       />
     </div>
 
@@ -56,14 +48,10 @@
     </div>
 
     <div class="col app-header__right">
-      <q-btn
+      <AppHeaderButton
         data-test-id="files-search"
         icon="search"
         @click="showSearchHeader"
-        color="black"
-        flat
-        round
-        dense
       />
     </div>
   </q-toolbar>
@@ -74,11 +62,15 @@ import { mapActions, mapGetters } from 'pinia'
 import { useFilesStore } from '../../store/index-pinia'
 
 import eventBus from 'src/event-bus'
+import AppHeaderButton from 'src/components/common/AppHeaderButton'
 
 import { getShortName } from '../../utils/common'
 
 export default {
   name: 'DefaultHeader',
+  components: {
+    AppHeaderButton,
+  },
   data() {
     return {
       isPathMenuOpen: false,

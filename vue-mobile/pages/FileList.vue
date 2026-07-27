@@ -1,5 +1,6 @@
 <template>
   <div data-test-id="files-list" class="fit column">
+  <AppListLoader v-if="loadingStatus" initial class="col" />
   <q-scroll-area :thumb-style="{ width: '5px' }" :class="fileListHeight" 
     v-if="!loadingStatus && (folderList.length || downloadFiles.length || fileList.length)"
   >
@@ -51,6 +52,7 @@ import DownloadFileItem from '../components/DownloadFileItem'
 import FilesCaptions from '../components/FilesCaptions'
 
 import AppPullRefresh from 'src/components/common/AppPullRefresh'
+import AppListLoader from 'src/components/common/AppListLoader'
 
 export default {
   name: 'FileList',
@@ -60,7 +62,8 @@ export default {
     FileItem,
     DownloadFileItem,
     FilesCaptions,
-    AppPullRefresh
+    AppPullRefresh,
+    AppListLoader,
   },
 
   data() {

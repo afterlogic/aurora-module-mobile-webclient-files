@@ -1,14 +1,10 @@
 <template>
   <q-toolbar class="app-header">
     <div class="col app-header__left">
-      <q-btn
+      <AppHeaderButton
         data-test-id="files-view-back"
         icon="chevron_left"
         @click="onPreviousPath"
-        color="black"
-        flat
-        round
-        dense
       />
     </div>
     <div class="col app-header__right" v-if="actions">
@@ -106,12 +102,14 @@ import { mapActions, mapGetters } from 'pinia'
 import { useFilesStore } from '../../store/index-pinia'
 
 import ActionIcon from '../common/ActionIcon'
+import AppHeaderButton from 'src/components/common/AppHeaderButton'
 import { getFileActions } from '../../utils/file-actions'
 
 export default {
   name: 'FileInfoHeader',
   components: {
-    ActionIcon
+    ActionIcon,
+    AppHeaderButton,
   },
 
   mounted() {

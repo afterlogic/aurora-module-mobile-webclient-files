@@ -2,14 +2,10 @@
   <div>
     <q-toolbar class="app-header search-toolbar">
       <div class="col app-header__left">
-        <q-btn
+        <AppHeaderButton
           data-test-id="files-search-close"
-          @click="onCloseSearch"
-          color="black"
           icon="close"
-          flat
-          round
-          dense
+          @click="onCloseSearch"
         />
       </div>
       <div class="col-8 app-header__title">
@@ -47,9 +43,13 @@
 <script>
 import { mapActions, mapGetters } from 'pinia'
 import { useFilesStore } from '../../store/index-pinia'
+import AppHeaderButton from 'src/components/common/AppHeaderButton'
 
 export default {
   name: 'SearchHeader',
+  components: {
+    AppHeaderButton,
+  },
   data() {
     return {
       text: '',

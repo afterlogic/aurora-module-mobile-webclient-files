@@ -1,18 +1,14 @@
 <template>
   <ShareWithMeInfoIcon v-if="currentFile?.sharedWithMeAccess" class="absolute" style="right: 0; position: fixed; z-index: 1"/>
+  <AppListLoader v-if="currentFile?.decryptionProgress" initial class="fit" />
   <q-scroll-area
+    v-else
     data-test-id="files-view"
     :thumb-style="{ width: '5px', 'z-index': 2 }"
-    class="file-info__info"
+    class="file-info__info fit"
   >
     <div v-if="currentFile">
       <div class="flex items-center justify-center">
-        <div
-            class="file-info__preview full-width"
-            style="height: 1em"
-        >
-          <q-linear-progress v-if="currentFile.decryptionProgress" indeterminate track-color="grey-1" color="primary"/>
-        </div>
         <div
             v-if="(currentFile.paranoidKey || !currentFile.thumbnailUrl) &&
               !currentFile.decryptViewUrl"
@@ -94,6 +90,7 @@ import EncryptedItemIcon from '../components/icons/item/EncryptedItemIcon'
 import LinkItemIcon from '../components/icons/item/LinkItemIcon'
 import SharedItemIcon from '../components/icons/item/SharedItemIcon'
 import ShareWithMeInfoIcon from '../components/icons/ShareWithMeInfoIcon'
+import AppListLoader from 'src/components/common/AppListLoader'
 
 export default {
   name: 'FileInfo',
@@ -104,7 +101,8 @@ export default {
     EncryptedItemIcon,
     LinkItemIcon,
     SharedItemIcon,
-    ShareWithMeInfoIcon
+    ShareWithMeInfoIcon,
+    AppListLoader,
   },
 
   mounted() {
