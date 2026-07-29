@@ -37,7 +37,6 @@
         :selectItemHandler="selectItem"
         :openMenuHandler="openMenu"
       />
-      <AppListLoader v-if="loadingStatus" />
       <div style="height: 70px" class="full-width" />
     </AppPullRefresh>
   </q-scroll-area>
@@ -124,14 +123,23 @@ export default {
       }
     },
   },
+  created() {
+    // Avoid empty-state flash on first paint before fetch starts.
+    if (!this.hasListItems) {
+      this.changeLoadingStatus(true)
+    }
+  },
   mounted() {
-    this.fetchData()
+    if (!this.hasListItems) {
+      this.fetchData()
+    }
   },
   methods: {
     ...mapActions(useFilesStore, [
       'asyncGetFiles',
       'selectFile',
       'changeDialogComponent',
+      'changeLoadingStatus',
     ]),
     async fetchData() {
       if (!this.currentStorage?.Type) {

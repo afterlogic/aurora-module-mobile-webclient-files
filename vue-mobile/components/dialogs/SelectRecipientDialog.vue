@@ -19,14 +19,7 @@
     </template>
     <template v-slot:content>
       <div class="q-px-lg" style="margin-top: 32px">
-        <div v-if="isWaitingContacts" class="flex items-center justify-center">
-          <q-circular-progress
-              indeterminate
-              size="40px"
-              color="primary"
-              class="q-ma-md"
-          />
-        </div>
+        <AppListLoader v-if="isWaitingContacts" />
         <q-scroll-area v-else class="full-width" :thumb-style="{width: '0'}" style="height: 300px">
           <div>
             <AppContactItem
@@ -45,6 +38,7 @@
 <script>
 import AppDialog from "components/common/AppDialog";
 import AppContactItem from "components/common/AppContactItem";
+import AppListLoader from "components/common/AppListLoader";
 import KeyIcon from "components/common/icons/KeyIcon";
 
 export default {
@@ -52,7 +46,8 @@ export default {
   components: {
     KeyIcon,
     AppDialog,
-    AppContactItem
+    AppContactItem,
+    AppListLoader,
   },
   props: {
     onGetContacts: { type: Function, default: null }
