@@ -1,14 +1,14 @@
 <template>
   <!-- <q-dialog v-model="openDialog" position="bottom"> -->
   <q-dialog data-test-id="files-item-menu" position="bottom">
-    <q-card class="menu card-radius" v-if="file" style="min-height: 301px; overflow: hidden">
-      <q-card-section class="row items-center no-wrap" style="min-height: 50px;">
+    <q-card class="menu card-radius" v-if="file">
+      <q-card-section class="row items-center no-wrap">
         <div>
           <div class="menu__title">{{ file.name }}</div>
         </div>
       </q-card-section>
       <q-separator />
-      <q-list style="height: 250px" class="scroll">
+      <q-list>
         <div v-for="action in actions" :key="action.name">
           <q-item
             v-if="isShowAction(action)"

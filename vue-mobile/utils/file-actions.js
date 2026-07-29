@@ -120,6 +120,32 @@ export const fileActions = {
     icon: 'CopyMoveIcon',
     isShowAction: isShowAction,
   },
+  addToFavorites: {
+    method: async () => {
+      const filesStore = useFilesStore()
+      await filesStore.asyncToggleFavorite({
+        item: filesStore.currentFile,
+        add: true,
+      })
+    },
+    name: 'addToFavorites',
+    displayNameKey: 'FILESWEBCLIENT.ACTION_ADD_TO_FAVORITES',
+    icon: 'FavoriteIcon',
+    isShowAction: isShowAction,
+  },
+  removeFromFavorites: {
+    method: async () => {
+      const filesStore = useFilesStore()
+      await filesStore.asyncToggleFavorite({
+        item: filesStore.currentFile,
+        add: false,
+      })
+    },
+    name: 'removeFromFavorites',
+    displayNameKey: 'FILESWEBCLIENT.ACTION_REMOVE_FROM_FAVORITES',
+    icon: 'FavoriteIcon',
+    isShowAction: isShowAction,
+  },
   createShareableLink: {
     method: null,
     name: 'createShareableLink',
@@ -207,32 +233,6 @@ export const fileActions = {
     getComponent: () => { return defineAsyncComponent(() => import('../components/dialogs/RestoreItemsDialog')) },
     displayNameKey: 'FILESWEBCLIENT.ACTION_RESTORE',
     icon: 'RestoreIcon',
-    isShowAction: isShowAction,
-  },
-  addToFavorites: {
-    method: async () => {
-      const filesStore = useFilesStore()
-      await filesStore.asyncToggleFavorite({
-        item: filesStore.currentFile,
-        add: true,
-      })
-    },
-    name: 'addToFavorites',
-    displayNameKey: 'FILESWEBCLIENT.ACTION_ADD_TO_FAVORITES',
-    icon: 'FavoriteIcon',
-    isShowAction: isShowAction,
-  },
-  removeFromFavorites: {
-    method: async () => {
-      const filesStore = useFilesStore()
-      await filesStore.asyncToggleFavorite({
-        item: filesStore.currentFile,
-        add: false,
-      })
-    },
-    name: 'removeFromFavorites',
-    displayNameKey: 'FILESWEBCLIENT.ACTION_REMOVE_FROM_FAVORITES',
-    icon: 'FavoriteIcon',
     isShowAction: isShowAction,
   },
 }
