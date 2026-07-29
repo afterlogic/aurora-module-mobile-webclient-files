@@ -21,7 +21,7 @@
       <ButtonDialog
           data-test-id="files-rename-submit"
           class="q-mb-sm q-mr-sm"
-          :saving="saving"
+          :saving="submitDisabled"
           :action="renameItem"
           :label="$t('FILESWEBCLIENT.ACTION_RENAME')"
       />
@@ -53,35 +53,51 @@ export default {
     placeholder() {
       return this.file.isFolder ? 'Folder name' : 'File name'
     },
+    submitDisabled() {
+      return this.saving || this.blockedAfterError
+    },
   },
   data() {
     return {
       itemName: this.file.name,
       openDialog: false,
       saving: false,
+      blockedAfterError: false,
     }
   },
   watch: {
     dialog(val) {
       this.openDialog = val
+      if (val) {
+        this.itemName = this.file?.name || ''
+        this.saving = false
+        this.blockedAfterError = false
+      }
+    },
+    itemName() {
+      if (this.blockedAfterError) {
+        this.blockedAfterError = false
+      }
     },
   },
   methods: {
     ...mapActions(useFilesStore, ['asyncRenameItem', 'changeFileName']),
     async renameItem() {
-      if (this.itemName.length) {
-        if (!this.saving) {
-          this.saving = true
-          const result = await this.asyncRenameItem({
-            file: this.file,
-            itemName: this.itemName,
-          })
-          if (result) {
-            await this.changeFileName(this.itemName)
-            this.openDialog = false
-            this.$emit('closeDialog')
-          }
-        }
+      if (!this.itemName.length || this.submitDisabled) {
+        return
+      }
+      this.saving = true
+      const result = await this.asyncRenameItem({
+        file: this.file,
+        itemName: this.itemName,
+      })
+      this.saving = false
+      if (result) {
+        await this.changeFileName(this.itemName)
+        this.openDialog = false
+        this.$emit('closeDialog')
+      } else {
+        this.blockedAfterError = true
       }
     },
     cancelDialog() {

@@ -23,7 +23,7 @@
       <ButtonDialog
         data-test-id="files-create-folder-submit"
         class="q-ma-sm"
-        :saving="saving"
+        :saving="submitDisabled"
         :action="createFolder"
         :label="$t('COREWEBCLIENT.ACTION_CREATE')"
       />
@@ -62,12 +62,29 @@ export default {
       folderName: '',
       openDialog: false,
       saving: false,
+      blockedAfterError: false,
     }
+  },
+
+  computed: {
+    submitDisabled() {
+      return this.saving || this.blockedAfterError
+    },
   },
 
   watch: {
     dialog(val) {
       this.openDialog = val
+      if (val) {
+        this.folderName = ''
+        this.saving = false
+        this.blockedAfterError = false
+      }
+    },
+    folderName() {
+      if (this.blockedAfterError) {
+        this.blockedAfterError = false
+      }
     },
   },
 
@@ -75,19 +92,23 @@ export default {
     ...mapActions(useFilesStore, ['asyncCreateFolder', 'asyncGetFiles']),
 
     async createFolder() {
-      if (!this.saving) {
-        if (validateFileOrFolderName(this.folderName)) {
-          this.saving = true
-          const result = await this.asyncCreateFolder({ name: this.folderName })
-          if (result) {
-            this.$emit('closeDialog')
-            await this.asyncGetFiles()
-          }
+      if (this.submitDisabled) {
+        return
+      }
+      if (validateFileOrFolderName(this.folderName)) {
+        this.saving = true
+        const result = await this.asyncCreateFolder({ name: this.folderName })
+        this.saving = false
+        if (result) {
+          this.$emit('closeDialog')
+          await this.asyncGetFiles()
         } else {
-          notification.showError(
-            i18n.global.tc('FILESWEBCLIENT.ERROR_INVALID_FOLDER_NAME')
-          )
+          this.blockedAfterError = true
         }
+      } else {
+        notification.showError(
+          i18n.global.tc('FILESWEBCLIENT.ERROR_INVALID_FOLDER_NAME')
+        )
       }
     },
 
