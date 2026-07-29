@@ -69,6 +69,8 @@ export default {
         } else {
           this.isShowDialog = false
         }
+      } else if (!value) {
+        this.isShowDialog = false
       }
     },
     isShowDialog(v) {
