@@ -1,9 +1,9 @@
-// import _ from 'lodash'
-// import typesUtils from 'src/utils/types'
+import types from 'src/utils/types'
 
 class FilesSettings {
   constructor (appData) {
-    // const filesData = typesUtils.pObject(appData.Files)
+    const filesData = types.pObject(appData.Files)
+    this.allowFavorites = types.pBool(filesData.AllowFavorites, true)
   }
 }
 
@@ -13,4 +13,8 @@ export default {
   init (appData) {
     settings = new FilesSettings(appData)
   },
+}
+
+export const getFilesSettings = () => {
+  return settings
 }

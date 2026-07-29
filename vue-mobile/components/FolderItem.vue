@@ -17,8 +17,9 @@
 
     <q-item-section class="list-item__text">
       <q-item-label class="list-item__text_primary folder__name">{{ folderName }}</q-item-label>
-      <q-item-label v-if="isShared" class="list-item__text_secondary folder__info">
-        <SharedItemIcon class="folder__info-icon_shared" />
+      <q-item-label v-if="isShared || folder.favorite" class="list-item__text_secondary folder__info">
+        <SharedItemIcon v-if="isShared" class="folder__info-icon_shared" />
+        <FavoriteItemIcon v-if="folder.favorite" class="folder__info-icon_favorite" />
       </q-item-label>
     </q-item-section>
 
@@ -39,11 +40,12 @@
 import { mapGetters, mapActions } from 'pinia'
 import { useFilesStore } from '../store/index-pinia'
 
-import { getShortName } from '../utils/common'
+import { getShortName, getItemStorageType } from '../utils/common'
 
 import { SHARING_LEVELS } from '../enums'
 import FolderIcon from './icons/FolderIcon'
 import SharedItemIcon from './icons/item/SharedItemIcon'
+import FavoriteItemIcon from './icons/item/FavoriteItemIcon'
 import ShareWithMeItemIcon from './icons/ShareWithMeItemIcon'
 import AppItem from 'src/components/common/AppItem'
 
@@ -52,6 +54,7 @@ export default {
   components: {
     FolderIcon,
     SharedItemIcon,
+    FavoriteItemIcon,
     ShareWithMeItemIcon,
     AppItem
   },
@@ -90,7 +93,7 @@ export default {
           name: this.folder.name,
         }
 
-        const storageId = this.currentStorage?.Type || this.contact?.storage
+        const storageId = getItemStorageType(this.folder, this.currentStorage?.Type) || this.folder?.storage
         if (storageId) {
           await this.$router.push({ path: `/files/${storageId}${this.folder.fullPath}/` })
         }
@@ -139,7 +142,8 @@ export default {
 
   &__info-icon_encrypted,
   &__info-icon_shared,
-  &__info-icon_link {
+  &__info-icon_link,
+  &__info-icon_favorite {
     fill: $secondary;
   }
 }

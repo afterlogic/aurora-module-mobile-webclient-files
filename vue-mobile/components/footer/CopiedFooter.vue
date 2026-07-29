@@ -12,6 +12,7 @@
             @click="cancel"
         />
         <AppButton
+            v-if="isCopyMoveAllowed"
             data-test-id="files-copymove-copy"
             size="15px"
             flat
@@ -40,6 +41,7 @@ import {mapActions, mapGetters} from 'pinia'
 import { useFilesStore } from '../../store/index-pinia'
 
 import AppButton from 'components/common/AppButton'
+import { STORAGE_TYPES } from '../../enums'
 
 export default {
   name: 'CopiedFooter',
@@ -49,8 +51,13 @@ export default {
   computed: {
     ...mapGetters(useFilesStore, ['currentStorage', 'copiedFiles']),
     showMoveAction() {
-      return this.currentStorage.Type !== 'shared' && this.copiedFiles[0].type !== 'shared'
-    }
+      return this.currentStorage.Type !== STORAGE_TYPES.SHARED
+        && this.currentStorage.Type !== STORAGE_TYPES.FAVORITES
+        && this.copiedFiles[0].type !== STORAGE_TYPES.SHARED
+    },
+    isCopyMoveAllowed() {
+      return this.currentStorage.Type !== STORAGE_TYPES.FAVORITES
+    },
   },
   methods: {
     ...mapActions(useFilesStore, ['removeCopiedFiles', 'copyItems', 'moveItems']),

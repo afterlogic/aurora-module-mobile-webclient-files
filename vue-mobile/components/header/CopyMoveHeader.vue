@@ -18,7 +18,11 @@
       Move files/folders
     </div>
     <div class="col app-header__right">
-      <AppHeaderButton icon="create_new_folder" @click="createFolder" />
+      <AppHeaderButton
+        v-if="isCreateAllowed"
+        icon="create_new_folder"
+        @click="createFolder"
+      />
       <div class="dropdown-more flex justify-center items-center">
         <q-btn-dropdown v-close-popup :menu-offset="[8, -45]" flat unelevated dense>
           <template v-slot:label>
@@ -26,7 +30,7 @@
           </template>
           <q-list v-close-popup style="width: 205px; min-height: 55px">
             <StorageItem
-                v-for="storage in storageList"
+                v-for="storage in copyTargetStorages"
                 :key="storage"
                 :storage="storage"
             />
@@ -44,6 +48,7 @@ import { useFilesStore } from '../../store/index-pinia'
 import StorageItem from '../StorageItem'
 import ActionIcon from '../common/ActionIcon'
 import AppHeaderButton from 'src/components/common/AppHeaderButton'
+import { STORAGE_TYPES } from '../../enums'
 
 export default {
   name: 'CopyMoveHeader',
@@ -53,7 +58,10 @@ export default {
     AppHeaderButton,
   },
   computed: {
-    ...mapGetters(useFilesStore, ['copiedFiles', 'currentPath', 'storageList']),
+    ...mapGetters(useFilesStore, ['copiedFiles', 'currentPath', 'storageList', 'isCreateAllowed']),
+    copyTargetStorages() {
+      return this.storageList.filter((storage) => storage.Type !== STORAGE_TYPES.FAVORITES)
+    },
   },
   methods: {
     ...mapActions(useFilesStore, [

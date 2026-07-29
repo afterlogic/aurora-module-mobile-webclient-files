@@ -1,7 +1,7 @@
 import types from 'src/utils/types'
 import { getApiHost } from 'src/api/helpers'
 import { fileFormats } from './formats'
-import { STORAGE_ICON_NAMES } from '../enums'
+import { STORAGE_ICON_NAMES, STORAGE_TYPES } from '../enums'
 
 export const getStorageIconName = (storageType) => {
   const key = (storageType || '').toLowerCase()
@@ -97,9 +97,17 @@ const parseFile = (file) => {
     isImg: isImg(types.pString(file.Name)),
     isArchive: !!file?.Actions?.list,
     sharedWithMeAccess: types.pInt(file?.ExtendedProps?.SharedWithMeAccess),
+    favorite: types.pBool(file.IsFavorite),
     decryptionProgress: false,
     iconName: file.IsFolder ? 'Folder' : getPreviewIconName({ name: types.pString(file.Name), paranoidKey: types.pString(file?.ExtendedProps?.ParanoidKey) }),
   }
+}
+
+export const getItemStorageType = (item, currentStorageType) => {
+  if (currentStorageType === STORAGE_TYPES.FAVORITES && item?.type) {
+    return item.type
+  }
+  return currentStorageType
 }
 
 export const parseUploadedFile = (file, path, storage) => {

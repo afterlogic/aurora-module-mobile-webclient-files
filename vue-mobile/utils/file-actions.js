@@ -2,10 +2,15 @@ import eventBus from 'src/event-bus'
 import { useFilesStore} from '../store/index-pinia'
 import { defineAsyncComponent } from 'vue'
 
-import { SHARING_LEVELS } from '../enums'
+import { SHARING_LEVELS, STORAGE_TYPES } from '../enums'
+import { getFilesSettings } from '../settings'
 
 const isArchiveElement = (path) => {
   return path.split('.')[path.split('.').length - 1] === 'zip'
+}
+
+const isAllowFavorites = () => {
+  return getFilesSettings()?.allowFavorites !== false
 }
 
 const isShowAction = (action, items = [], storage, path) => {
@@ -13,6 +18,18 @@ const isShowAction = (action, items = [], storage, path) => {
   let result = true
   if (items.length && storage && items[0]) {
     switch (action) {
+      case 'addToFavorites':
+        if (!isAllowFavorites()) result = false
+        if (storage !== STORAGE_TYPES.PERSONAL) result = false
+        if (items[0].favorite) result = false
+        if (isArchiveElement(path)) result = false
+        break
+      case 'removeFromFavorites':
+        if (!isAllowFavorites()) result = false
+        if (!items[0].favorite) result = false
+        if (storage !== STORAGE_TYPES.PERSONAL && storage !== STORAGE_TYPES.FAVORITES) result = false
+        if (isArchiveElement(path)) result = false
+        break
       case 'copy':
         if (isArchiveElement(path)) result = false
         break
@@ -126,6 +143,32 @@ export const fileActions = {
     getComponent: () => { return defineAsyncComponent(() => import('../components/dialogs/DeleteItemsDialog')) },
     displayNameKey: 'COREWEBCLIENT.ACTION_DELETE',
     icon: 'DeleteIcon',
+    isShowAction: isShowAction,
+  },
+  addToFavorites: {
+    method: async () => {
+      const filesStore = useFilesStore()
+      await filesStore.asyncToggleFavorite({
+        item: filesStore.currentFile,
+        add: true,
+      })
+    },
+    name: 'addToFavorites',
+    displayNameKey: 'FILESWEBCLIENT.ACTION_ADD_TO_FAVORITES',
+    icon: 'FavoriteIcon',
+    isShowAction: isShowAction,
+  },
+  removeFromFavorites: {
+    method: async () => {
+      const filesStore = useFilesStore()
+      await filesStore.asyncToggleFavorite({
+        item: filesStore.currentFile,
+        add: false,
+      })
+    },
+    name: 'removeFromFavorites',
+    displayNameKey: 'FILESWEBCLIENT.ACTION_REMOVE_FROM_FAVORITES',
+    icon: 'FavoriteIcon',
     isShowAction: isShowAction,
   },
 }

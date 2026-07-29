@@ -5,6 +5,15 @@ export const SHARING_LEVELS = {
   NOACCESS: 0,
 }
 
+export const STORAGE_TYPES = {
+  PERSONAL: 'personal',
+  CORPORATE: 'corporate',
+  SHARED: 'shared',
+  ENCRYPTED: 'encrypted',
+  FAVORITES: 'favorites',
+  TRASH: 'trash',
+}
+
 export const STORAGE_ICON_NAMES = {
   personal: 'Personal',
   corporate: 'Corporate',

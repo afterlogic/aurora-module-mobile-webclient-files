@@ -183,4 +183,26 @@ export default {
       .then(result => result)
       .catch(error => false)
   },
+
+  addToFavorites: async (parameters) => {
+    return webApi.sendRequest({
+      moduleName: 'Files',
+      methodName: 'AddToFavorites',
+      parameters: parameters,
+      defaultErrorText: i18n.global.t('FILESWEBCLIENT.ERROR_FAVORITE_NOT_SET'),
+    })
+      .then(result => result)
+      .catch(() => false)
+  },
+
+  removeFromFavorites: async (parameters) => {
+    return webApi.sendRequest({
+      moduleName: 'Files',
+      methodName: 'RemoveFromFavorites',
+      parameters: parameters,
+      defaultErrorText: i18n.global.t('FILESWEBCLIENT.ERROR_FAVORITE_NOT_SET'),
+    })
+      .then(result => result)
+      .catch(() => false)
+  },
 }

@@ -27,6 +27,7 @@
         <EncryptedItemIcon v-if="file.paranoidKey" class="file__info-icon_encrypted"/>
         <SharedItemIcon v-if="isShared" class="file__info-icon_shared" width="14" height="14" />
         <LinkItemIcon v-if="file.publicLink" class="file__info-icon_link"/>
+        <FavoriteItemIcon v-if="file.favorite" class="file__info-icon_favorite"/>
         <span class="file__size">{{ fileSize }}</span>
         <span class="file__separator">|</span>
         <span class="file__date">{{ fileDate }}</span>
@@ -56,7 +57,7 @@ import text from 'src/utils/text'
 import date from 'src/utils/date'
 import { getApiHost } from 'src/api/helpers'
 
-import { getShortName } from '../utils/common'
+import { getShortName, getItemStorageType } from '../utils/common'
 
 import { SHARING_LEVELS } from '../enums'
 import AppItem from 'src/components/common/AppItem'
@@ -64,6 +65,7 @@ import FileItemIcon from './icons/FileItemIcon'
 import DownloadingProgress from './common/DownloadingProgress'
 import EncryptedItemIcon from './icons/item/EncryptedItemIcon'
 import LinkItemIcon from './icons/item/LinkItemIcon'
+import FavoriteItemIcon from './icons/item/FavoriteItemIcon'
 import SharedItemIcon from './icons/item/SharedItemIcon'
 import ShareWithMeItemIcon from './icons/ShareWithMeItemIcon'
 
@@ -75,6 +77,7 @@ export default {
     DownloadingProgress,
     EncryptedItemIcon,
     LinkItemIcon,
+    FavoriteItemIcon,
     SharedItemIcon,
     AppItem
   },
@@ -146,7 +149,7 @@ export default {
         !this.file.downloading &&
         !this.isArchive
       ) {
-        const storageId = this.currentStorage?.Type || this.file?.storage
+        const storageId = getItemStorageType(this.file, this.currentStorage?.Type) || this.file?.storage
         if (storageId) {
           this.selectFile(this.file)
           this.$router.push({ path: `/files/${storageId}${this.file.path}/${this.file.id}` })
@@ -202,13 +205,15 @@ export default {
   }
   &__info-icon_encrypted,
   &__info-icon_shared,
-  &__info-icon_link {
+  &__info-icon_link,
+  &__info-icon_favorite {
     fill: $secondary;
   }
 
   .list-item__selected &__info-icon_encrypted,
   .list-item__selected &__info-icon_shared,
-  .list-item__selected &__info-icon_link {
+  .list-item__selected &__info-icon_link,
+  .list-item__selected &__info-icon_favorite {
     fill: #000;
   }
   // &__size,

@@ -43,6 +43,30 @@
           </template>
           <q-list style="width: 205px; min-height: 55px">
             <q-item
+              v-if="isShowAction(actions.addToFavorites)"
+              data-test-id="files-menu-add-favorite"
+              clickable
+              v-close-popup
+              @click="onPerformAction(actions.addToFavorites)"
+            >
+              <ActionIcon class="q-mr-md" :icon="actions.addToFavorites.icon" />
+              <q-item-section>
+                {{ $t(actions.addToFavorites.displayNameKey) }}
+              </q-item-section>
+            </q-item>
+            <q-item
+              v-if="isShowAction(actions.removeFromFavorites)"
+              data-test-id="files-menu-remove-favorite"
+              clickable
+              v-close-popup
+              @click="onPerformAction(actions.removeFromFavorites)"
+            >
+              <ActionIcon class="q-mr-md" :icon="actions.removeFromFavorites.icon" />
+              <q-item-section>
+                {{ $t(actions.removeFromFavorites.displayNameKey) }}
+              </q-item-section>
+            </q-item>
+            <q-item
               v-if="isShowAction(actions.shareWithTeammates)"
               data-test-id="files-menu-share"
               clickable
@@ -128,7 +152,10 @@ export default {
       'currentPathString'
     ]),
     isShowDropdown() {
-      return this.currentStorage.Type !== 'shared' || this.isShowAction(this.actions.shareLeave)
+      return this.currentStorage.Type !== 'shared'
+        || this.isShowAction(this.actions.shareLeave)
+        || this.isShowAction(this.actions.addToFavorites)
+        || this.isShowAction(this.actions.removeFromFavorites)
     },
   },
   watch: {

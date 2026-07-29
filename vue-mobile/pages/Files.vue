@@ -51,6 +51,7 @@ export default {
       'currentStorage',
       'currentHeader',
       'dialogComponent',
+      'isCreateAllowed',
     ]),
     appButtonRotate() {
       return this.dialogComponent?.component === 'CreateButtonsDialogs'
@@ -61,7 +62,7 @@ export default {
       // && !this.isSelectMode
       && !this.copiedFiles.length
       && (this.$route.name === 'file-list' || this.$route.name === 'files')
-      && this.currentStorage?.Type !== 'shared'
+      && this.isCreateAllowed
     },
     fileListHeight() {
       if (this.currentHeader === 'SearchHeader') return 'files__list-search'

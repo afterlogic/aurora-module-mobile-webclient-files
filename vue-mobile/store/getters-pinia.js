@@ -1,11 +1,17 @@
 import { getFilteredItems, getStorageIconName } from '../utils/common'
 import { pathSegmentsToApiPath } from '../utils/path'
+import { STORAGE_TYPES } from '../enums'
 
 export default {
   // Do not add getters with the same name as state (e.g. currentPath):
   // Pinia then shadows state and assignments like this.currentPath = ... break.
   currentPathString: (state) => pathSegmentsToApiPath(state.currentPath),
   currentStorageIconName: (state) => getStorageIconName(state.currentStorage?.Type),
+  isFavoritesStorage: (state) => state.currentStorage?.Type === STORAGE_TYPES.FAVORITES,
+  isCreateAllowed: (state) => {
+    const storageType = state.currentStorage?.Type
+    return storageType !== STORAGE_TYPES.SHARED && storageType !== STORAGE_TYPES.FAVORITES
+  },
   loadingStatus: (state) => state.isLoading,
   isArchive: (state) => {
     return false

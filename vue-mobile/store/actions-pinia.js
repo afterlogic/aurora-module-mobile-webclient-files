@@ -15,6 +15,7 @@ import {
 } from '../../../ContactsMobileWebclient/vue-mobile/utils/common'
 import openpgpWebApi from '../../../OpenPgpMobileWebclient/vue-mobile/openpgp-web-api'
 import { normalizeRoutePath } from '../utils/path'
+import { STORAGE_TYPES } from '../enums'
 
 let getFilesRequestId = 0
 
@@ -75,8 +76,11 @@ export default {
     this.currentPath = normalizeRoutePath(path)
   },
   async asyncRenameItem({ file, itemName }) {
+    const storageType = this.currentStorage?.Type === STORAGE_TYPES.FAVORITES && file?.type
+      ? file.type
+      : this.currentStorage?.Type
     const parameters = {
-      Type: this.currentStorage?.Type,
+      Type: storageType,
       Path: file.path,
       Name: file.name,
       NewName: itemName,
@@ -113,8 +117,11 @@ export default {
   },
   
   async asyncDeleteItems({ items }) {
+    const storageType = this.currentStorage?.Type === STORAGE_TYPES.FAVORITES && items[0]?.type
+      ? items[0].type
+      : this.currentStorage?.Type
     const parameters = {
-      Type: this.currentStorage?.Type,
+      Type: storageType,
       Path: this.currentPathString,
       Items: items,
     }
@@ -362,5 +369,38 @@ export default {
       return result?.Shares
     }
     return false
-  }
+  },
+
+  async asyncToggleFavorite({ item, add }) {
+    const parameters = {
+      Items: [{
+        Type: STORAGE_TYPES.PERSONAL,
+        Path: item.path,
+        Name: item.name,
+      }],
+    }
+    const originalState = item.favorite
+    item.favorite = add
+
+    const result = add
+      ? await filesWebApi.addToFavorites(parameters)
+      : await filesWebApi.removeFromFavorites(parameters)
+
+    if (add) {
+      item.favorite = !!result
+    } else {
+      item.favorite = !result
+    }
+
+    if (!result) {
+      item.favorite = originalState
+      return false
+    }
+
+    if (!add && this.currentStorage?.Type === STORAGE_TYPES.FAVORITES) {
+      this.changeItemsLists({ items: [item] })
+    }
+
+    return true
+  },
 }
