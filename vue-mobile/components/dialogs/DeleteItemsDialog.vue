@@ -1,5 +1,4 @@
 <template>
-  <!-- <app-dialog v-model="openDialog" :close="closeDialog"> -->
   <AppDialog data-test-id="files-delete-dialog" :close="closeDialog">
     <template v-slot:content>
       <div class="dialog__title-text q-ma-lg">
@@ -47,6 +46,14 @@ export default {
   
   computed: {
     ...mapGetters(useFilesStore, ['selectedFiles']),
+    itemsToDelete() {
+      if (this.selectedFiles.length > 1) {
+        return this.selectedFiles.filter(
+          (file) => file.sharedWithMeAccess === SHARING_LEVELS.NOACCESS
+        )
+      }
+      return this.file ? [this.file] : []
+    },
     title() {
       if (this.selectedFiles.length > 1) {
         return this.$tc(
@@ -67,24 +74,11 @@ export default {
     },
     async deleteItems() {
       this.saving = true
-      const items = []
-      if (this.selectedFiles.length > 1) {
-        this.selectedFiles.forEach((file) => {
-          if (file.sharedWithMeAccess === SHARING_LEVELS.NOACCESS) {
-            items.push({
-              Path: file.path,
-              Name: file.name,
-              IsFolder: file.isFolder,
-            })
-          }
-        })
-      } else {
-        items.push({
-          Path: this.file.path,
-          Name: this.file.name,
-          IsFolder: this.file.isFolder,
-        })
-      }
+      const items = this.itemsToDelete.map((file) => ({
+        Path: file.path,
+        Name: file.name,
+        IsFolder: file.isFolder,
+      }))
       const result = await this.asyncDeleteItems({ items })
       if (result) {
         await this.changeItemsLists({

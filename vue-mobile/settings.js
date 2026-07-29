@@ -4,6 +4,7 @@ class FilesSettings {
   constructor (appData) {
     const filesData = types.pObject(appData.Files)
     this.allowFavorites = types.pBool(filesData.AllowFavorites, true)
+    this.allowTrash = types.pBool(filesData.AllowTrash, true)
   }
 }
 

@@ -8,9 +8,12 @@ export default {
   currentPathString: (state) => pathSegmentsToApiPath(state.currentPath),
   currentStorageIconName: (state) => getStorageIconName(state.currentStorage?.Type),
   isFavoritesStorage: (state) => state.currentStorage?.Type === STORAGE_TYPES.FAVORITES,
+  isTrashStorage: (state) => state.currentStorage?.Type === STORAGE_TYPES.TRASH,
   isCreateAllowed: (state) => {
     const storageType = state.currentStorage?.Type
-    return storageType !== STORAGE_TYPES.SHARED && storageType !== STORAGE_TYPES.FAVORITES
+    return storageType !== STORAGE_TYPES.SHARED
+      && storageType !== STORAGE_TYPES.FAVORITES
+      && storageType !== STORAGE_TYPES.TRASH
   },
   loadingStatus: (state) => state.isLoading,
   isArchive: (state) => {

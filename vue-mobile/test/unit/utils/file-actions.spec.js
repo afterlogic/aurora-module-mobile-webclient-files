@@ -1,12 +1,25 @@
-import { describe, expect, it } from 'vitest'
-import { fileActions } from 'utils/file-actions.js'
+import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
+import { fileActions, shouldShowDeleteConfirm } from 'utils/file-actions.js'
 import { SHARING_LEVELS } from '../../../enums.js'
+import { getFilesSettings } from '../../../settings.js'
+
+vi.mock('../../../settings.js', () => ({
+  getFilesSettings: vi.fn(),
+}))
 
 describe('fileActions.isShowAction', () => {
   const show = (name, items, storage, path) =>
     fileActions[name].isShowAction(name, items, storage, path)
 
   const file = { isFolder: false, sharedWithMeAccess: SHARING_LEVELS.NOACCESS }
+
+  beforeEach(() => {
+    getFilesSettings.mockReturnValue({ allowFavorites: true, allowTrash: true })
+  })
+
+  afterEach(() => {
+    vi.clearAllMocks()
+  })
 
   it('hides copy/rename/delete inside zip path', () => {
     expect(show('copy', [file], 'personal', '/a.zip')).toBe(false)
@@ -34,5 +47,43 @@ describe('fileActions.isShowAction', () => {
         '/f.txt'
       )
     ).toBe(true)
+  })
+
+  it('shows restore only in trash', () => {
+    expect(show('restore', [file], 'personal', '/f.txt')).toBe(false)
+    expect(show('restore', [file], 'trash', '/f.txt')).toBe(true)
+  })
+
+  it('hides copy/rename/share actions in trash', () => {
+    expect(show('copy', [file], 'trash', '/f.txt')).toBe(false)
+    expect(show('rename', [file], 'trash', '/f.txt')).toBe(false)
+    expect(show('createShareableLink', [file], 'trash', '/f.txt')).toBe(false)
+    expect(show('shareWithTeammates', [file], 'trash', '/f.txt')).toBe(false)
+    expect(show('delete', [file], 'trash', '/f.txt')).toBe(true)
+  })
+})
+
+describe('shouldShowDeleteConfirm', () => {
+  beforeEach(() => {
+    getFilesSettings.mockReturnValue({ allowTrash: true })
+  })
+
+  afterEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('does not confirm soft-delete from regular storage', () => {
+    expect(shouldShowDeleteConfirm('personal')).toBe(false)
+    expect(shouldShowDeleteConfirm('corporate')).toBe(false)
+    expect(shouldShowDeleteConfirm('favorites')).toBe(false)
+  })
+
+  it('confirms permanent delete from trash', () => {
+    expect(shouldShowDeleteConfirm('trash')).toBe(true)
+  })
+
+  it('confirms delete when trash is disabled', () => {
+    getFilesSettings.mockReturnValue({ allowTrash: false })
+    expect(shouldShowDeleteConfirm('personal')).toBe(true)
   })
 })

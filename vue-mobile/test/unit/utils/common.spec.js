@@ -5,7 +5,10 @@ import {
   formatHintText,
   getFiles,
   getFolders,
+  resolveDeleteStorageType,
+  isSharedWithOthers,
 } from 'utils/common.js'
+import { STORAGE_TYPES } from '../../../enums.js'
 
 describe('files common utils (pure helpers)', () => {
   describe('getShortName', () => {
@@ -39,6 +42,21 @@ describe('files common utils (pure helpers)', () => {
     it('splits files and folders by isFolder', () => {
       expect(getFiles(items).map((i) => i.name)).toEqual(['f'])
       expect(getFolders(items).map((i) => i.name)).toEqual(['d'])
+    })
+  })
+
+  describe('resolveDeleteStorageType', () => {
+    it('uses item type for favorites and trash', () => {
+      expect(resolveDeleteStorageType(STORAGE_TYPES.TRASH, { type: 'personal' })).toBe('personal')
+      expect(resolveDeleteStorageType(STORAGE_TYPES.FAVORITES, { type: 'corporate' })).toBe('corporate')
+      expect(resolveDeleteStorageType(STORAGE_TYPES.PERSONAL, { type: 'corporate' })).toBe('personal')
+    })
+  })
+
+  describe('isSharedWithOthers', () => {
+    it('detects non-empty shares', () => {
+      expect(isSharedWithOthers({ shares: [] })).toBe(false)
+      expect(isSharedWithOthers({ shares: [{ PublicId: 'a' }] })).toBe(true)
     })
   })
 })

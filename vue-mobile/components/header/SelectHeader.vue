@@ -12,10 +12,18 @@
     </div>
     <div class="col app-header__right">
       <ActionIcon
+        v-if="isShowAction(actions.copy)"
         data-test-id="files-select-copy"
         @click="copyItems"
         class="q-mr-md"
         :icon="actions.copy.icon"
+      />
+      <ActionIcon
+        v-if="isShowAction(actions.restore)"
+        data-test-id="files-select-restore"
+        class="q-mr-md"
+        @click="onPerformAction(actions.restore)"
+        :icon="actions.restore.icon"
       />
       <div v-if="isShowAction(actions.shareLeave) && sharedFiles.length" class="flex no-wrap">
         <ActionIcon
@@ -100,6 +108,8 @@ export default {
         this.changeDialogComponent({ getComponent: action.getComponent})
       } else if (action.component) {
         this.changeDialogComponent({ component: action.component })
+      } else if (action.method) {
+        action.method(this)
       }
     }
   },

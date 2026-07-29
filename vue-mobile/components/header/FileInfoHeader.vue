@@ -23,6 +23,13 @@
           @click="onPerformAction(actions.download)"
       />
       <ActionIcon
+          v-if="isShowAction(actions.restore)"
+          data-test-id="files-view-restore"
+          class="q-mr-lg"
+          icon="RestoreIcon"
+          @click="onPerformAction(actions.restore)"
+      />
+      <ActionIcon
           v-if="isShowAction(actions.delete)"
           data-test-id="files-view-delete"
           class="q-mr-lg"
@@ -152,7 +159,12 @@ export default {
       'currentPathString'
     ]),
     isShowDropdown() {
-      return this.currentStorage.Type !== 'shared'
+      if (!this.actions) {
+        return false
+      }
+      return this.isShowAction(this.actions.copy)
+        || this.isShowAction(this.actions.rename)
+        || this.isShowAction(this.actions.shareWithTeammates)
         || this.isShowAction(this.actions.shareLeave)
         || this.isShowAction(this.actions.addToFavorites)
         || this.isShowAction(this.actions.removeFromFavorites)

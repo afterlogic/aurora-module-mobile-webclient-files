@@ -13,6 +13,40 @@ const isAllowFavorites = () => {
   return getFilesSettings()?.allowFavorites !== false
 }
 
+const isAllowTrash = () => {
+  return getFilesSettings()?.allowTrash !== false
+}
+
+export const shouldShowDeleteConfirm = (storage) => {
+  if (storage === STORAGE_TYPES.TRASH) {
+    return true
+  }
+  return !isAllowTrash()
+}
+
+const getDeletableItems = (filesStore) => {
+  if (filesStore.selectedFiles?.length) {
+    return filesStore.selectedFiles.filter(
+      (item) => item.sharedWithMeAccess === SHARING_LEVELS.NOACCESS
+    )
+  }
+  return filesStore.currentFile ? [filesStore.currentFile] : []
+}
+
+const buildDeleteApiItems = (items) => {
+  return items.map((file) => ({
+    Path: file.path,
+    Name: file.name,
+    IsFolder: file.isFolder,
+  }))
+}
+
+const openDeleteDialog = (filesStore) => {
+  filesStore.changeDialogComponent({
+    getComponent: () => defineAsyncComponent(() => import('../components/dialogs/DeleteItemsDialog')),
+  })
+}
+
 const isShowAction = (action, items = [], storage, path) => {
 
   let result = true
@@ -31,15 +65,16 @@ const isShowAction = (action, items = [], storage, path) => {
         if (isArchiveElement(path)) result = false
         break
       case 'copy':
+        if (storage === STORAGE_TYPES.TRASH) result = false
         if (isArchiveElement(path)) result = false
         break
       case 'createShareableLink':
-        if (storage === 'shared') result = false
+        if (storage === STORAGE_TYPES.SHARED || storage === STORAGE_TYPES.TRASH) result = false
         if (isArchiveElement(path)) result = false
         if (items[0].sharedWithMeAccess !== SHARING_LEVELS.NOACCESS) result = false
         break
       case 'shareWithTeammates':
-        if (storage === 'corporate') result = false
+        if (storage === STORAGE_TYPES.CORPORATE || storage === STORAGE_TYPES.TRASH) result = false
         if (items[0].sharedWithMeAccess !== SHARING_LEVELS.RESHARE && items[0].sharedWithMeAccess !== SHARING_LEVELS.NOACCESS) result = false
         if (isArchiveElement(path)) result = false
         break
@@ -47,10 +82,15 @@ const isShowAction = (action, items = [], storage, path) => {
         if (items[0].isFolder) result = false
         break
       case 'rename':
+        if (storage === STORAGE_TYPES.TRASH) result = false
         if (isArchiveElement(path)) result = false
         break
       case 'delete':
-        if (storage === 'shared') result = false
+        if (storage === STORAGE_TYPES.SHARED) result = false
+        if (isArchiveElement(path)) result = false
+        break
+      case 'restore':
+        if (storage !== STORAGE_TYPES.TRASH) result = false
         if (isArchiveElement(path)) result = false
         break
       case 'shareLeave':
@@ -130,19 +170,43 @@ export const fileActions = {
   rename: {
     method: null,
     name: 'rename',
-    // component: defineAsyncComponent(() => import('../components/dialogs/RenameItemDialog')),
     getComponent: () => { return defineAsyncComponent(() => import('../components/dialogs/RenameItemDialog')) },
     displayNameKey: 'FILESWEBCLIENT.ACTION_RENAME',
     icon: 'RenameIcon',
     isShowAction: isShowAction,
   },
   delete: {
-    method: null,
+    method: async () => {
+      const filesStore = useFilesStore()
+      const storage = filesStore.currentStorage?.Type
+      const items = getDeletableItems(filesStore)
+      if (!items.length) {
+        return
+      }
+
+      if (!shouldShowDeleteConfirm(storage)) {
+        const result = await filesStore.asyncDeleteItems({ items: buildDeleteApiItems(items) })
+        if (result) {
+          await filesStore.changeItemsLists({ items })
+          await filesStore.selectFile(null)
+          filesStore.resetSelectedItems?.({ items })
+        }
+        return
+      }
+
+      openDeleteDialog(filesStore)
+    },
     name: 'delete',
-    // component: defineAsyncComponent(() => import('../components/dialogs/DeleteItemsDialog')),
-    getComponent: () => { return defineAsyncComponent(() => import('../components/dialogs/DeleteItemsDialog')) },
     displayNameKey: 'COREWEBCLIENT.ACTION_DELETE',
     icon: 'DeleteIcon',
+    isShowAction: isShowAction,
+  },
+  restore: {
+    method: null,
+    name: 'restore',
+    getComponent: () => { return defineAsyncComponent(() => import('../components/dialogs/RestoreItemsDialog')) },
+    displayNameKey: 'FILESWEBCLIENT.ACTION_RESTORE',
+    icon: 'RestoreIcon',
     isShowAction: isShowAction,
   },
   addToFavorites: {

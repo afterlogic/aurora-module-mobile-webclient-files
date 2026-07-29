@@ -53,10 +53,12 @@ export default {
     showMoveAction() {
       return this.currentStorage.Type !== STORAGE_TYPES.SHARED
         && this.currentStorage.Type !== STORAGE_TYPES.FAVORITES
+        && this.currentStorage.Type !== STORAGE_TYPES.TRASH
         && this.copiedFiles[0].type !== STORAGE_TYPES.SHARED
     },
     isCopyMoveAllowed() {
       return this.currentStorage.Type !== STORAGE_TYPES.FAVORITES
+        && this.currentStorage.Type !== STORAGE_TYPES.TRASH
     },
   },
   methods: {

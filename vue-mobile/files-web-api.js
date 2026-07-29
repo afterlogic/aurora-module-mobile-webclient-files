@@ -54,6 +54,16 @@ export default {
       .catch(error => false)
   },
 
+  restoreItems: async (parameters) => {
+    return webApi.sendRequest({
+      moduleName: 'Files',
+      methodName: 'Restore',
+      parameters: parameters,
+    })
+      .then(result => result)
+      .catch(error => false)
+  },
+
   copyMoveItems: async (parameters, method) => {
     return webApi.sendRequest({
       moduleName: 'Files',

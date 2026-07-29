@@ -98,6 +98,7 @@ const parseFile = (file) => {
     isArchive: !!file?.Actions?.list,
     sharedWithMeAccess: types.pInt(file?.ExtendedProps?.SharedWithMeAccess),
     favorite: types.pBool(file.IsFavorite),
+    trashOriginalPath: types.pString(file?.ExtendedProps?.TrashOriginalPath),
     decryptionProgress: false,
     iconName: file.IsFolder ? 'Folder' : getPreviewIconName({ name: types.pString(file.Name), paranoidKey: types.pString(file?.ExtendedProps?.ParanoidKey) }),
   }
@@ -105,6 +106,27 @@ const parseFile = (file) => {
 
 export const getItemStorageType = (item, currentStorageType) => {
   if (currentStorageType === STORAGE_TYPES.FAVORITES && item?.type) {
+    return item.type
+  }
+  return currentStorageType
+}
+
+export const STORAGES_THAT_SUPPORT_TRASH = [
+  STORAGE_TYPES.PERSONAL,
+  STORAGE_TYPES.SHARED,
+  STORAGE_TYPES.CORPORATE,
+  STORAGE_TYPES.ENCRYPTED,
+]
+
+export const isSharedWithOthers = (item) => {
+  return Array.isArray(item?.shares) && item.shares.length > 0
+}
+
+export const resolveDeleteStorageType = (currentStorageType, item) => {
+  if (
+    (currentStorageType === STORAGE_TYPES.FAVORITES || currentStorageType === STORAGE_TYPES.TRASH)
+    && item?.type
+  ) {
     return item.type
   }
   return currentStorageType

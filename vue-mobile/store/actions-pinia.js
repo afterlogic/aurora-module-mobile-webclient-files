@@ -8,6 +8,7 @@ import {
   getFiles,
   getFolders,
   getStorageIconName,
+  resolveDeleteStorageType,
 } from '../utils/common'
 import {
   parseContactSuggestion,
@@ -117,15 +118,18 @@ export default {
   },
   
   async asyncDeleteItems({ items }) {
-    const storageType = this.currentStorage?.Type === STORAGE_TYPES.FAVORITES && items[0]?.type
-      ? items[0].type
-      : this.currentStorage?.Type
+    const sourceItem = this.selectedFiles?.[0] || this.currentFile || items[0]
+    const storageType = resolveDeleteStorageType(this.currentStorage?.Type, sourceItem)
     const parameters = {
       Type: storageType,
       Path: this.currentPathString,
       Items: items,
     }
     return await filesWebApi.deleteItems(parameters)
+  },
+
+  async asyncRestoreItems({ items }) {
+    return await filesWebApi.restoreItems({ Items: items })
   },
 
   changeItemsLists({ items }) {

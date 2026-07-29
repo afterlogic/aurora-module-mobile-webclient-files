@@ -60,7 +60,10 @@ export default {
   computed: {
     ...mapGetters(useFilesStore, ['copiedFiles', 'currentPath', 'storageList', 'isCreateAllowed']),
     copyTargetStorages() {
-      return this.storageList.filter((storage) => storage.Type !== STORAGE_TYPES.FAVORITES)
+      return this.storageList.filter((storage) => {
+        return storage.Type !== STORAGE_TYPES.FAVORITES
+          && storage.Type !== STORAGE_TYPES.TRASH
+      })
     },
   },
   methods: {
