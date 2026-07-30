@@ -3,8 +3,12 @@
     <template v-slot:content>
       <div class="dialog__title-text q-ma-lg">
         <span>{{ title }}</span>
-        <div v-if="originalPaths.length" class="q-mt-md">
-          <div v-for="(path, index) in originalPaths" :key="index">{{ path }}</div>
+        <div v-if="originalPaths.length" class="q-mt-md restore-paths">
+          <div
+            v-for="(path, index) in originalPaths"
+            :key="index"
+            class="restore-paths__item"
+          >{{ path }}</div>
           <div v-if="hasMoreOriginalPaths">...</div>
         </div>
       </div>
@@ -88,3 +92,12 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+.restore-paths {
+  &__item {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+}
+</style>
