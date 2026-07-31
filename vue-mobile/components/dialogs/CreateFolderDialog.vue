@@ -23,7 +23,8 @@
       <ButtonDialog
         data-test-id="files-create-folder-submit"
         class="q-ma-sm"
-        :saving="submitDisabled"
+        :saving="saving"
+        :disabled="submitDisabled"
         :action="createFolder"
         :label="$t('COREWEBCLIENT.ACTION_CREATE')"
       />
@@ -68,7 +69,7 @@ export default {
 
   computed: {
     submitDisabled() {
-      return this.saving || this.blockedAfterError
+      return this.blockedAfterError || !validateFileOrFolderName(this.folderName)
     },
   },
 
@@ -92,7 +93,7 @@ export default {
     ...mapActions(useFilesStore, ['asyncCreateFolder', 'asyncGetFiles']),
 
     async createFolder() {
-      if (this.submitDisabled) {
+      if (this.saving || this.submitDisabled) {
         return
       }
       if (validateFileOrFolderName(this.folderName)) {

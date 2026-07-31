@@ -21,7 +21,8 @@
       <ButtonDialog
           data-test-id="files-rename-submit"
           class="q-mb-sm q-mr-sm"
-          :saving="submitDisabled"
+          :saving="saving"
+          :disabled="submitDisabled"
           :action="renameItem"
           :label="$t('FILESWEBCLIENT.ACTION_RENAME')"
       />
@@ -54,7 +55,9 @@ export default {
       return this.file.isFolder ? 'Folder name' : 'File name'
     },
     submitDisabled() {
-      return this.saving || this.blockedAfterError
+      const name = (this.itemName || '').trim()
+      const unchanged = name === (this.file?.name || '')
+      return this.blockedAfterError || !name || unchanged
     },
   },
   data() {
@@ -83,7 +86,7 @@ export default {
   methods: {
     ...mapActions(useFilesStore, ['asyncRenameItem', 'changeFileName']),
     async renameItem() {
-      if (!this.itemName.length || this.submitDisabled) {
+      if (!this.itemName.length || this.saving || this.submitDisabled) {
         return
       }
       this.saving = true

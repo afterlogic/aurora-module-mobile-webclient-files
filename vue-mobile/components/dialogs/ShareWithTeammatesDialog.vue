@@ -102,6 +102,7 @@
           data-test-id="files-share-save"
           class="q-ma-sm"
           :saving="saving"
+          :disabled="!hasShareChanges"
           :action="save"
           :label="$t('COREWEBCLIENT.ACTION_SAVE')"
       />
@@ -183,6 +184,9 @@ export default {
   },
   computed: {
     ...mapState(useCoreStore, ['userPublicId']),
+    hasShareChanges() {
+      return !!this.hasChanges()
+    },
     statuses() {
       const statuses = {
         2: 'read',
@@ -357,6 +361,9 @@ export default {
       )
     },
     async save() {
+      if (!this.hasShareChanges || this.saving) {
+        return
+      }
       if (this.currentUser) {
         this.$refs.notAddedUserDialog.openDialog(this.currentUser)
       } else {
