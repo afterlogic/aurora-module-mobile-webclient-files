@@ -71,16 +71,21 @@ async function deleteOpenedFile(page, name) {
     timeout: 15000,
   })
   await clickReady(page.getByTestId('files-view-delete'))
-  await expect(page.getByTestId('files-delete-dialog')).toBeVisible({
-    timeout: 15000,
-  })
-  await clickReady(page.getByTestId('files-delete-confirm'))
-  await expect(page.getByTestId('files-delete-dialog')).toBeHidden({
-    timeout: 45000,
-  })
-  if (await page.getByTestId('files-view').isVisible().catch(() => false)) {
-    await clickReady(page.getByTestId('files-view-back'))
+
+  // Confirm only when the dialog is shown (Trash / AllowTrash=false).
+  const deleteDialog = page.getByTestId('files-delete-dialog')
+  const dialogShown = await deleteDialog
+    .waitFor({ state: 'visible', timeout: 5000 })
+    .then(() => true)
+    .catch(() => false)
+  if (dialogShown) {
+    await clickReady(page.getByTestId('files-delete-confirm'))
+    await expect(deleteDialog).toBeHidden({ timeout: 45000 })
   }
+
+  // After delete from file view the app must navigate to the list by itself
+  // (no manual files-view-back). A blank files-view left on screen is a bug.
+  await expect(page.getByTestId('files-view')).toBeHidden({ timeout: 30000 })
   await waitForFilesList(page)
   await expect(
     page.getByTestId('files-item').filter({ hasText: name })

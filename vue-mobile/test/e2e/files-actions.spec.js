@@ -156,10 +156,10 @@ test.describe('Mobile files actions', () => {
       await attachScreenshot(page, 'files-upload-01-list')
     })
 
-    await step('Open uploaded file and delete', async () => {
+    await step('Open uploaded file, delete, land on files list', async () => {
       await openFileByName(page, uniqueName)
       await deleteOpenedFile(page, uniqueName)
-      console.log(`  → Deleted: ${uniqueName}`)
+      console.log(`  → Deleted and back on list: ${uniqueName}`)
       await attachScreenshot(page, 'files-upload-02-deleted')
     })
   })
