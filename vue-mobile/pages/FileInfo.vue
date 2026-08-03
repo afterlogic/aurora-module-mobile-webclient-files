@@ -151,8 +151,8 @@ export default {
       this.getFile()
     },
     currentFile(file) {
-      if (!file) {
-        // this.$router.back()
+      if (!file && this.$route.name === 'file-view') {
+        this.$router.back()
       }
     }
   },
