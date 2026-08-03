@@ -55,6 +55,7 @@
               <EncryptedItemIcon v-if="currentFile.paranoidKey" class="file__info-icon_encrypted q-mx-xs"/>
               <SharedItemIcon v-if="isShared" width="14" height="14" class="file__info-icon_shared q-mx-xs"/>
               <LinkItemIcon v-if="currentFile.publicLink" class="file__info-icon_link q-mx-xs"/>
+              <FavoriteItemIcon v-if="currentFile.favorite" class="file__info-icon_favorite q-mx-xs"/>
             </div>
           </div>
         </div>
@@ -88,6 +89,7 @@ import FileItemIcon from '../components/icons/FileItemIcon'
 import InputForm from '../components/common/InputForm'
 import EncryptedItemIcon from '../components/icons/item/EncryptedItemIcon'
 import LinkItemIcon from '../components/icons/item/LinkItemIcon'
+import FavoriteItemIcon from '../components/icons/item/FavoriteItemIcon'
 import SharedItemIcon from '../components/icons/item/SharedItemIcon'
 import ShareWithMeInfoIcon from '../components/icons/ShareWithMeInfoIcon'
 import AppListLoader from 'src/components/common/AppListLoader'
@@ -100,6 +102,7 @@ export default {
     InputForm,
     EncryptedItemIcon,
     LinkItemIcon,
+    FavoriteItemIcon,
     SharedItemIcon,
     ShareWithMeInfoIcon,
     AppListLoader,
