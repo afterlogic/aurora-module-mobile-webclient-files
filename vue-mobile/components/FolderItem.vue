@@ -41,6 +41,7 @@ import { mapGetters, mapActions } from 'pinia'
 import { useFilesStore } from '../store/index-pinia'
 
 import { getShortName, getItemStorageType } from '../utils/common'
+import { buildFilesItemRoute } from '../utils/path'
 
 import { SHARING_LEVELS } from '../enums'
 import FolderIcon from './icons/FolderIcon'
@@ -67,7 +68,7 @@ export default {
   },
   computed: {
     ...mapGetters(useFilesStore, [
-      'currentStorage'
+      'currentStorage',
     ]),
     folderName() {
       return this.folder ? getShortName(this.folder.name, 50) : ''
@@ -88,14 +89,11 @@ export default {
     ]),
     async openFolder() {
       if (!this.isSelectMode && !this.folder.isCopied && !this.isMoved) {
-        const path = {
-          path: this.folder.fullPath,
-          name: this.folder.name,
-        }
-
         const storageId = getItemStorageType(this.folder, this.currentStorage?.Type) || this.folder?.storage
         if (storageId) {
-          await this.$router.push({ path: `/files/${storageId}${this.folder.fullPath}/` })
+          await this.$router.push({
+            path: buildFilesItemRoute(storageId, this.folder.fullPath),
+          })
         }
       } else {
         this.isMoved = false

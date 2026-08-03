@@ -58,6 +58,7 @@ import date from 'src/utils/date'
 import { getApiHost } from 'src/api/helpers'
 
 import { getShortName, getItemStorageType } from '../utils/common'
+import { buildFilesItemRoute } from '../utils/path'
 
 import { SHARING_LEVELS } from '../enums'
 import AppItem from 'src/components/common/AppItem'
@@ -99,14 +100,17 @@ export default {
       'isArchive',
       'currentStorage',
       'currentPathString',
+      'isTrashStorage',
     ]),
     fileName() {
-      // if (this.file) {
-      //   return getShortName(this.file.name, 30)
-      // }
-      // return ''
       let name = this.file.name
-      if (this.currentPathString !== this.file.path && this.file.path) {
+      // Path suffix is for Favorites (items from different folders). In Trash the
+      // physical path is always /.trash and must not be shown in the list.
+      if (
+        !this.isTrashStorage &&
+        this.currentPathString !== this.file.path &&
+        this.file.path
+      ) {
         name += ' (' + this.file.path + ')'
       }
       return getShortName(name, 30)
@@ -152,7 +156,9 @@ export default {
         const storageId = getItemStorageType(this.file, this.currentStorage?.Type) || this.file?.storage
         if (storageId) {
           this.selectFile(this.file)
-          this.$router.push({ path: `/files/${storageId}${this.file.path}/${this.file.id}` })
+          this.$router.push({
+            path: buildFilesItemRoute(storageId, this.file.path, this.file.id),
+          })
         }
       } else {
         this.isMoved = false

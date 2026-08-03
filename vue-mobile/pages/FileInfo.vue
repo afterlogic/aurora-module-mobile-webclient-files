@@ -114,6 +114,7 @@ export default {
       'currentFile',
       'currentStorage',
       'fileList',
+      'isTrashStorage',
     ]),
     isShowDecryptAction() {
       if (!this.currentFile) return ''
@@ -127,6 +128,9 @@ export default {
       return api + this.currentFile.viewUrl
     },
     filePatch() {
+      if (this.isTrashStorage) {
+        return this.currentFile.trashOriginalPath || '/'
+      }
       return this.currentFile.path || '/'
     },
     fileDate() {
