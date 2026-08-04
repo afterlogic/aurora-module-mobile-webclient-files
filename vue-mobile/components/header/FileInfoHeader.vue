@@ -8,35 +8,35 @@
       />
     </div>
     <div class="col app-header__right" v-if="actions">
-      <ActionIcon
+      <AppHeaderButton
           v-if="isShowAction(actions.createShareableLink)"
           data-test-id="files-view-share-link"
-          class="q-mr-lg"
-          icon="SecureLinkIcon"
           @click="onPerformAction(actions.createShareableLink)"
-      />
-      <ActionIcon
+      >
+        <ActionIcon color="black" icon="SecureLinkIcon" />
+      </AppHeaderButton>
+      <AppHeaderButton
           v-if="isShowAction(actions.download)"
           data-test-id="files-view-download"
-          class="q-mr-lg"
-          icon="DownloadIcon"
           @click="onPerformAction(actions.download)"
-      />
-      <ActionIcon
+      >
+        <ActionIcon color="black" icon="DownloadIcon" />
+      </AppHeaderButton>
+      <AppHeaderButton
           v-if="isShowAction(actions.restore)"
           data-test-id="files-view-restore"
-          class="q-mr-lg"
-          icon="RestoreIcon"
           @click="onPerformAction(actions.restore)"
-      />
-      <ActionIcon
+      >
+        <ActionIcon color="black" icon="RestoreIcon" />
+      </AppHeaderButton>
+      <AppHeaderButton
           v-if="isShowAction(actions.delete)"
           data-test-id="files-view-delete"
-          class="q-mr-lg"
-          icon="DeleteIcon"
           @click="onPerformAction(actions.delete)"
-      />
-      <div class="dropdown-more flex justify-center items-center">
+      >
+        <ActionIcon color="black" icon="DeleteIcon" />
+      </AppHeaderButton>
+      <div class="dropdown-more">
         <q-btn-dropdown
           v-if="isShowDropdown"
           data-test-id="files-view-more"
@@ -46,7 +46,7 @@
           dense
         >
           <template v-slot:label>
-            <ActionIcon icon="MoreIcon" />
+            <ActionIcon color="black" icon="MoreIcon" />
           </template>
           <q-list style="width: 205px; min-height: 55px">
             <q-item

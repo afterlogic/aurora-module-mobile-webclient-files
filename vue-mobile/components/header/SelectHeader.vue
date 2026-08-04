@@ -11,37 +11,39 @@
       {{ `Selected: ${items.length}` }}
     </div>
     <div class="col app-header__right">
-      <ActionIcon
+      <AppHeaderButton
         v-if="isShowAction(actions.copy)"
         data-test-id="files-select-copy"
         @click="copyItems"
-        class="q-mr-md"
-        :icon="actions.copy.icon"
-      />
-      <ActionIcon
+      >
+        <ActionIcon color="black" :icon="actions.copy.icon" />
+      </AppHeaderButton>
+      <AppHeaderButton
         v-if="isShowAction(actions.restore)"
         data-test-id="files-select-restore"
-        class="q-mr-md"
         @click="onPerformAction(actions.restore)"
-        :icon="actions.restore.icon"
-      />
-      <div v-if="isShowAction(actions.shareLeave) && sharedFiles.length" class="flex no-wrap">
-        <ActionIcon
+      >
+        <ActionIcon color="black" :icon="actions.restore.icon" />
+      </AppHeaderButton>
+      <div
+        v-if="isShowAction(actions.shareLeave) && sharedFiles.length"
+        class="flex no-wrap items-center"
+      >
+        <AppHeaderButton
           data-test-id="files-select-share-leave"
-          class="q-mr-xs"
           @click="onPerformAction(actions.shareLeave)"
-          :icon="actions.shareLeave.icon"
-        />
-        <span class="q-mr-md">{{sharedFiles.length}}</span>
+        >
+          <ActionIcon color="black" :icon="actions.shareLeave.icon" />
+        </AppHeaderButton>
+        <span>{{ sharedFiles.length }}</span>
       </div>
-      <div v-if="isShowAction(actions.delete) && unsharedFiles.length" class="flex no-wrap">
-        <ActionIcon
-          data-test-id="files-select-delete"
-          class="q-mr-xs"
-          @click="onPerformAction(actions.delete)"
-          :icon="actions.delete.icon"
-        />
-      </div>
+      <AppHeaderButton
+        v-if="isShowAction(actions.delete) && unsharedFiles.length"
+        data-test-id="files-select-delete"
+        @click="onPerformAction(actions.delete)"
+      >
+        <ActionIcon color="black" :icon="actions.delete.icon" />
+      </AppHeaderButton>
     </div>
   </q-toolbar>
 </template>

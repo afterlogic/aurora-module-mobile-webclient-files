@@ -24,10 +24,10 @@
         icon="create_new_folder"
         @click="createFolder"
       />
-      <div class="dropdown-more flex justify-center items-center">
+      <div class="dropdown-more">
         <q-btn-dropdown v-close-popup :menu-offset="[8, -45]" flat unelevated dense>
           <template v-slot:label>
-            <ActionIcon class="q-mr-md" icon="SelectStorageIcon" />
+            <ActionIcon color="black" icon="SelectStorageIcon" />
           </template>
           <q-list v-close-popup style="width: 205px; min-height: 55px">
             <StorageItem

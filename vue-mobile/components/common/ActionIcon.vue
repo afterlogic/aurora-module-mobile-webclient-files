@@ -38,15 +38,11 @@ export default {
 <style scoped>
 .action-icon {
   width: 16px;
-  min-height: 32px;
-  min-width: 32px;
   cursor: pointer;
 }
 
 .action-icon_with-cross {
   position: relative;
-  min-height: unset;
-  min-width: unset;
   cursor: inherit;
 
   &::before,
