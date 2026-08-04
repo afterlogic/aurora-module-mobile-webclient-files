@@ -13,6 +13,7 @@ const {
   uploadFileViaFab,
   openFileByName,
   deleteOpenedFile,
+  openPersonalStorage,
 } = require('./helpers/files')
 
 const hasCredentials = !!(process.env.E2E_LOGIN && process.env.E2E_PASSWORD)
@@ -326,6 +327,117 @@ test.describe('Mobile files actions', () => {
     await step('Cleanup: delete moved file', async () => {
       await openFileByName(page, uniqueName)
       await deleteOpenedFile(page, uniqueName)
+    })
+  })
+
+  test('creates a folder from move header and moves file into it', async ({
+    page,
+  }) => {
+    test.setTimeout(240000)
+    await loginAsTestUser(page)
+    await openFiles(page)
+    await openPersonalStorage(page)
+
+    const stamp = Date.now()
+    const uniqueName = `e2e-move-cf-${stamp}.txt`
+    const folderName = `E2E MoveFolder ${stamp}`
+
+    await step('Upload file for move + create folder', async () => {
+      await uploadFileViaFab(page, uniqueName)
+    })
+
+    await step('Open file → Copy/Move mode', async () => {
+      await openFileByName(page, uniqueName)
+      await clickReady(page.getByTestId('files-view-more'))
+      await expect(page.getByTestId('files-menu-copy')).toBeVisible({
+        timeout: 10000,
+      })
+      await clickReady(page.getByTestId('files-menu-copy'))
+      await expect(page.getByTestId('files-copymove-header')).toBeVisible({
+        timeout: 15000,
+      })
+      await expect(page.getByTestId('files-copymove-footer')).toBeVisible({
+        timeout: 15000,
+      })
+      await attachScreenshot(page, 'files-move-create-01-mode')
+    })
+
+    await step('Create folder from move header', async () => {
+      const createBtn = page.getByTestId('files-copymove-create-folder')
+      test.skip(
+        (await createBtn.count()) === 0,
+        'Create folder not allowed on this storage'
+      )
+      await clickReady(createBtn)
+      await expect(page.getByTestId('files-create-folder-dialog')).toBeVisible({
+        timeout: 15000,
+      })
+      await page
+        .getByTestId('files-create-folder-name')
+        .locator('input')
+        .fill(folderName)
+      await clickReady(page.getByTestId('files-create-folder-submit'))
+      await expect(page.getByTestId('files-create-folder-dialog')).toBeHidden({
+        timeout: 45000,
+      })
+      await waitForFilesList(page)
+      await expect(
+        page.getByTestId('files-folder').filter({ hasText: folderName }).first()
+      ).toBeVisible({ timeout: 60000 })
+      console.log(`  → Folder created from move header: ${folderName}`)
+      await attachScreenshot(page, 'files-move-create-02-folder')
+    })
+
+    await step(`Move file into "${folderName}"`, async () => {
+      await clickReady(
+        page.getByTestId('files-folder').filter({ hasText: folderName }).first()
+      )
+      await waitForFilesList(page)
+      await expect(page.getByTestId('files-copymove-move')).toBeVisible({
+        timeout: 15000,
+      })
+      await clickReady(page.getByTestId('files-copymove-move'))
+      await expect(page.getByTestId('files-copymove-header')).toBeHidden({
+        timeout: 45000,
+      })
+      await waitForFilesList(page)
+      await expect(
+        page.getByTestId('files-item').filter({ hasText: uniqueName }).first()
+      ).toBeVisible({ timeout: 60000 })
+      console.log(`  → Moved into new folder: ${folderName}`)
+      await attachScreenshot(page, 'files-move-create-03-moved')
+    })
+
+    await step('Cleanup: delete moved file and folder', async () => {
+      await openFileByName(page, uniqueName)
+      await deleteOpenedFile(page, uniqueName)
+      await openPersonalStorage(page)
+      const folder = page
+        .getByTestId('files-folder')
+        .filter({ hasText: folderName })
+        .first()
+      if ((await folder.count()) === 0) return
+      await clickReady(folder.getByTestId('files-folder-more'))
+      const del = page.getByTestId('files-item-menu-delete')
+      if ((await del.count()) === 0) {
+        console.log('  → No delete in folder menu; leave folder')
+        await page.keyboard.press('Escape').catch(() => undefined)
+        return
+      }
+      await clickReady(del)
+      const deleteDialog = page.getByTestId('files-delete-dialog')
+      const dialogShown = await deleteDialog
+        .waitFor({ state: 'visible', timeout: 5000 })
+        .then(() => true)
+        .catch(() => false)
+      if (dialogShown) {
+        await clickReady(page.getByTestId('files-delete-confirm'))
+        await expect(deleteDialog).toBeHidden({ timeout: 45000 })
+      }
+      await waitForFilesList(page)
+      await expect(
+        page.getByTestId('files-folder').filter({ hasText: folderName })
+      ).toHaveCount(0, { timeout: 30000 })
     })
   })
 })

@@ -20,6 +20,7 @@
     <div class="col app-header__right">
       <AppHeaderButton
         v-if="isCreateAllowed"
+        data-test-id="files-copymove-create-folder"
         icon="create_new_folder"
         @click="createFolder"
       />
