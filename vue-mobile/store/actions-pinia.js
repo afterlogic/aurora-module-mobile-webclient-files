@@ -128,6 +128,43 @@ export default {
     return await filesWebApi.deleteItems(parameters)
   },
 
+  async asyncEmptyTrash() {
+    const items = [...this.folderList, ...this.fileList]
+    if (!items.length) {
+      return false
+    }
+
+    const groups = {}
+    items.forEach((item) => {
+      const storageType = resolveDeleteStorageType(this.currentStorage?.Type, item)
+      if (!groups[storageType]) {
+        groups[storageType] = []
+      }
+      groups[storageType].push({
+        Path: item.path,
+        Name: item.name,
+        IsFolder: item.isFolder,
+      })
+    })
+
+    const results = await Promise.all(
+      Object.entries(groups).map(([storageType, groupItems]) =>
+        filesWebApi.deleteItems({
+          Type: storageType,
+          Path: this.currentPathString,
+          Items: groupItems,
+        })
+      )
+    )
+
+    const success = results.every(Boolean)
+    if (success) {
+      this.clearItemLists()
+      this.selectFile(null)
+    }
+    return success
+  },
+
   async asyncRestoreItems({ items }) {
     return await filesWebApi.restoreItems({ Items: items })
   },

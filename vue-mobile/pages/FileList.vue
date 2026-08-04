@@ -1,10 +1,21 @@
 <template>
-  <div data-test-id="files-list" class="fit column">
+  <div data-test-id="files-list" class="fit column files-list">
+  <div v-if="isShowEmptyTrashButton" class="list__info col-auto">
+    <div
+      data-test-id="files-empty-trash-button"
+      @click="showEmptyTrashDialog"
+      class="list__button list__button_with-icon"
+    >
+      <ActionIcon class="list__button-icon" icon="DeleteIcon" with-cross />
+      {{ $t('FILESMOBILEWEBCLIENT.ACTION_EMPTY_TRASH') }}
+    </div>
+  </div>
+
   <AppListLoader v-if="isInitialListLoading" initial class="col" />
   <q-scroll-area
     v-else-if="hasListItems"
     :thumb-style="{ width: '5px' }"
-    :class="fileListHeight"
+    class="files__list col"
   >
     <AppPullRefresh :refresh-action="asyncGetFiles">
       <FolderItem
@@ -40,18 +51,20 @@
       <div style="height: 70px" class="full-width" />
     </AppPullRefresh>
   </q-scroll-area>
-  <FilesCaptions v-else-if="!loadingStatus"/>
+  <FilesCaptions v-else-if="!loadingStatus" class="col" />
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'pinia'
+import { defineAsyncComponent } from 'vue'
+import { mapGetters, mapActions, mapState } from 'pinia'
 import { useFilesStore } from '../store/index-pinia'
 
 import FolderItem from '../components/FolderItem'
 import FileItem from '../components/FileItem'
 import DownloadFileItem from '../components/DownloadFileItem'
 import FilesCaptions from '../components/FilesCaptions'
+import ActionIcon from '../components/common/ActionIcon'
 
 import AppPullRefresh from 'src/components/common/AppPullRefresh'
 import AppListLoader from 'src/components/common/AppListLoader'
@@ -64,6 +77,7 @@ export default {
     FileItem,
     DownloadFileItem,
     FilesCaptions,
+    ActionIcon,
     AppPullRefresh,
     AppListLoader,
   },
@@ -75,6 +89,9 @@ export default {
   },
   
   computed: {
+    ...mapState(useFilesStore, [
+      'currentPath',
+    ]),
     ...mapGetters(useFilesStore, [
       'folderList',
       'fileList',
@@ -83,9 +100,9 @@ export default {
       'downloadFiles',
       'loadingStatus',
       'currentStorage',
-      'currentHeader',
       'currentPathString',
       'searchText',
+      'isTrashStorage',
     ]),
     isCopied() {
       return !!this.copiedFiles.length
@@ -96,9 +113,13 @@ export default {
     isInitialListLoading() {
       return this.loadingStatus && !this.hasListItems
     },
-    fileListHeight() {
-      if (this.currentHeader === 'SearchHeader') return 'files__list-search'
-      return 'files__list-default'
+    isShowEmptyTrashButton() {
+      return (
+        this.isTrashStorage
+        && !(this.currentPath?.length)
+        && !(this.searchText || '').trim()
+        && this.hasListItems
+      )
     },
   },
   watch: {
@@ -151,6 +172,11 @@ export default {
       this.selectFile(file)
       this.changeDialogComponent({ component })
     },
+    showEmptyTrashDialog() {
+      this.changeDialogComponent({
+        getComponent: () => defineAsyncComponent(() => import('../components/dialogs/EmptyTrashDialog')),
+      })
+    },
     selectItem(item) {
       item.isSelected = !item.isSelected
     },
@@ -163,28 +189,38 @@ export default {
 </script>
 
 <style lang="scss">
-.files__list-default {
-  height: 100%;
+.files-list {
+  min-height: 0;
+
+  .files__list {
+    min-height: 0;
+  }
 }
-.files__list-search {
-  height: 100%;
-}
+
 .files__list .q-scrollarea__content {
   width: 100vw;
 }
-.user-email {
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 25px;
-  color: rgba(0, 0, 0, 0.6);
-}
-.user-name {
-  font-weight: 700;
-  font-size: 18px;
-  line-height: 20px;
-  color: #000000;
-}
-.user-info {
-  padding-top: 36px;
+
+.list {
+  &__info {
+    text-align: center;
+    color: #969494;
+    padding: 16px 32px 32px 32px;
+  }
+
+  &__button {
+    color: #469CF8;
+    margin-top: 12px;
+  }
+
+  &__button_with-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__button-icon {
+    flex-shrink: 0;
+  }
 }
 </style>
