@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue'
 import { mapActions, mapGetters } from 'pinia'
 import { useFilesStore } from '../../store/index-pinia'
 
@@ -77,7 +78,11 @@ export default {
       this.removeCopiedFiles()
     },
     createFolder() {
-      this.changeDialogComponent({ component: 'CreateFolderDialog' })
+      this.changeDialogComponent({
+        getComponent: () => {
+          return defineAsyncComponent(() => import('../dialogs/CreateFolderDialog'))
+        },
+      })
     },
     async onPreviousPath() {
       this.$router.back()
