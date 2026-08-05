@@ -46,6 +46,48 @@ test.describe('Mobile files actions', () => {
     })
   })
 
+  test('switching storages hides old list and shows loader', async ({ page }) => {
+    test.setTimeout(180000)
+    await loginAsTestUser(page)
+    await openFiles(page)
+
+    await step('Open files drawer', async () => {
+      await clickReady(page.getByTestId('files-folder-menu'))
+      await expect(page.getByTestId('mail-drawer')).toBeVisible({
+        timeout: 15000,
+      })
+      await expect(page.getByTestId('files-storage-item').first()).toBeVisible({
+        timeout: 15000,
+      })
+    })
+
+    const storages = page.getByTestId('files-storage-item')
+    const count = await storages.count()
+    test.skip(count < 2, 'Not enough storages available in test environment')
+
+    await step('Select first storage', async () => {
+      await clickReady(storages.first())
+      await waitForFilesList(page)
+    })
+
+    const oldListItems = page.getByTestId('files-item').or(page.getByTestId('files-folder'))
+    const oldFirst = oldListItems.first()
+
+    await step('Select second storage', async () => {
+      await clickReady(page.getByTestId('files-folder-menu'))
+      await expect(page.getByTestId('mail-drawer')).toBeVisible({
+        timeout: 15000,
+      })
+
+      await clickReady(page.getByTestId('files-storage-item').nth(1))
+
+      // The previous list must hide while the new storage loads.
+      await expect(oldFirst).toBeHidden({ timeout: 5000 })
+    })
+
+    await waitForFilesList(page)
+  })
+
   test('search filters files list', async ({ page }) => {
     test.setTimeout(120000)
     await loginAsTestUser(page)
