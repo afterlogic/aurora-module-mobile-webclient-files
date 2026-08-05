@@ -130,7 +130,8 @@ export default {
       },
     },
     currentPathString: {
-      handler: async function () {
+      handler: function () {
+        this.changeLoadingStatus(true)
         this.fetchData()
       },
     },
@@ -152,9 +153,10 @@ export default {
     }
   },
   mounted() {
-    if (!this.hasListItems) {
-      this.fetchData()
-    }
+    // Always refresh when the list view is shown again (e.g. back from file-view).
+    // Stale items may remain in the store from an earlier fetch with a wrong path.
+    this.changeLoadingStatus(true)
+    this.fetchData()
   },
   methods: {
     ...mapActions(useFilesStore, [

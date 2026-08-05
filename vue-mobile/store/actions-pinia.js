@@ -365,15 +365,18 @@ export default {
         IsFolder: currentFile.isFolder
       })
     }
+    const sourceItem = selectedItems[0] || this.currentFile
+    const storageType = resolveDeleteStorageType(currentStorage?.Type, sourceItem)
     const parameters = {
-      Type: currentStorage.Type,
+      Type: storageType,
       Path: currentPath,
       Items: items
     }
-    const result =  await filesWebApi.leaveShare(parameters)
+    const result = await filesWebApi.leaveShare(parameters)
     if (result) {
-      dispatch('changeItemsLists', { items })
+      this.changeItemsLists({ items: selectedItems.length ? selectedItems : [this.currentFile] })
     }
+    return result
   },
   changeCurrentHeader(headerName) {
     this.currentHeader = headerName

@@ -41,13 +41,17 @@ export default {
     saving: false
   }),
   methods: {
-    ...mapActions(useFilesStore, ['asyncLeaveShare', 'changeItemsLists', 'selectFile']),
-    leaveShare() {
-      const result = this.asyncLeaveShare()
-      if (result) {
-        this.changeItemsLists({ items: this.selectedFiles.length ? this.selectedFiles : [this.currentFile] })
-        this.selectFile(null)
-        this.$emit('closeDialog')
+    ...mapActions(useFilesStore, ['asyncLeaveShare', 'selectFile']),
+    async leaveShare() {
+      this.saving = true
+      try {
+        const result = await this.asyncLeaveShare()
+        if (result) {
+          this.selectFile(null)
+          this.$emit('closeDialog')
+        }
+      } finally {
+        this.saving = false
       }
     },
     cancelDialog() {
