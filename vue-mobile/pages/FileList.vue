@@ -11,7 +11,7 @@
     </div>
   </div>
 
-  <AppListLoader v-if="isInitialListLoading" initial class="col" />
+  <AppListLoader v-if="loadingStatus" initial class="col" />
   <q-scroll-area
     v-else-if="hasListItems"
     :thumb-style="{ width: '5px' }"
@@ -110,12 +110,10 @@ export default {
     hasListItems() {
       return this.folderList.length > 0 || this.downloadFiles.length > 0 || this.fileList.length > 0
     },
-    isInitialListLoading() {
-      return this.loadingStatus && !this.hasListItems
-    },
     isShowEmptyTrashButton() {
       return (
         this.isTrashStorage
+        && !this.loadingStatus
         && !(this.currentPath?.length)
         && !(this.searchText || '').trim()
         && this.hasListItems
@@ -124,7 +122,10 @@ export default {
   },
   watch: {
     currentStorage: {
-      handler: async function () {
+      handler: function () {
+        // Ensure we immediately hide the previous list and show the loader
+        // when switching storages (before asyncGetFiles resolves).
+        this.changeLoadingStatus(true)
         this.fetchData()
       },
     },
