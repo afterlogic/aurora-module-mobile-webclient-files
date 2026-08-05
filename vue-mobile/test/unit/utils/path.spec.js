@@ -4,7 +4,11 @@ import {
   pathSegmentsToApiPath,
   toVirtualTrashPath,
   buildFilesItemRoute,
+  getRouteStorageId,
+  getRoutePathForFile,
+  buildItemRouteFromContext,
 } from 'utils/path.js'
+import { STORAGE_TYPES } from '../../../enums.js'
 
 describe('path utils', () => {
   describe('normalizeRoutePath', () => {
@@ -60,6 +64,58 @@ describe('path utils', () => {
     it('keeps physical path for non-trash storages', () => {
       expect(buildFilesItemRoute('personal', '/docs', 'a.txt')).toBe('/files/personal/docs/a.txt')
       expect(buildFilesItemRoute('personal', '/docs')).toBe('/files/personal/docs/')
+    })
+  })
+
+  describe('getRouteStorageId', () => {
+    it('keeps favorites for files, but uses item type for folders', () => {
+      expect(getRouteStorageId(STORAGE_TYPES.FAVORITES, { type: 'personal' })).toBe('favorites')
+      expect(getRouteStorageId(STORAGE_TYPES.FAVORITES, { type: 'personal' }, { isFolder: true })).toBe('personal')
+      expect(getRouteStorageId(STORAGE_TYPES.TRASH, { type: 'personal' })).toBe('trash')
+      expect(getRouteStorageId(STORAGE_TYPES.PERSONAL, { type: 'corporate' })).toBe('corporate')
+      expect(getRouteStorageId(STORAGE_TYPES.PERSONAL, null)).toBe('personal')
+    })
+  })
+
+  describe('getRoutePathForFile', () => {
+    it('ignores physical path when browsing favorites', () => {
+      expect(getRoutePathForFile(STORAGE_TYPES.FAVORITES, { path: '/Docs/sub' }, '')).toBe('')
+    })
+
+    it('uses virtual trash path for trash storage', () => {
+      expect(getRoutePathForFile(STORAGE_TYPES.TRASH, { path: '/.trash/Docs' }, '')).toBe('/Docs')
+    })
+  })
+
+  describe('buildItemRouteFromContext', () => {
+    it('opens favorite file without switching to the original storage path', () => {
+      expect(buildItemRouteFromContext(STORAGE_TYPES.FAVORITES, {
+        type: 'shared',
+        path: '/SharedFolder',
+        id: 'report.pdf',
+      }, {
+        fileId: 'report.pdf',
+      })).toBe('/files/favorites/report.pdf')
+    })
+
+    it('opens favorited folder in its real storage path', () => {
+      expect(buildItemRouteFromContext(STORAGE_TYPES.FAVORITES, {
+        type: 'personal',
+        fullPath: '/Docs/Reports',
+        path: '/Docs',
+      }, {
+        isFolder: true,
+      })).toBe('/files/personal/Docs/Reports/')
+    })
+
+    it('opens trash favorite file in favorites route namespace', () => {
+      expect(buildItemRouteFromContext(STORAGE_TYPES.FAVORITES, {
+        type: 'personal',
+        path: '/.trash/old.txt',
+        id: 'old.txt',
+      }, {
+        fileId: 'old.txt',
+      })).toBe('/files/favorites/old.txt')
     })
   })
 })
