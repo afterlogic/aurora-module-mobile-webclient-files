@@ -32,6 +32,7 @@ import AppCreateButton from 'src/components/common/AppCreateButton'
 import FilesHeader from '../components/header/FilesHeader'
 import DrawerContent from '../components/DrawerContent'
 import DialogsList from '../components/DialogsList'
+import { STORAGE_TYPES } from '../enums'
 
 export default {
   name: 'Files',
@@ -98,6 +99,16 @@ export default {
     '$route.params.path': {
       handler: function (path) {
         this.changeSearchText('')
+        // Favorites/trash are flat virtual storages — a file name must not
+        // become a folder path while the file-view route is active.
+        if (
+          this.$route.name === 'file-view'
+          && (this.$route.params.storageId === STORAGE_TYPES.FAVORITES
+            || this.$route.params.storageId === STORAGE_TYPES.TRASH)
+        ) {
+          this.changeCurrentPath({ path: [] })
+          return
+        }
         this.changeCurrentPath({ path })
       },
       immediate: true,

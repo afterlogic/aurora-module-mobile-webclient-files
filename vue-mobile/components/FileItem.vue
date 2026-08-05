@@ -57,8 +57,8 @@ import text from 'src/utils/text'
 import date from 'src/utils/date'
 import { getApiHost } from 'src/api/helpers'
 
-import { getShortName, getItemStorageType } from '../utils/common'
-import { buildFilesItemRoute } from '../utils/path'
+import { getShortName } from '../utils/common'
+import { buildItemRouteFromContext } from '../utils/path'
 
 import { SHARING_LEVELS } from '../enums'
 import AppItem from 'src/components/common/AppItem'
@@ -153,13 +153,16 @@ export default {
         !this.file.downloading &&
         !this.isArchive
       ) {
-        const storageId = getItemStorageType(this.file, this.currentStorage?.Type) || this.file?.storage
-        if (storageId) {
-          this.selectFile(this.file)
-          this.$router.push({
-            path: buildFilesItemRoute(storageId, this.file.path, this.file.id),
-          })
+        if (!this.currentStorage?.Type) {
+          return
         }
+        this.selectFile(this.file)
+        this.$router.push({
+          path: buildItemRouteFromContext(this.currentStorage?.Type, this.file, {
+            currentPathString: this.currentPathString,
+            fileId: this.file.id,
+          }),
+        })
       } else {
         this.isMoved = false
       }
