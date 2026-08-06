@@ -36,94 +36,64 @@
       >
         <ActionIcon color="black" icon="DeleteIcon" />
       </AppHeaderButton>
-      <div class="dropdown-more">
-        <q-btn-dropdown
-          v-if="isShowDropdown"
-          data-test-id="files-view-more"
-          :menu-offset="[8, -45]"
-          flat
-          unelevated
-          dense
-        >
-          <template v-slot:label>
-            <ActionIcon color="black" icon="MoreIcon" />
-          </template>
-          <q-list style="width: 205px; min-height: 55px">
-            <q-item
-              v-if="isShowAction(actions.addToFavorites)"
-              data-test-id="files-menu-add-favorite"
-              clickable
-              v-close-popup
-              @click="onPerformAction(actions.addToFavorites)"
-            >
-              <ActionIcon class="q-mr-md" :icon="actions.addToFavorites.icon" />
-              <q-item-section>
-                {{ $t(actions.addToFavorites.displayNameKey) }}
-              </q-item-section>
-            </q-item>
-            <q-item
-              v-if="isShowAction(actions.removeFromFavorites)"
-              data-test-id="files-menu-remove-favorite"
-              clickable
-              v-close-popup
-              @click="onPerformAction(actions.removeFromFavorites)"
-            >
-              <ActionIcon class="q-mr-md" :icon="actions.removeFromFavorites.icon" />
-              <q-item-section>
-                {{ $t(actions.removeFromFavorites.displayNameKey) }}
-              </q-item-section>
-            </q-item>
-            <q-item
-              v-if="isShowAction(actions.shareWithTeammates)"
-              data-test-id="files-menu-share"
-              clickable
-              v-close-popup
-              @click="onPerformAction(actions.shareWithTeammates)"
-            >
-              <ActionIcon class="q-mr-md" :icon="actions.shareWithTeammates.icon" />
-              <q-item-section>
-                {{ $t(actions.shareWithTeammates.displayNameKey) }}
-              </q-item-section>
-            </q-item>
-            <q-item
-                v-if="isShowAction(actions.shareLeave)"
-                data-test-id="files-menu-share-leave"
-                clickable
-                v-close-popup
-                @click="onPerformAction(actions.shareLeave)"
-            >
-              <ActionIcon class="q-mr-md" :icon="actions.shareLeave.icon" />
-              <q-item-section>
-                {{ $t(actions.shareLeave.displayNameKey) }}
-              </q-item-section>
-            </q-item>
-            <q-item
-              v-if="isShowAction(actions.copy)"
-              data-test-id="files-menu-copy"
-              clickable
-              v-close-popup
-              @click="onCopyMove(actions.copy)"
-            >
-              <ActionIcon class="q-mr-md" :icon="actions.copy.icon" />
-              <q-item-section>
-                {{ $t(actions.copy.displayNameKey) }}
-              </q-item-section>
-            </q-item>
-            <q-item
-              v-if="isShowAction(actions.rename)"
-              data-test-id="files-menu-rename"
-              clickable
-              v-close-popup
-              @click="onPerformAction(actions.rename)"
-            >
-              <ActionIcon class="q-mr-md" :icon="actions.rename.icon" />
-              <q-item-section>
-                {{ $t(actions.rename.displayNameKey) }}
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-btn-dropdown>
-      </div>
+      <AppHeaderMoreDropdown
+        v-if="isShowDropdown"
+        data-test-id="files-view-more"
+      >
+        <template #label>
+          <ActionIcon color="black" icon="MoreIcon" />
+        </template>
+        <q-list style="width: 205px; min-height: 55px">
+          <AppMoreActionContainer
+            v-if="isShowAction(actions.addToFavorites)"
+            data-test-id="files-menu-add-favorite"
+            :action-label="$t(actions.addToFavorites.displayNameKey)"
+            @click="onPerformAction(actions.addToFavorites)"
+          >
+            <ActionIcon :icon="actions.addToFavorites.icon" />
+          </AppMoreActionContainer>
+          <AppMoreActionContainer
+            v-if="isShowAction(actions.removeFromFavorites)"
+            data-test-id="files-menu-remove-favorite"
+            :action-label="$t(actions.removeFromFavorites.displayNameKey)"
+            @click="onPerformAction(actions.removeFromFavorites)"
+          >
+            <ActionIcon :icon="actions.removeFromFavorites.icon" />
+          </AppMoreActionContainer>
+          <AppMoreActionContainer
+            v-if="isShowAction(actions.shareWithTeammates)"
+            data-test-id="files-menu-share"
+            :action-label="$t(actions.shareWithTeammates.displayNameKey)"
+            @click="onPerformAction(actions.shareWithTeammates)"
+          >
+            <ActionIcon :icon="actions.shareWithTeammates.icon" />
+          </AppMoreActionContainer>
+          <AppMoreActionContainer
+            v-if="isShowAction(actions.shareLeave)"
+            data-test-id="files-menu-share-leave"
+            :action-label="$t(actions.shareLeave.displayNameKey)"
+            @click="onPerformAction(actions.shareLeave)"
+          >
+            <ActionIcon :icon="actions.shareLeave.icon" />
+          </AppMoreActionContainer>
+          <AppMoreActionContainer
+            v-if="isShowAction(actions.copy)"
+            data-test-id="files-menu-copy"
+            :action-label="$t(actions.copy.displayNameKey)"
+            @click="onCopyMove(actions.copy)"
+          >
+            <ActionIcon :icon="actions.copy.icon" />
+          </AppMoreActionContainer>
+          <AppMoreActionContainer
+            v-if="isShowAction(actions.rename)"
+            data-test-id="files-menu-rename"
+            :action-label="$t(actions.rename.displayNameKey)"
+            @click="onPerformAction(actions.rename)"
+          >
+            <ActionIcon :icon="actions.rename.icon" />
+          </AppMoreActionContainer>
+        </q-list>
+      </AppHeaderMoreDropdown>
     </div>
   </q-toolbar>
 </template>
@@ -134,6 +104,8 @@ import { useFilesStore } from '../../store/index-pinia'
 
 import ActionIcon from '../common/ActionIcon'
 import AppHeaderButton from 'src/components/common/AppHeaderButton'
+import AppHeaderMoreDropdown from 'src/components/common/AppHeaderMoreDropdown'
+import AppMoreActionContainer from 'src/components/common/AppMoreActionContainer'
 import { getFileActions } from '../../utils/file-actions'
 
 export default {
@@ -141,6 +113,8 @@ export default {
   components: {
     ActionIcon,
     AppHeaderButton,
+    AppHeaderMoreDropdown,
+    AppMoreActionContainer,
   },
 
   mounted() {
