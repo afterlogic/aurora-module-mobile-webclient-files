@@ -1,12 +1,15 @@
 <template>
   <div
     class="action-icon flex justify-center items-center"
-    :class="{ 'action-icon_with-cross': withCross }"
+    :class="{
+      'action-icon_with-cross': withCross,
+      'action-icon_decorative': !isInteractive,
+    }"
     :style="iconStyle"
-    role="button"
-    tabindex="0"
-    @click="$emit('click', $event)"
-    @keydown.enter.prevent="$emit('click', $event)"
+    :role="isInteractive ? 'button' : undefined"
+    :tabindex="isInteractive ? 0 : undefined"
+    @click="onClick"
+    @keydown.enter.prevent="onClick"
   >
     <component :is="componentInstance" :color="color" />
   </div>
@@ -24,12 +27,27 @@ export default {
     withCross: { type: Boolean, default: false },
   },
   computed: {
+    // Interactive only when a parent listens to @click — otherwise stay
+    // decorative so nested use inside q-btn / wrappers does not create a
+    // second button hit-target. Declared emits are omitted from $attrs,
+    // so read the listener from the vnode props.
+    isInteractive() {
+      return typeof this.$.vnode.props?.onClick === 'function'
+    },
     componentInstance () {
       const name = this.icon ? this.icon : ''
       return defineAsyncComponent(() => import(`../icons/file-actions/${name}`))
     },
     iconStyle() {
       return this.color ? { color: this.color } : null
+    },
+  },
+  methods: {
+    onClick(event) {
+      if (!this.isInteractive) {
+        return
+      }
+      this.$emit('click', event)
     },
   },
 }
@@ -39,6 +57,11 @@ export default {
 .action-icon {
   width: 16px;
   cursor: pointer;
+}
+
+.action-icon_decorative {
+  cursor: inherit;
+  pointer-events: none;
 }
 
 .action-icon_with-cross {

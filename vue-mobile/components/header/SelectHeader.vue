@@ -16,14 +16,22 @@
         data-test-id="files-select-copy"
         @click="copyItems"
       >
-        <ActionIcon color="black" :icon="actions.copy.icon" />
+        <ActionIcon
+          color="black"
+          :icon="actions.copy.icon"
+          @click.stop="copyItems"
+        />
       </AppHeaderButton>
       <AppHeaderButton
         v-if="isShowAction(actions.restore)"
         data-test-id="files-select-restore"
         @click="onPerformAction(actions.restore)"
       >
-        <ActionIcon color="black" :icon="actions.restore.icon" />
+        <ActionIcon
+          color="black"
+          :icon="actions.restore.icon"
+          @click.stop="onPerformAction(actions.restore)"
+        />
       </AppHeaderButton>
       <div
         v-if="isShowAction(actions.shareLeave) && sharedFiles.length"
@@ -33,7 +41,11 @@
           data-test-id="files-select-share-leave"
           @click="onPerformAction(actions.shareLeave)"
         >
-          <ActionIcon color="black" :icon="actions.shareLeave.icon" />
+          <ActionIcon
+            color="black"
+            :icon="actions.shareLeave.icon"
+            @click.stop="onPerformAction(actions.shareLeave)"
+          />
         </AppHeaderButton>
         <span>{{ sharedFiles.length }}</span>
       </div>
@@ -42,7 +54,11 @@
         data-test-id="files-select-delete"
         @click="onPerformAction(actions.delete)"
       >
-        <ActionIcon color="black" :icon="actions.delete.icon" />
+        <ActionIcon
+          color="black"
+          :icon="actions.delete.icon"
+          @click.stop="onPerformAction(actions.delete)"
+        />
       </AppHeaderButton>
     </div>
   </q-toolbar>
