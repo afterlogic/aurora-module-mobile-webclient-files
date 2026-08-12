@@ -93,6 +93,7 @@ async function deleteOpenedFile(page, name) {
 }
 
 async function longPressFilesItem(page, item) {
+  await item.scrollIntoViewIfNeeded()
   const box = await item.boundingBox()
   if (!box) {
     throw new Error('files item has no bounding box for long-press')
@@ -101,6 +102,9 @@ async function longPressFilesItem(page, item) {
   await page.mouse.down()
   await page.waitForTimeout(750)
   await page.mouse.up()
+  // FileList.skipSelectToggleUntil ≈ 500ms after long-press (guards synthetic
+  // click on the same row). Wait it out before the next UI action.
+  await page.waitForTimeout(550)
 }
 
 async function navigateToStorageRoot(page) {
@@ -116,6 +120,47 @@ async function navigateToStorageRoot(page) {
   }
 }
 
+/**
+ * Click an item inside the left drawer (q-scroll-area).
+ * Plain clickReady fails: Quasar keeps closed-drawer nodes in the DOM, so
+ * Playwright can resolve Corporate while it is off-screen / not actionable,
+ * then retries close the overlay. Scroll the nested container and force-click
+ * only after the item is in the viewport.
+ */
+async function clickDrawerItem(page, item) {
+  const drawer = page.getByTestId('mail-drawer')
+  await expect(drawer).toBeVisible({ timeout: 15000 })
+
+  await expect
+    .poll(
+      async () => {
+        await item.evaluate((el) => {
+          const area = el.closest('.q-scrollarea')
+          const container =
+            area?.querySelector('.q-scrollarea__container') ||
+            el.closest('.q-scrollarea__container') ||
+            el.closest('.scroll')
+          if (container) {
+            const er = el.getBoundingClientRect()
+            const cr = container.getBoundingClientRect()
+            container.scrollTop +=
+              er.top - cr.top - cr.height / 2 + er.height / 2
+          } else {
+            el.scrollIntoView({ block: 'center', inline: 'nearest' })
+          }
+        })
+        return item.isVisible()
+      },
+      { timeout: 15000, intervals: [100, 200, 400] }
+    )
+    .toBeTruthy()
+
+  await expect(item).toBeInViewport({ timeout: 10000 })
+  // Nested scroll + overlay: actionability click often flakes; force is safe
+  // after we proved the item is on-screen inside the open drawer.
+  await item.click({ force: true })
+}
+
 async function openPersonalStorage(page) {
   await navigateToStorageRoot(page)
   await clickReady(page.getByTestId('files-folder-menu'))
@@ -126,11 +171,74 @@ async function openPersonalStorage(page) {
     )
     .first()
   if ((await personal.count()) > 0) {
-    await clickReady(personal)
+    await clickDrawerItem(page, personal)
   } else {
-    await clickReady(page.getByTestId('files-storage-item').first())
+    await clickDrawerItem(page, page.getByTestId('files-storage-item').first())
   }
   await waitForFilesList(page)
+}
+
+async function openSharedStorage(page) {
+  await navigateToStorageRoot(page)
+  await clickReady(page.getByTestId('files-folder-menu'))
+  await expect(page.getByTestId('mail-drawer')).toBeVisible({ timeout: 15000 })
+  const shared = page
+    .locator(
+      '[data-test-id="files-storage-item"][data-storage-type="shared"]'
+    )
+    .first()
+  await expect(shared).toBeVisible({ timeout: 15000 })
+  await clickDrawerItem(page, shared)
+  await waitForFilesList(page)
+}
+
+/**
+ * From open file view: Share with teammates → pick contact → access → Save.
+ * Contact must be in the owner's team address book (q-select filter).
+ */
+async function shareOpenedFileWithTeammate(page, teammateEmail) {
+  await clickReady(page.getByTestId('files-view-more'))
+  const shareMenu = page.getByTestId('files-menu-share')
+  await expect(shareMenu).toBeVisible({ timeout: 15000 })
+  await clickReady(shareMenu)
+
+  const dialog = page.getByTestId('files-share-dialog')
+  await expect(dialog).toBeVisible({ timeout: 15000 })
+
+  const selectRoot = dialog.getByTestId('files-share-contact-select')
+  const input = selectRoot.locator('input').first()
+  await expect(input).toBeVisible({ timeout: 10000 })
+  // Quasar use-input: native input has no-pointer-events; open via field, type with force.
+  await selectRoot.locator('.q-field__control').click({ force: true })
+  await input.fill(teammateEmail, { force: true })
+
+  // Quasar options render in a portal outside the dialog.
+  const option = page
+    .locator('.q-menu .q-item, .q-virtual-scroll__content .q-item')
+    .filter({ hasText: teammateEmail })
+    .first()
+  await expect(option).toBeVisible({ timeout: 30000 })
+  await option.click()
+
+  const plusBtn = dialog.locator('.dropdown-plus .q-btn').first()
+  await expect(plusBtn).toBeEnabled({ timeout: 10000 })
+  await clickReady(plusBtn)
+  // Status labels in DropdownContactStatus are English keys (not i18n).
+  const readStatus = page
+    .locator('.q-menu .q-item')
+    .filter({ hasText: /^read$/i })
+    .first()
+  await expect(readStatus).toBeVisible({ timeout: 10000 })
+  await clickReady(readStatus)
+
+  await expect(
+    dialog.locator('.users-list').getByText(teammateEmail, { exact: false })
+  ).toBeVisible({ timeout: 10000 })
+
+  const save = page.getByTestId('files-share-save')
+  await expect(save).toBeEnabled({ timeout: 10000 })
+  await clickReady(save)
+  await expect(dialog).toBeHidden({ timeout: 60000 })
 }
 
 module.exports = {
@@ -142,7 +250,10 @@ module.exports = {
   deleteOpenedFile,
   longPressFilesItem,
   navigateToStorageRoot,
+  clickDrawerItem,
   openPersonalStorage,
+  openSharedStorage,
+  shareOpenedFileWithTeammate,
   waitForListReady,
   clickReady,
   step,

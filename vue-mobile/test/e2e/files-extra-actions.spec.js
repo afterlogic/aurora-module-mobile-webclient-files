@@ -55,10 +55,11 @@ test.describe('Mobile files select-copy and download', () => {
       await expect(page.getByTestId('files-select-header')).toBeVisible({
         timeout: 15000,
       })
-      await expect(page.getByTestId('files-select-copy')).toBeVisible({
-        timeout: 10000,
-      })
-      await clickReady(page.getByTestId('files-select-copy'))
+      const copyBtn = page.getByTestId('files-select-copy')
+      await expect(copyBtn).toBeVisible({ timeout: 10000 })
+      // Native wrapper @click on files-select-copy; hasTouch Playwright click/tap
+      // miss q-btn, but HTMLElement.click() runs the Vue listener on this node.
+      await copyBtn.evaluate((el) => el.click())
       await expect(page.getByTestId('files-copymove-header')).toBeVisible({
         timeout: 15000,
       })
@@ -215,13 +216,17 @@ test.describe('Mobile files select-copy and download', () => {
         return
       }
       await clickReady(del)
-      await expect(page.getByTestId('files-delete-dialog')).toBeVisible({
-        timeout: 15000,
-      })
-      await clickReady(page.getByTestId('files-delete-confirm'))
-      await expect(page.getByTestId('files-delete-dialog')).toBeHidden({
-        timeout: 45000,
-      })
+      // Confirm only when shown (Trash / AllowTrash=false); otherwise delete
+      // goes straight to trash without files-delete-dialog.
+      const deleteDialog = page.getByTestId('files-delete-dialog')
+      const dialogShown = await deleteDialog
+        .waitFor({ state: 'visible', timeout: 5000 })
+        .then(() => true)
+        .catch(() => false)
+      if (dialogShown) {
+        await clickReady(page.getByTestId('files-delete-confirm'))
+        await expect(deleteDialog).toBeHidden({ timeout: 45000 })
+      }
       await waitForFilesList(page)
       await expect(
         page.getByTestId('files-folder').filter({ hasText: renamed })
