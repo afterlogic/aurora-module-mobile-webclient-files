@@ -11,55 +11,63 @@
       {{ `Selected: ${items.length}` }}
     </div>
     <div class="col app-header__right">
-      <AppHeaderButton
+      <div
         v-if="isShowAction(actions.copy)"
         data-test-id="files-select-copy"
+        class="flex items-center"
+        role="button"
+        tabindex="0"
         @click="copyItems"
+        @keydown.enter.prevent="copyItems"
       >
-        <ActionIcon
-          color="black"
-          :icon="actions.copy.icon"
-          @click.stop="copyItems"
-        />
-      </AppHeaderButton>
-      <AppHeaderButton
+        <AppHeaderButton tabindex="-1">
+          <ActionIcon color="black" :icon="actions.copy.icon" />
+        </AppHeaderButton>
+      </div>
+      <div
         v-if="isShowAction(actions.restore)"
         data-test-id="files-select-restore"
+        class="flex items-center"
+        role="button"
+        tabindex="0"
         @click="onPerformAction(actions.restore)"
+        @keydown.enter.prevent="onPerformAction(actions.restore)"
       >
-        <ActionIcon
-          color="black"
-          :icon="actions.restore.icon"
-          @click.stop="onPerformAction(actions.restore)"
-        />
-      </AppHeaderButton>
+        <AppHeaderButton tabindex="-1">
+          <ActionIcon color="black" :icon="actions.restore.icon" />
+        </AppHeaderButton>
+      </div>
       <div
         v-if="isShowAction(actions.shareLeave) && sharedFiles.length"
         class="flex no-wrap items-center"
       >
-        <AppHeaderButton
+        <div
           data-test-id="files-select-share-leave"
+          class="flex items-center"
+          role="button"
+          tabindex="0"
           @click="onPerformAction(actions.shareLeave)"
+          @keydown.enter.prevent="onPerformAction(actions.shareLeave)"
         >
-          <ActionIcon
-            color="black"
-            :icon="actions.shareLeave.icon"
-            @click.stop="onPerformAction(actions.shareLeave)"
-          />
-        </AppHeaderButton>
+          <AppHeaderButton tabindex="-1">
+            <ActionIcon color="black" :icon="actions.shareLeave.icon" />
+          </AppHeaderButton>
+        </div>
         <span>{{ sharedFiles.length }}</span>
       </div>
-      <AppHeaderButton
+      <div
         v-if="isShowAction(actions.delete) && unsharedFiles.length"
         data-test-id="files-select-delete"
+        class="flex items-center"
+        role="button"
+        tabindex="0"
         @click="onPerformAction(actions.delete)"
+        @keydown.enter.prevent="onPerformAction(actions.delete)"
       >
-        <ActionIcon
-          color="black"
-          :icon="actions.delete.icon"
-          @click.stop="onPerformAction(actions.delete)"
-        />
-      </AppHeaderButton>
+        <AppHeaderButton tabindex="-1">
+          <ActionIcon color="black" :icon="actions.delete.icon" />
+        </AppHeaderButton>
+      </div>
     </div>
   </q-toolbar>
 </template>

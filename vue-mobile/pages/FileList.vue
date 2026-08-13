@@ -85,6 +85,7 @@ export default {
   data() {
     return {
       isSelectMode: false,
+      skipSelectToggleUntil: 0,
     }
   },
   
@@ -181,11 +182,17 @@ export default {
       })
     },
     selectItem(item) {
+      if (Date.now() < this.skipSelectToggleUntil) {
+        return
+      }
       item.isSelected = !item.isSelected
     },
     longPress(item) {
       this.isSelectMode = true
-      this.selectItem(item)
+      item.isSelected = true
+      // Quasar touch-hold + Playwright mouse.up still emit a click that would
+      // toggle the just-selected item off before SelectHeader can appear.
+      this.skipSelectToggleUntil = Date.now() + 500
     },
   },
 }
