@@ -2,8 +2,8 @@
 
 ```bash
 cd modules/FilesMobileWebclient/vue-mobile
-yarn
-yarn test:unit
+npm install
+npm run test:unit
 ```
 
-Template mirrors Mail/Core: `test/unit/**/*.spec.js`, `yarn test:unit`, pre-commit when `vue-mobile/` is staged.
+Template mirrors Mail/Core: `test/unit/**/*.spec.js`, `npm run test:unit`, pre-commit when `vue-mobile/` is staged.
