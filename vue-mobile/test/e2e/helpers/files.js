@@ -6,7 +6,7 @@ const { sharedHelper, fixturePath } = require(path.join(
 const fs = require('fs')
 const { expect } = require('@playwright/test')
 const { step, attachScreenshot } = sharedHelper('login')
-const { waitForListReady, clickReady } = sharedHelper('ready')
+const { waitForListReady, clickReady, clickDrawerItem } = sharedHelper('ready')
 
 const listReadyOptions = {
   itemTestIds: ['files-item', 'files-folder'],
@@ -19,6 +19,15 @@ const listReadyOptions = {
 }
 
 const defaultFixturePath = fixturePath('e2e-attach.txt')
+
+/** Keep under FileItem getShortName(..., 30) so list/search text matches fully. */
+function uniqueFileName(prefix) {
+  return `${prefix}-${Date.now()}.txt`
+}
+
+function uniqueFolderName(prefix) {
+  return `${prefix} ${Date.now()}`
+}
 
 async function openFiles(page) {
   await clickReady(page.getByTestId('nav-files'))
@@ -35,44 +44,139 @@ async function waitForFilesList(page) {
   await waitForListReady(page, listReadyOptions)
 }
 
-async function uploadFileViaFab(page, uniqueName, fixturePath = defaultFixturePath) {
-  await clickReady(page.getByTestId('files-create-fab'))
-  await expect(page.getByTestId('files-upload-file')).toBeVisible({
+async function isFilesSearchOpen(page) {
+  return page
+    .getByTestId('files-search-input')
+    .isVisible()
+    .catch(() => false)
+}
+
+async function closeFilesSearch(page) {
+  if (!(await isFilesSearchOpen(page))) {
+    return
+  }
+  await clickReady(page.getByTestId('files-search-close'))
+  await expect(page.getByTestId('files-search-input')).toBeHidden({
     timeout: 15000,
   })
+}
 
-  const [fileChooser] = await Promise.all([
-    page.waitForEvent('filechooser'),
-    page.getByTestId('files-upload-file').click(),
-  ])
+/**
+ * Open Files search (or reuse open search) and set the query.
+ * Leaves search open so filtered results stay visible.
+ * Does not call waitForListReady — search empty state ("Nothing found") would
+ * otherwise hang when spinners/list settle oddly.
+ */
+async function searchFiles(page, query) {
+  if (!(await isFilesSearchOpen(page))) {
+    await clickReady(page.getByTestId('files-search'))
+    await expect(page.getByTestId('files-search-input')).toBeVisible({
+      timeout: 15000,
+    })
+  }
+  const input = page.getByTestId('files-search-input').locator('input')
+  await input.fill('')
+  await input.fill(query)
+  await page.waitForTimeout(1000)
+}
+
+/**
+ * Find a file or folder row by name. Uses list first, then search when the
+ * Personal list is long / virtualized.
+ * @param {'files-item'|'files-folder'} kind
+ */
+async function locateByName(page, name, kind, { timeout = 60000 } = {}) {
+  const row = () => page.getByTestId(kind).filter({ hasText: name }).first()
+
+  if (await row().isVisible().catch(() => false)) {
+    return row()
+  }
+
+  await searchFiles(page, name)
+  await expect(
+    row(),
+    `Expected ${kind} "${name}" after search (upload/API may have failed)`
+  ).toBeVisible({ timeout })
+  return row()
+}
+
+/**
+ * FAB → Upload file. files-upload-file only mounts FileUploader; Quasar
+ * pickFiles() opens the chooser asynchronously via $root.uploadFiles.
+ */
+async function uploadFileViaFab(page, uniqueName, fixturePath = defaultFixturePath) {
+  await closeFilesSearch(page).catch(() => undefined)
+  await clickReady(page.getByTestId('files-create-fab'))
+  const uploadBtn = page.getByTestId('files-upload-file')
+  await expect(uploadBtn).toBeVisible({ timeout: 15000 })
+
+  const fileChooserPromise = page.waitForEvent('filechooser', { timeout: 30000 })
+  // hasTouch: Playwright click can miss Vue @click on this FAB child.
+  await uploadBtn.evaluate((el) => el.click())
+  const fileChooser = await fileChooserPromise
+
+  // Multipart UploadFile: postData() may be empty; match URL + content-type.
+  const uploadResponsePromise = page.waitForResponse(
+    (res) => {
+      const req = res.request()
+      if (!req.url().includes('Api')) return false
+      if (req.method() !== 'POST') return false
+      const ct = (req.headers()['content-type'] || '').toLowerCase()
+      if (ct.includes('multipart/form-data')) return true
+      const post = req.postData() || ''
+      return post.includes('UploadFile') || post.includes('jua-uploader')
+    },
+    { timeout: 90000 }
+  )
+
   await fileChooser.setFiles({
     name: uniqueName,
     mimeType: 'text/plain',
     buffer: fs.readFileSync(fixturePath),
   })
 
-  const item = page
-    .getByTestId('files-item')
-    .filter({ hasText: uniqueName })
-    .first()
-  await expect(item).toBeVisible({ timeout: 90000 })
+  const resp = await uploadResponsePromise
+  if (!resp.ok()) {
+    throw new Error(`Files.UploadFile HTTP ${resp.status()} for "${uniqueName}"`)
+  }
+  let body = null
+  try {
+    body = await resp.json()
+  } catch {
+    body = null
+  }
+  // Aurora may return HTTP 200 with ErrorCode (e.g. 102 AuthError) and no Result.
+  if (!body || body.Result !== true) {
+    throw new Error(
+      `Files.UploadFile failed for "${uniqueName}": ${JSON.stringify(body)}`
+    )
+  }
+  console.log(`  → UploadFile OK for ${uniqueName}`)
+
+  // Prefer list poll; fall back to search if the list is long.
+  const inList = page.getByTestId('files-item').filter({ hasText: uniqueName }).first()
+  const appeared = await inList
+    .waitFor({ state: 'visible', timeout: 15000 })
+    .then(() => true)
+    .catch(() => false)
+  if (appeared) {
+    return inList
+  }
+
+  const item = await locateByName(page, uniqueName, 'files-item', {
+    timeout: 60000,
+  })
+  await closeFilesSearch(page)
   return item
 }
 
 async function openFileByName(page, name) {
-  const item = page.getByTestId('files-item').filter({ hasText: name }).first()
-  await expect(item).toBeVisible({ timeout: 30000 })
+  const item = await locateByName(page, name, 'files-item', { timeout: 30000 })
   await clickReady(item)
   await expect(page.getByTestId('files-view')).toBeVisible({ timeout: 30000 })
 }
 
-async function deleteOpenedFile(page, name) {
-  await expect(page.getByTestId('files-view-delete')).toBeVisible({
-    timeout: 15000,
-  })
-  await clickReady(page.getByTestId('files-view-delete'))
-
-  // Confirm only when the dialog is shown (Trash / AllowTrash=false).
+async function confirmDeleteDialogIfShown(page) {
   const deleteDialog = page.getByTestId('files-delete-dialog')
   const dialogShown = await deleteDialog
     .waitFor({ state: 'visible', timeout: 5000 })
@@ -82,6 +186,14 @@ async function deleteOpenedFile(page, name) {
     await clickReady(page.getByTestId('files-delete-confirm'))
     await expect(deleteDialog).toBeHidden({ timeout: 45000 })
   }
+}
+
+async function deleteOpenedFile(page, name) {
+  await expect(page.getByTestId('files-view-delete')).toBeVisible({
+    timeout: 15000,
+  })
+  await clickReady(page.getByTestId('files-view-delete'))
+  await confirmDeleteDialogIfShown(page)
 
   // After delete from file view the app must navigate to the list by itself
   // (no manual files-view-back). A blank files-view left on screen is a bug.
@@ -112,6 +224,7 @@ async function navigateToStorageRoot(page) {
     await clickReady(page.getByTestId('files-view-back'))
     await waitForFilesList(page)
   }
+  await closeFilesSearch(page).catch(() => undefined)
   for (let i = 0; i < 10; i++) {
     const back = page.getByTestId('files-path-back')
     if (!(await back.isVisible().catch(() => false))) break
@@ -120,48 +233,211 @@ async function navigateToStorageRoot(page) {
   }
 }
 
-/**
- * Click an item inside the left drawer (q-scroll-area).
- * Plain clickReady fails: Quasar keeps closed-drawer nodes in the DOM, so
- * Playwright can resolve Corporate while it is off-screen / not actionable,
- * then retries close the overlay. Scroll the nested container and force-click
- * only after the item is in the viewport.
- */
-async function clickDrawerItem(page, item) {
-  const drawer = page.getByTestId('mail-drawer')
-  await expect(drawer).toBeVisible({ timeout: 15000 })
-
-  await expect
-    .poll(
-      async () => {
-        await item.evaluate((el) => {
-          const area = el.closest('.q-scrollarea')
-          const container =
-            area?.querySelector('.q-scrollarea__container') ||
-            el.closest('.q-scrollarea__container') ||
-            el.closest('.scroll')
-          if (container) {
-            const er = el.getBoundingClientRect()
-            const cr = container.getBoundingClientRect()
-            container.scrollTop +=
-              er.top - cr.top - cr.height / 2 + er.height / 2
-          } else {
-            el.scrollIntoView({ block: 'center', inline: 'nearest' })
-          }
-        })
-        return item.isVisible()
-      },
-      { timeout: 15000, intervals: [100, 200, 400] }
-    )
-    .toBeTruthy()
-
-  await expect(item).toBeInViewport({ timeout: 10000 })
-  // Nested scroll + overlay: actionability click often flakes; force is safe
-  // after we proved the item is on-screen inside the open drawer.
-  await item.click({ force: true })
+async function createFolderViaFab(page, folderName) {
+  await closeFilesSearch(page).catch(() => undefined)
+  await clickReady(page.getByTestId('files-create-fab'))
+  await clickReady(page.getByTestId('files-create-folder'))
+  await expect(page.getByTestId('files-create-folder-dialog')).toBeVisible({
+    timeout: 15000,
+  })
+  await page
+    .getByTestId('files-create-folder-name')
+    .locator('input')
+    .fill(folderName)
+  await clickReady(page.getByTestId('files-create-folder-submit'))
+  await expect(page.getByTestId('files-create-folder-dialog')).toBeHidden({
+    timeout: 45000,
+  })
+  await waitForFilesList(page)
+  const folder = await locateByName(page, folderName, 'files-folder', {
+    timeout: 60000,
+  })
+  await closeFilesSearch(page)
+  return folder
 }
 
-async function openPersonalStorage(page) {
+async function deleteFolderIfPresent(page, folderName) {
+  await closeFilesSearch(page).catch(() => undefined)
+  await waitForFilesList(page)
+
+  let folder = page
+    .getByTestId('files-folder')
+    .filter({ hasText: folderName })
+    .first()
+  if (!(await folder.isVisible().catch(() => false))) {
+    await searchFiles(page, folderName)
+    folder = page
+      .getByTestId('files-folder')
+      .filter({ hasText: folderName })
+      .first()
+    if (!(await folder.isVisible().catch(() => false))) {
+      await closeFilesSearch(page).catch(() => undefined)
+      return
+    }
+  }
+
+  await clickReady(folder.getByTestId('files-folder-more'))
+  const del = page.getByTestId('files-item-menu-delete')
+  if ((await del.count()) === 0) {
+    console.log('  → No delete in folder menu; leave folder')
+    await page.keyboard.press('Escape').catch(() => undefined)
+    await closeFilesSearch(page).catch(() => undefined)
+    return
+  }
+  await clickReady(del)
+  await confirmDeleteDialogIfShown(page)
+  await waitForFilesList(page)
+  await closeFilesSearch(page).catch(() => undefined)
+  await expect(
+    page.getByTestId('files-folder').filter({ hasText: folderName })
+  ).toHaveCount(0, { timeout: 30000 })
+}
+
+/**
+ * Delete a file during test cleanup (not the scenario under test).
+ * Prefer file view delete; fall back to item menu when navigation after delete
+ * does not close files-view (known intermittent product issue on some stands).
+ */
+async function cleanupDeleteFile(page, name) {
+  await closeFilesSearch(page).catch(() => undefined)
+
+  if (!(await page.getByTestId('files-view').isVisible().catch(() => false))) {
+    const listed = page.getByTestId('files-item').filter({ hasText: name }).first()
+    if (!(await listed.isVisible().catch(() => false))) {
+      await searchFiles(page, name)
+      if (
+        !(await page
+          .getByTestId('files-item')
+          .filter({ hasText: name })
+          .first()
+          .isVisible()
+          .catch(() => false))
+      ) {
+        await closeFilesSearch(page).catch(() => undefined)
+        return
+      }
+    }
+    await openFileByName(page, name)
+  }
+
+  await clickReady(page.getByTestId('files-view-delete'))
+  await confirmDeleteDialogIfShown(page)
+
+  const viewHidden = await page
+    .getByTestId('files-view')
+    .waitFor({ state: 'hidden', timeout: 30000 })
+    .then(() => true)
+    .catch(() => false)
+
+  if (!viewHidden) {
+    console.log('  → files-view still open after delete; cleanup via list menu')
+    await clickReady(page.getByTestId('files-view-back'))
+    await waitForFilesList(page)
+    const row = await locateByName(page, name, 'files-item', {
+      timeout: 15000,
+    }).catch(() => null)
+    if (!row) {
+      await closeFilesSearch(page).catch(() => undefined)
+      return
+    }
+    await clickReady(row.getByTestId('files-item-more'))
+    await expect(page.getByTestId('files-item-menu')).toBeVisible({
+      timeout: 15000,
+    })
+    await clickReady(page.getByTestId('files-item-menu-delete'))
+    await confirmDeleteDialogIfShown(page)
+  }
+
+  await waitForFilesList(page)
+  await closeFilesSearch(page).catch(() => undefined)
+}
+
+/**
+ * Best-effort cleanup of names created by this test. Never throws — failures
+ * are logged so the original test error stays primary.
+ */
+async function cleanupArtifacts(page, { files = [], folders = [] } = {}) {
+  try {
+    await page.keyboard.press('Escape').catch(() => undefined)
+    if (await page.getByTestId('files-view').isVisible().catch(() => false)) {
+      await clickReady(page.getByTestId('files-view-back')).catch(() => undefined)
+    }
+    await navigateToStorageRoot(page)
+  } catch (e) {
+    console.log(`  → cleanupArtifacts navigate: ${e.message}`)
+  }
+
+  for (const name of files) {
+    try {
+      await cleanupDeleteFile(page, name)
+      console.log(`  → cleanup file: ${name}`)
+    } catch (e) {
+      console.log(`  → cleanup file failed (${name}): ${e.message}`)
+    }
+  }
+  for (const name of folders) {
+    try {
+      await deleteFolderIfPresent(page, name)
+      console.log(`  → cleanup folder: ${name}`)
+    } catch (e) {
+      console.log(`  → cleanup folder failed (${name}): ${e.message}`)
+    }
+  }
+}
+
+/**
+ * Remove leftover e2e / E2E artifacts from Personal so the list does not grow
+ * across runs. Caps deletions per call to keep suite time bounded.
+ */
+async function purgeE2eLeftovers(page, { maxItems = 8 } = {}) {
+  await navigateToStorageRoot(page)
+  let removed = 0
+
+  while (removed < maxItems) {
+    await searchFiles(page, 'e2e')
+    const file = page
+      .getByTestId('files-item')
+      .filter({ hasText: /e2e/i })
+      .first()
+    const folder = page
+      .getByTestId('files-folder')
+      .filter({ hasText: /e2e/i })
+      .first()
+
+    const hasFile = await file.isVisible().catch(() => false)
+    const hasFolder = await folder.isVisible().catch(() => false)
+    if (!hasFile && !hasFolder) {
+      break
+    }
+
+    try {
+      if (hasFile) {
+        const label = (
+          await file.locator('.file__name').innerText().catch(() => '')
+        ).trim()
+        await closeFilesSearch(page)
+        await cleanupDeleteFile(page, label || 'e2e')
+      } else {
+        const label = (
+          await folder.locator('.folder__name').innerText().catch(() => '')
+        ).trim()
+        await closeFilesSearch(page)
+        await deleteFolderIfPresent(page, label || 'E2E')
+      }
+      removed += 1
+    } catch (e) {
+      console.log(`  → purgeE2eLeftovers stop: ${e.message}`)
+      break
+    }
+  }
+
+  await closeFilesSearch(page).catch(() => undefined)
+  if (removed > 0) {
+    console.log(`  → Purged ${removed} leftover e2e artifact(s)`)
+  }
+}
+
+async function openPersonalStorage(page, { purge = false } = {}) {
   await navigateToStorageRoot(page)
   await clickReady(page.getByTestId('files-folder-menu'))
   await expect(page.getByTestId('mail-drawer')).toBeVisible({ timeout: 15000 })
@@ -176,6 +452,9 @@ async function openPersonalStorage(page) {
     await clickDrawerItem(page, page.getByTestId('files-storage-item').first())
   }
   await waitForFilesList(page)
+  if (purge) {
+    await purgeE2eLeftovers(page)
+  }
 }
 
 async function openSharedStorage(page) {
@@ -211,13 +490,22 @@ async function shareOpenedFileWithTeammate(page, teammateEmail) {
   // Quasar use-input: native input has no-pointer-events; open via field, type with force.
   await selectRoot.locator('.q-field__control').click({ force: true })
   await input.fill(teammateEmail, { force: true })
+  await page.waitForTimeout(300)
 
   // Quasar options render in a portal outside the dialog.
   const option = page
     .locator('.q-menu .q-item, .q-virtual-scroll__content .q-item')
     .filter({ hasText: teammateEmail })
     .first()
-  await expect(option).toBeVisible({ timeout: 30000 })
+  const optionVisible = await option
+    .waitFor({ state: 'visible', timeout: 30000 })
+    .then(() => true)
+    .catch(() => false)
+  if (!optionVisible) {
+    throw new Error(
+      `Teammate "${teammateEmail}" not in share autocomplete — add them to ${process.env.E2E_LOGIN || 'primary user'} team address book on the stand`
+    )
+  }
   await option.click()
 
   const plusBtn = dialog.locator('.dropdown-plus .q-btn').first()
@@ -243,11 +531,21 @@ async function shareOpenedFileWithTeammate(page, teammateEmail) {
 
 module.exports = {
   listReadyOptions,
+  uniqueFileName,
+  uniqueFolderName,
   openFiles,
   waitForFilesList,
+  searchFiles,
+  closeFilesSearch,
+  locateByName,
   uploadFileViaFab,
   openFileByName,
   deleteOpenedFile,
+  cleanupDeleteFile,
+  cleanupArtifacts,
+  purgeE2eLeftovers,
+  createFolderViaFab,
+  deleteFolderIfPresent,
   longPressFilesItem,
   navigateToStorageRoot,
   clickDrawerItem,
