@@ -62,7 +62,8 @@ export default {
     },
     addedFiles() {
       if (this.currentStorage.Type !== 'encrypted') {
-        let url = getApiHost() + '/?/Api/'
+        // getApiHost() already ends with '/'; same as web-api.js sendRequest.
+        let url = getApiHost() + '?/Api/'
         let sAuthToken = VueCookies.get('AuthToken')
         let headers = []
         if (sAuthToken) {
