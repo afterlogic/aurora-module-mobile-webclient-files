@@ -136,8 +136,11 @@ async function uploadFileViaFab(page, uniqueName, fixturePath = defaultFixturePa
   })
 
   const resp = await uploadResponsePromise
+  const uploadUrl = resp.url()
   if (!resp.ok()) {
-    throw new Error(`Files.UploadFile HTTP ${resp.status()} for "${uniqueName}"`)
+    throw new Error(
+      `Files.UploadFile HTTP ${resp.status()} for "${uniqueName}" url=${uploadUrl}`
+    )
   }
   let body = null
   try {
@@ -145,10 +148,15 @@ async function uploadFileViaFab(page, uniqueName, fixturePath = defaultFixturePa
   } catch {
     body = null
   }
-  // Aurora may return HTTP 200 with ErrorCode (e.g. 102 AuthError) and no Result.
-  if (!body || body.Result !== true) {
+  // Success: Result is true, or an object with File (UploadFile API shape).
+  // HTTP 200 alone is not enough — AuthError 102 also returns 200.
+  const uploadOk =
+    body &&
+    !body.ErrorCode &&
+    (body.Result === true || (body.Result && body.Result.File))
+  if (!uploadOk) {
     throw new Error(
-      `Files.UploadFile failed for "${uniqueName}": ${JSON.stringify(body)}`
+      `Files.UploadFile failed for "${uniqueName}" url=${uploadUrl}: ${JSON.stringify(body)}`
     )
   }
   console.log(`  → UploadFile OK for ${uniqueName}`)
