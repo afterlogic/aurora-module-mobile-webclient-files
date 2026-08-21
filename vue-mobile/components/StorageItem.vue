@@ -6,7 +6,7 @@
     :data-storage-name="storage.DisplayName"
     :active="active"
     clickable
-    v-ripple
+    :ripple="false"
     @click.prevent="selectStorage"
   >
     <q-item-section side>
