@@ -65,7 +65,12 @@ export default {
         // getApiHost() already ends with '/'; same as web-api.js sendRequest.
         let url = getApiHost() + '?/Api/'
         let sAuthToken = VueCookies.get('AuthToken')
-        let headers = []
+        // TwoFactorAuth AllowUsedDevices requires X-DeviceId on every Api entry
+        // (including Quasar multipart upload); without it the server returns AuthError 102.
+        let headers = [
+          { name: 'X-DeviceId', value: VueCookies.get('DeviceId') || '' },
+          { name: 'X-MobileApp', value: '1' },
+        ]
         if (sAuthToken) {
           headers.push({ name: 'Authorization', value: 'Bearer ' + sAuthToken })
         }
