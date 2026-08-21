@@ -86,7 +86,8 @@ export default {
       .catch(error => false)
   },
 
-  createShareableLink: async (parameters, module) => {
+  /** Simple public links use Files; protected links must call OpenPgpFilesWebclient elsewhere. */
+  createShareableLink: async (parameters, module = 'Files') => {
     return webApi.sendRequest({
       moduleName: module,
       methodName: 'CreatePublicLink',

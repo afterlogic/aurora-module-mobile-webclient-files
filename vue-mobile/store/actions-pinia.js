@@ -239,31 +239,23 @@ export default {
     return await filesWebApi.createFolder(parameters)
   },
 
-  async asyncCreateShareableLink({ withPassword }) {
+  /**
+   * Creates a simple public link via the Files module (PersonalFiles implements it).
+   * Password-protected / OpenPgp links are owned by OpenPgpFilesMobileWebclient.
+   */
+  async asyncCreateShareableLink() {
     const currentFile = this.currentFile
-    let password = ''
-    if (withPassword) {
-      const OpenPgp = (await import('../../../OpenPgpMobileWebclient/vue-mobile/openpgp-helper')).default
-      password = OpenPgp.generatePassword()
-    }
     const parameters = {
       Type: currentFile.type,
       Path: currentFile.path,
       Name: currentFile.name,
       Size: currentFile.size,
       IsFolder: currentFile.isFolder,
-      RecipientEmail: '',
-      PgpEncryptionMode: '',
-      LifetimeHrs: 0,
-      Password: password,
     }
-    const module = 'OpenPgpFilesWebclient'
-    const result = await filesWebApi.createShareableLink(parameters, module)
+    const result = await filesWebApi.createShareableLink(parameters)
     if (result) {
       currentFile.publicLink = `${getApiHost()}${result}`
-      if (parameters.Password) {
-        currentFile.linkPassword = parameters.Password
-      }
+      currentFile.linkPassword = ''
     }
     return result
   },

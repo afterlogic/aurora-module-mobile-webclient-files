@@ -1,6 +1,5 @@
 import types from 'src/utils/types'
 import { getApiHost } from 'src/api/helpers'
-import OpenPgp from "../../../OpenPgpMobileWebclient/vue-mobile/openpgp-helper";
 import _ from 'lodash'
 import filesWebApi from '../files-web-api'
 import {
@@ -147,7 +146,11 @@ export default {
     }
     return await filesWebApi.createFolder(parameters)
   },
-  asyncCreateShareableLink: async ({ commit, getters }, { withPassword }) => {
+  /**
+   * Creates a simple public link via the Files module (PersonalFiles implements it).
+   * Password-protected / OpenPgp links are owned by OpenPgpFilesMobileWebclient.
+   */
+  asyncCreateShareableLink: async ({ commit, getters }) => {
     const currentFile = getters['currentFile']
     const parameters = {
       Type: currentFile.type,
@@ -155,27 +158,19 @@ export default {
       Name: currentFile.name,
       Size: currentFile.size,
       IsFolder: currentFile.isFolder,
-      RecipientEmail: '',
-      PgpEncryptionMode: '',
-      LifetimeHrs: 0,
-      Password: withPassword ? OpenPgp.generatePassword() : '',
     }
-    const module = 'OpenPgpFilesWebclient'
-    const result = await filesWebApi.createShareableLink(parameters, module)
+    const result = await filesWebApi.createShareableLink(parameters)
     if (result) {
       commit('setItemProperty', {
         item: currentFile,
         property: 'publicLink',
         value: `${getApiHost()}${result}`,
       })
-      if (parameters.Password) {
-        commit('setItemProperty', {
-          item: currentFile,
-          property: 'linkPassword',
-          value: parameters.Password,
-        })
-      }
-      return result
+      commit('setItemProperty', {
+        item: currentFile,
+        property: 'linkPassword',
+        value: '',
+      })
     }
     return result
   },

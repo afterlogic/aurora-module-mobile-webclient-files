@@ -150,7 +150,7 @@ export const fileActions = {
     method: null,
     name: 'createShareableLink',
     getComponent: () => { return defineAsyncComponent(() => import('../components/dialogs/CreateShareableLinkDialog')) },
-    displayNameKey: 'OPENPGPFILESWEBCLIENT.HEADING_CREATE_PUBLIC_LINK',
+    displayNameKey: 'FILESWEBCLIENT.LABEL_PUBLIC_LINK',
     icon: 'SecureLinkIcon',
     isShowAction: isShowAction,
   },

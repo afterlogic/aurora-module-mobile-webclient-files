@@ -8,7 +8,7 @@
     <template v-slot:title>
       <div v-if="file && (!file.paranoidKey || file.publicLink)">
         <div v-if="!file.publicLink">
-          <span>{{ $t('OPENPGPFILESWEBCLIENT.HEADING_CREATE_PUBLIC_LINK') }}</span>
+          <span>{{ $t(protectedLinksAvailable ? 'OPENPGPFILESWEBCLIENT.HEADING_CREATE_PUBLIC_LINK' : 'FILESWEBCLIENT.LABEL_PUBLIC_LINK') }}</span>
         </div>
         <div v-if="file.publicLink">
           <span>{{ file.linkPassword ? 'Protected public link' : $t('FILESWEBCLIENT.LABEL_PUBLIC_LINK') }}</span>
@@ -20,7 +20,7 @@
     </template>
     <template v-slot:content>
       <div v-if="file && (!file.paranoidKey || file.publicLink)">
-        <div v-if="!file.publicLink">
+        <div v-if="!file.publicLink && protectedLinksAvailable">
           <AppCheckbox
             class="q-pl-lg q-py-lg q-pr-md"
             v-model="withPassword"
@@ -146,6 +146,7 @@ import { useOpenPGPStore } from '../../../../OpenPgpMobileWebclient/vue-mobile/s
 import { useCoreStore } from '../../../../CoreMobileWebclient/vue-mobile/src/stores/index-pinia'
 import { sendShareableLinkViaEmail } from '../../../../OpenPgpFilesMobileWebclient/vue-mobile/utils/send-shareable-link-email'
 import eventBus from 'src/event-bus'
+import modulesManager from 'src/modules-manager'
 
 import notification from 'src/utils/notification'
 
@@ -171,8 +172,11 @@ export default {
   computed: {
     ...mapState(useOpenPGPStore, ['myPrivateKeys']),
     ...mapState(useCoreStore, ['userPublicId']),
+    protectedLinksAvailable() {
+      return modulesManager.isModuleAvailable('OpenPgpFilesWebclient')
+    },
     createBtnLabel() {
-      return this.withPassword
+      return this.withPassword && this.protectedLinksAvailable
         ? 'Create protected link'
         : 'Create shareable link'
     },
@@ -297,7 +301,26 @@ export default {
       this.showSelectRecipientDialog = false
     },
     async createShareableLink() {
-      await this.asyncCreateShareableLink({ withPassword: this.withPassword })
+      if (this.withPassword && this.protectedLinksAvailable) {
+        const { createProtectedPublicLink } = await import(
+          '../../../../OpenPgpFilesMobileWebclient/vue-mobile/files/protected-public-link'
+        )
+        const created = await createProtectedPublicLink(this.file, { withPassword: true })
+        if (created) {
+          this.changeItemProperty({
+            item: this.file,
+            property: 'publicLink',
+            value: created.publicLink,
+          })
+          this.changeItemProperty({
+            item: this.file,
+            property: 'linkPassword',
+            value: created.linkPassword,
+          })
+        }
+      } else {
+        await this.asyncCreateShareableLink()
+      }
       this.publicLink = this.file.publicLink
       this.linkPassword = this.file.linkPassword
     },
