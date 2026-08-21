@@ -13,7 +13,14 @@
           data-test-id="files-view-share-link"
           @click="onPerformAction(actions.createShareableLink)"
       >
-        <ActionIcon color="black" icon="SecureLinkIcon" />
+        <ActionIcon color="black" :icon="actions.createShareableLink.icon" />
+      </AppHeaderButton>
+      <AppHeaderButton
+          v-if="isShowAction(actions.createSecureShareableLink)"
+          data-test-id="files-view-secure-share-link"
+          @click="onPerformAction(actions.createSecureShareableLink)"
+      >
+        <ActionIcon color="black" :icon="actions.createSecureShareableLink.icon" />
       </AppHeaderButton>
       <AppHeaderButton
           v-if="isShowAction(actions.download)"
@@ -178,6 +185,9 @@ export default {
       }
     },
     isShowAction(action) {
+      if (!action?.isShowAction) {
+        return false
+      }
       return action.isShowAction(
           action.name,
           [this.currentFile],
