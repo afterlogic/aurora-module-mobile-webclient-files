@@ -1,6 +1,7 @@
 import { getFilteredItems, getStorageIconName } from '../utils/common'
 import { pathSegmentsToApiPath } from '../utils/path'
 import { STORAGE_TYPES } from '../enums'
+import { getFilesSettings } from '../settings'
 
 export default {
   // Do not add getters with the same name as state (e.g. currentPath):
@@ -14,6 +15,25 @@ export default {
     return storageType !== STORAGE_TYPES.SHARED
       && storageType !== STORAGE_TYPES.FAVORITES
       && storageType !== STORAGE_TYPES.TRASH
+  },
+  isCreateShortcutAllowed: (state) => {
+    if (getFilesSettings()?.disableShortcuts) {
+      return false
+    }
+    const storage = state.currentStorage
+    const storageType = storage?.Type
+    if (
+      storageType === STORAGE_TYPES.SHARED
+      || storageType === STORAGE_TYPES.FAVORITES
+      || storageType === STORAGE_TYPES.TRASH
+      || storageType === STORAGE_TYPES.ENCRYPTED
+    ) {
+      return false
+    }
+    if (storage?.IsExternal) {
+      return false
+    }
+    return true
   },
   loadingStatus: (state) => state.isLoading,
   isArchive: (state) => {

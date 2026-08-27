@@ -23,6 +23,13 @@
         <ActionIcon color="black" :icon="actions.createSecureShareableLink.icon" />
       </AppHeaderButton>
       <AppHeaderButton
+          v-if="isShowAction(actions.openLink)"
+          data-test-id="files-view-open-link"
+          @click="onPerformAction(actions.openLink)"
+      >
+        <ActionIcon color="black" :icon="actions.openLink.icon" />
+      </AppHeaderButton>
+      <AppHeaderButton
           v-if="isShowAction(actions.download)"
           data-test-id="files-view-download"
           @click="onPerformAction(actions.download)"

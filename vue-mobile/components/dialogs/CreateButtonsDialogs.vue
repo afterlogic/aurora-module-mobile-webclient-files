@@ -10,6 +10,14 @@
         <UploadFileIcon />
       </div>
       <div
+        v-if="isCreateShortcutAllowed"
+        data-test-id="files-create-shortcut"
+        class="create-buttons__item create-shortcut"
+        @click="createShortcut"
+      >
+        <CreateShortcutIcon />
+      </div>
+      <div
         data-test-id="files-create-folder"
         class="create-buttons__item create-folder"
         @click="createFolder"
@@ -22,10 +30,11 @@
 
 <script>
 import { defineAsyncComponent } from 'vue'
-import { mapActions } from 'pinia'
+import { mapActions, mapGetters } from 'pinia'
 import { useFilesStore } from '../../store/index-pinia'
 
 import CreateFolderIcon from '../icons/actions/CreateFolderIcon'
+import CreateShortcutIcon from '../icons/actions/CreateShortcutIcon'
 import UploadFileIcon from '../icons/actions/UploadFileIcon'
 
 export default {
@@ -33,30 +42,23 @@ export default {
 
   components: {
     CreateFolderIcon,
+    CreateShortcutIcon,
     UploadFileIcon,
   },
-  // props: {
-    // file: { type: Object, default: null },
-    // dialog: { type: Boolean, default: false },
-  // },
-  // data() {
-  //   return {
-  //     openDialog: false,
-  //   }
-  // },
-  // watch: {
-  //   dialog(val) {
-  //     this.openDialog = val
-  //     if (!val) {
-  //       this.changeDialogComponent({ component: '' })
-  //     }
-  //   },
-  // },
+
+  computed: {
+    ...mapGetters(useFilesStore, ['isCreateShortcutAllowed']),
+  },
+
   methods: {
     ...mapActions(useFilesStore, ['changeDialogComponent']),
     createFolder() {
       this.$emit('closeDialog')
       this.changeDialogComponent({ getComponent: () => { return defineAsyncComponent(() => import('./CreateFolderDialog')) } })
+    },
+    createShortcut() {
+      this.$emit('closeDialog')
+      this.changeDialogComponent({ getComponent: () => { return defineAsyncComponent(() => import('./CreateLinkDialog')) } })
     },
     uploadFile() {
       this.changeDialogComponent({ component: 'FileUploader' })
@@ -92,7 +94,8 @@ export default {
   }
 }
 
-.create-folder svg {
+.create-folder svg,
+.create-shortcut svg {
   width: 20px;
 }
 </style>

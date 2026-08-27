@@ -11,10 +11,20 @@
     @click="listItemClick(file)"
   >
     <q-item-section class="file__thumb" side>
-      <FileItemIcon v-if="file.paranoidKey || !file.isImg" :file="file" class="file__thumb-icon" />
-      <div class="file__thumb-image"
-        v-if="file.isImg && !file.paranoidKey"
+      <div
+        v-if="file.isLink && linkThumbnail"
+        class="file__thumb-image"
+        :style="{ 'background-image': `url(${linkThumbnail})`}"
+      />
+      <div
+        v-else-if="file.isImg && !file.paranoidKey"
+        class="file__thumb-image"
         :style="{ 'background-image': `url(${filePreview})`}"
+      />
+      <FileItemIcon
+        v-else
+        :file="file"
+        class="file__thumb-icon"
       />
       <ShareWithMeItemIcon v-if="file.sharedWithMeAccess" class="file__thumb-share-icon" />
     </q-item-section>
@@ -26,7 +36,7 @@
       <q-item-label v-if="!file.downloading" class="list-item__text_secondary file__info">
         <EncryptedItemIcon v-if="file.paranoidKey" class="file__info-icon_encrypted"/>
         <SharedItemIcon v-if="isShared" class="file__info-icon_shared" width="14" height="14" />
-        <LinkItemIcon v-if="file.publicLink" class="file__info-icon_link"/>
+        <LinkItemIcon v-if="file.publicLink || file.isLink" class="file__info-icon_link"/>
         <FavoriteItemIcon v-if="file.favorite" class="file__info-icon_favorite"/>
         <span class="file__size">{{ fileSize }}</span>
         <span class="file__separator">|</span>
@@ -57,7 +67,12 @@ import text from 'src/utils/text'
 import date from 'src/utils/date'
 import { getApiHost } from 'src/api/helpers'
 
-import { getShortName } from '../utils/common'
+import {
+  getShortName,
+  getLinkDisplayHost,
+  openExternalLink,
+  resolveThumbnailUrl,
+} from '../utils/common'
 import { buildItemRouteFromContext } from '../utils/path'
 
 import { SHARING_LEVELS } from '../enums'
@@ -118,7 +133,16 @@ export default {
     filePreview() {
       return this.file?.thumbnailUrl ? getApiHost() + (this.file?.thumbnailUrl) : ''
     },
+    linkThumbnail() {
+      if (!this.file?.isLink || !this.file?.thumbnailUrl) {
+        return ''
+      }
+      return resolveThumbnailUrl(this.file.thumbnailUrl)
+    },
     fileSize() {
+      if (this.file.isLink) {
+        return getLinkDisplayHost(this.file.linkUrl || this.file.openUrl) || this.$t('COREWEBCLIENT.ACTION_OPEN_LINK')
+      }
       return text.getFriendlySize(this.file.size)
     },
     fileDate() {
@@ -146,6 +170,14 @@ export default {
         //   name: this.file.name,
         // }
         this.changeCurrentHeader('')
+      } else if (
+        !this.isSelectMode &&
+        !this.isMoved &&
+        !this.copiedFiles.length &&
+        !this.file.downloading &&
+        this.file.isLink
+      ) {
+        openExternalLink(this.file.linkUrl || this.file.openUrl)
       } else if (
         !this.isSelectMode &&
         !this.isMoved &&

@@ -85,7 +85,7 @@ export default {
       Path: file.path,
       Name: file.name,
       NewName: itemName,
-      IsLink: 0,
+      IsLink: file.isLink ? 1 : 0,
       IsFolder: file.isFolder,
     }
     return await filesWebApi.renameItem(parameters)
@@ -237,6 +237,21 @@ export default {
       FolderName: name,
     }
     return await filesWebApi.createFolder(parameters)
+  },
+
+  async asyncCheckUrl({ url }) {
+    return await filesWebApi.checkUrl({ Url: url })
+  },
+
+  async asyncCreateLink({ link, name }) {
+    const currentStorage = this.currentStorage
+    const parameters = {
+      Type: currentStorage.Type,
+      Path: this.currentPathString,
+      Link: link,
+      Name: name,
+    }
+    return await filesWebApi.createLink(parameters)
   },
 
   /**

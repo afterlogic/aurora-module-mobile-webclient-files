@@ -15,6 +15,14 @@ const getFormatFile = (name) => {
 export const getPreviewIconName = (file) => {
   if (file.paranoidKey) return 'FileLockIcon'
 
+  if (file.isLink) {
+    const linkType = (file.linkType || '').toLowerCase()
+    if (linkType === 'oembeded') {
+      return 'FileMediaIcon'
+    }
+    return 'FileLinkIcon'
+  }
+
   const name = file.name
   const format = getFormatFile(name)
   if (!format) return 'FileIcon'
@@ -44,6 +52,55 @@ export const getPreviewIconName = (file) => {
   return 'FileIcon'
 }
 
+/**
+ * Builds a displayable thumbnail URL. External shortcut thumbs are absolute;
+ * server thumbs are relative to the API host.
+ */
+export const resolveThumbnailUrl = (thumbnailUrl) => {
+  const url = types.pString(thumbnailUrl)
+  if (!url) {
+    return ''
+  }
+  if (/^https?:\/\//i.test(url) || url.startsWith('data:')) {
+    return url
+  }
+  return getApiHost() + url
+}
+
+/**
+ * Opens an external shortcut URL in a new browser tab.
+ */
+export const openExternalLink = (url) => {
+  const link = types.pString(url)
+  if (!link) {
+    return false
+  }
+  window.open(link, '_blank', 'noopener,noreferrer')
+  return true
+}
+
+/**
+ * Maps CheckUrl API result to create-link payload fields (desktop prepareLinkData).
+ */
+export const prepareLinkData = (data, linkUrl) => {
+  return {
+    isLink: true,
+    linkType: types.pString(data?.LinkType),
+    linkUrl: types.pString(linkUrl),
+    name: types.pString(data?.Name),
+    size: types.pInt(data?.Size),
+    thumbnailUrl: types.pString(data?.Thumb),
+  }
+}
+
+export const getLinkDisplayHost = (url) => {
+  try {
+    return new URL(types.pString(url)).hostname || ''
+  } catch (e) {
+    return ''
+  }
+}
+
 const isImg = (name) => {
   const formatFile = getFormatFile(name)
   return fileFormats.image.find((format) => {
@@ -59,19 +116,30 @@ const getPublicLink = (link) => {
 }
 
 const parseFile = (file) => {
-  return {
+  const isLink = !!file.IsLink
+  const linkUrl = isLink
+    ? types.pString(file.LinkUrl) || types.pString(file?.Actions?.open?.url)
+    : ''
+  const linkType = isLink ? types.pString(file.LinkType) : ''
+  const name = types.pString(file.Name)
+  const paranoidKey = types.pString(file?.ExtendedProps?.ParanoidKey)
+  const parsed = {
     loading: false,
     content: types.pString(file.Content),
     size: types.pInt(file.Size),
     file: file,
     hash: types.pString(file.Hash),
-    name: types.pString(file.Name),
+    name,
     type: types.pString(file.Type),
     lastModified: types.pInt(file.LastModified),
     owner: types.pString(file.Owner),
     fullPath: types.pString(file.FullPath),
     path: types.pString(file.Path),
     isFolder: types.pBool(file.IsFolder),
+    isLink,
+    linkUrl,
+    linkType,
+    oembedHtml: isLink ? types.pString(file.OembedHtml) : '',
     shares: types.pArray(file?.ExtendedProps?.Shares),
     publicLink: getPublicLink(
       types.pString(file?.ExtendedProps?.PublicLink)
@@ -81,8 +149,8 @@ const parseFile = (file) => {
     eitUrl: types.pString(file?.Actions?.edit?.url),
     viewUrl: types.pString(file?.Actions?.view?.url),
     decryptViewUrl: '',
-    openUrl: types.pString(file?.Actions?.open?.url),
-    paranoidKey: types.pString(file?.ExtendedProps?.ParanoidKey),
+    openUrl: types.pString(file?.Actions?.open?.url) || linkUrl,
+    paranoidKey,
     initializationVector: types.pString(
       file?.ExtendedProps?.InitializationVector
     ),
@@ -94,15 +162,22 @@ const parseFile = (file) => {
     percentDownloading: 0,
     isSelected: false,
     isCopied: isCopied(),
-    isImg: isImg(types.pString(file.Name)),
+    isImg: !isLink && isImg(name),
     isArchive: !!file?.Actions?.list,
     sharedWithMeAccess: types.pInt(file?.ExtendedProps?.SharedWithMeAccess),
     favorite: types.pBool(file.IsFavorite),
     trashOriginalPath: types.pString(file?.ExtendedProps?.TrashOriginalPath),
     decryptionProgress: false,
-    iconName: file.IsFolder ? 'Folder' : getPreviewIconName({ name: types.pString(file.Name), paranoidKey: types.pString(file?.ExtendedProps?.ParanoidKey) }),
+    iconName: '',
   }
+  parsed.iconName = file.IsFolder
+    ? 'Folder'
+    : getPreviewIconName(parsed)
+  return parsed
 }
+
+/** Exported for unit tests. */
+export const parseFileItem = parseFile
 
 export const getItemStorageType = (item, currentStorageType) => {
   if (currentStorageType === STORAGE_TYPES.FAVORITES && item?.type) {

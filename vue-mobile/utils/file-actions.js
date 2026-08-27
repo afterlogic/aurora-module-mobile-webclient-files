@@ -4,6 +4,7 @@ import { defineAsyncComponent } from 'vue'
 
 import { SHARING_LEVELS, STORAGE_TYPES } from '../enums'
 import { getFilesSettings } from '../settings'
+import { openExternalLink } from './common'
 
 const isArchiveElement = (path) => {
   return path.split('.')[path.split('.').length - 1] === 'zip'
@@ -81,6 +82,10 @@ const isShowAction = (action, items = [], storage, path) => {
         break
       case 'download':
         if (items[0].isFolder) result = false
+        if (items[0].isLink) result = false
+        break
+      case 'openLink':
+        if (!items[0].isLink) result = false
         break
       case 'rename':
         if (storage === STORAGE_TYPES.TRASH) result = false
@@ -192,6 +197,17 @@ export const fileActions = {
     name: 'download',
     displayNameKey: 'COREWEBCLIENT.ACTION_DOWNLOAD_FILE',
     icon: 'DownloadIcon',
+    isShowAction: isShowAction,
+  },
+  openLink: {
+    method: () => {
+      const filesStore = useFilesStore()
+      const file = filesStore.currentFile
+      openExternalLink(file?.linkUrl || file?.openUrl)
+    },
+    name: 'openLink',
+    displayNameKey: 'COREWEBCLIENT.ACTION_OPEN_LINK',
+    icon: 'OpenLinkIcon',
     isShowAction: isShowAction,
   },
   rename: {

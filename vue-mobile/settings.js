@@ -5,6 +5,7 @@ class FilesSettings {
     const filesData = types.pObject(appData.Files)
     this.allowFavorites = types.pBool(filesData.AllowFavorites, true)
     this.allowTrash = types.pBool(filesData.AllowTrash, true)
+    this.disableShortcuts = types.pBool(filesData.DisableShortcuts, false)
   }
 }
 

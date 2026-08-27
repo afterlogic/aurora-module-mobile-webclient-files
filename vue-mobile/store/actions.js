@@ -71,7 +71,7 @@ export default {
       Path: file.path,
       Name: file.name,
       NewName: itemName,
-      IsLink: 0,
+      IsLink: file.isLink ? 1 : 0,
       IsFolder: file.isFolder,
     }
     return await filesWebApi.renameItem(parameters)

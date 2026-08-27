@@ -86,6 +86,26 @@ export default {
       .catch(error => false)
   },
 
+  checkUrl: async (parameters) => {
+    return webApi.sendRequest({
+      moduleName: 'Files',
+      methodName: 'CheckUrl',
+      parameters: parameters,
+    })
+      .then(result => result)
+      .catch(() => false)
+  },
+
+  createLink: async (parameters) => {
+    return webApi.sendRequest({
+      moduleName: 'Files',
+      methodName: 'CreateLink',
+      parameters: parameters,
+    })
+      .then(result => result)
+      .catch(() => false)
+  },
+
   /** Simple public links use Files; protected links must call OpenPgpFilesWebclient elsewhere. */
   createShareableLink: async (parameters, module = 'Files') => {
     return webApi.sendRequest({

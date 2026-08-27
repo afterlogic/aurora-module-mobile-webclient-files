@@ -10,12 +10,10 @@
     <div v-if="currentFile">
       <div class="flex items-center justify-center">
         <div
-            v-if="(currentFile.paranoidKey || !currentFile.thumbnailUrl) &&
-              !currentFile.decryptViewUrl"
+            v-if="showIconPreview"
             class="file-info__preview q-my-xl"
         >
           <FileItemIcon
-              v-if="currentFile.paranoidKey || !currentFile.thumbnailUrl"
               :file="currentFile"
               :height="64"
               :width="64"
@@ -27,22 +25,36 @@
           >
             <span>Show</span>
           </div>
+          <q-btn
+              v-if="currentFile.isLink"
+              data-test-id="files-view-open-link-btn"
+              class="q-mt-md"
+              color="primary"
+              flat
+              no-caps
+              :label="$t('COREWEBCLIENT.ACTION_OPEN_LINK')"
+              @click="openLink"
+          />
         </div>
         <div
             class="q-my-lg"
             style="height: 100%; width: 100%"
-            v-if="(currentFile.thumbnailUrl && !currentFile.paranoidKey) || currentFile.decryptViewUrl"
+            v-if="showImagePreview"
         >
           <div style="display:flex; justify-content:center; align-items:center; min-height: 250px;">
             <img :src="filePreview" style="max-height: 400px; max-width: 100%;" />
           </div>
-          <!--<q-img
-              class="file-info__img"
-              :src="filePreview"
-              no-spinner
-              fit="scale-down"
-              style="max-height: 400px;max-width: 100%;min-height: 250px;"
-          />-->
+          <div v-if="currentFile.isLink" class="flex justify-center">
+            <q-btn
+                data-test-id="files-view-open-link-btn"
+                class="q-mt-md"
+                color="primary"
+                flat
+                no-caps
+                :label="$t('COREWEBCLIENT.ACTION_OPEN_LINK')"
+                @click="openLink"
+            />
+          </div>
         </div>
       </div>
       <div>
@@ -54,10 +66,13 @@
             <div class="file__info flex items-end q-mb-xs">
               <EncryptedItemIcon v-if="currentFile.paranoidKey" class="file__info-icon_encrypted q-mx-xs"/>
               <SharedItemIcon v-if="isShared" width="14" height="14" class="file__info-icon_shared q-mx-xs"/>
-              <LinkItemIcon v-if="currentFile.publicLink" class="file__info-icon_link q-mx-xs"/>
+              <LinkItemIcon v-if="currentFile.publicLink || currentFile.isLink" class="file__info-icon_link q-mx-xs"/>
               <FavoriteItemIcon v-if="currentFile.favorite" class="file__info-icon_favorite q-mx-xs"/>
             </div>
           </div>
+        </div>
+        <div v-if="currentFile.isLink" class="q-ma-md">
+          <InputForm readonly :value="currentFile.linkUrl || currentFile.openUrl" :label="$t('FILESWEBCLIENT.LABEL_EXTERNAL_DOC_URL')" />
         </div>
         <div class="flex no-wrap justify-between q-ma-md">
           <InputForm readonly :value="fileSize" label="Size" style="width:100%" />
@@ -85,6 +100,11 @@ import { getApiHost } from 'src/api/helpers'
 import eventBus from 'src/event-bus'
 
 import { SHARING_LEVELS } from '../enums'
+import {
+  getLinkDisplayHost,
+  openExternalLink,
+  resolveThumbnailUrl,
+} from '../utils/common'
 import FileItemIcon from '../components/icons/FileItemIcon'
 import InputForm from '../components/common/InputForm'
 import EncryptedItemIcon from '../components/icons/item/EncryptedItemIcon'
@@ -123,9 +143,30 @@ export default {
       if (!this.currentFile) return ''
       return this.currentFile.paranoidKey && this.currentFile.thumbnailUrl
     },
+    showImagePreview() {
+      if (!this.currentFile) {
+        return false
+      }
+      if (this.currentFile.decryptViewUrl) {
+        return true
+      }
+      if (this.currentFile.isLink && this.currentFile.thumbnailUrl && !this.currentFile.paranoidKey) {
+        return true
+      }
+      return !!(this.currentFile.thumbnailUrl && !this.currentFile.paranoidKey && !this.currentFile.isLink)
+    },
+    showIconPreview() {
+      if (!this.currentFile) {
+        return false
+      }
+      return !this.showImagePreview
+    },
     filePreview() {
       if (this.currentFile.decryptViewUrl){
         return this.currentFile.decryptViewUrl
+      }
+      if (this.currentFile.isLink) {
+        return resolveThumbnailUrl(this.currentFile.thumbnailUrl)
       }
       const api = getApiHost()
       return api + this.currentFile.viewUrl
@@ -140,6 +181,10 @@ export default {
       return date.getDate(this.currentFile.lastModified)
     },
     fileSize() {
+      if (this.currentFile.isLink) {
+        return getLinkDisplayHost(this.currentFile.linkUrl || this.currentFile.openUrl)
+          || this.$t('COREWEBCLIENT.ACTION_OPEN_LINK')
+      }
       return text.getFriendlySize(this.currentFile.size)
     },
     isShared() {
@@ -180,6 +225,9 @@ export default {
         getParentComponent: this.$root._getParentComponent
       })
     },
+    openLink() {
+      openExternalLink(this.currentFile?.linkUrl || this.currentFile?.openUrl)
+    },
   }
 }
 </script>
@@ -200,13 +248,5 @@ export default {
   &__info-icon_link {
     fill: $secondary;
   }
-}
-.view-action {
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 18px;
-
-  letter-spacing: 0.3px;
-  text-decoration-line: underline;
 }
 </style>

@@ -31,5 +31,5 @@ export const fileFormats = {
   pdf: ['pdf'],
   archive: ['zip', 'cab', 'tar', 'tgz', 'gz', 'rar'],
   image: ['png', 'gif', 'bmp', 'tiff', 'jpg', 'jpeg'],
-  link: ['htm', 'html'],
+  link: ['htm', 'html', 'url'],
 }
