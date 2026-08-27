@@ -37,6 +37,13 @@ describe('fileActions.isShowAction', () => {
     expect(show('download', [file], 'personal', '/f.txt')).toBe(true)
   })
 
+  it('shows openLink only for shortcuts and hides download', () => {
+    const link = { ...file, isLink: true }
+    expect(show('openLink', [file], 'personal', '/f.txt')).toBe(false)
+    expect(show('openLink', [link], 'personal', '/demo.url')).toBe(true)
+    expect(show('download', [link], 'personal', '/demo.url')).toBe(false)
+  })
+
   it('shareLeave only when item has shared access', () => {
     expect(show('shareLeave', [file], 'personal', '/f.txt')).toBe(false)
     expect(

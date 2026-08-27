@@ -264,6 +264,303 @@ async function createFolderViaFab(page, folderName) {
   return folder
 }
 
+/**
+ * Open FAB create menu if not already open (FAB toggles).
+ */
+async function openCreateFabMenu(page) {
+  await closeFilesSearch(page).catch(() => undefined)
+  const menu = page.getByTestId('files-create-menu')
+  if (await menu.isVisible().catch(() => false)) {
+    return menu
+  }
+  await clickReady(page.getByTestId('files-create-fab'))
+  await expect(menu).toBeVisible({ timeout: 15000 })
+  return menu
+}
+
+async function closeCreateFabMenu(page) {
+  const menu = page.getByTestId('files-create-menu')
+  if (!(await menu.isVisible().catch(() => false))) {
+    return
+  }
+  await page.keyboard.press('Escape').catch(() => undefined)
+  if (await menu.isVisible().catch(() => false)) {
+    await clickReady(page.getByTestId('files-create-fab'))
+  }
+  await expect(menu).toBeHidden({ timeout: 15000 }).catch(() => undefined)
+}
+
+/**
+ * True when FAB → Create shortcut is available.
+ */
+async function isCreateShortcutAvailable(page) {
+  const menu = await openCreateFabMenu(page)
+  const visible = await page
+    .getByTestId('files-create-shortcut')
+    .isVisible()
+    .catch(() => false)
+  await closeCreateFabMenu(page)
+  return visible
+}
+
+function isFilesApiMethod(res, methodName) {
+  if (!res.url().includes('Api')) return false
+  if (res.request().method() !== 'POST') return false
+  const post = res.request().postData() || ''
+  return (
+    post.includes(`Method=${methodName}`) ||
+    post.includes(`"Method":"${methodName}"`) ||
+    post.includes(methodName)
+  )
+}
+
+function parseApiResponseText(text) {
+  const trimmed = String(text || '').trim()
+  try {
+    return JSON.parse(trimmed)
+  } catch {
+    const start = trimmed.indexOf('{')
+    const end = trimmed.lastIndexOf('}')
+    if (start === -1 || end === -1 || end <= start) {
+      return null
+    }
+    try {
+      return JSON.parse(trimmed.slice(start, end + 1))
+    } catch {
+      return null
+    }
+  }
+}
+
+/**
+ * Strip PHP notice HTML that local stands emit before JSON when display_errors=On.
+ * Axios JSON parse fails on that prefix, so Create shortcut never enables.
+ */
+function stripPhpNoticePrefix(body) {
+  const text = String(body || '')
+  const trimmed = text.trimStart()
+  if (!trimmed.startsWith('<')) {
+    return text
+  }
+  const start = trimmed.indexOf('{')
+  const end = trimmed.lastIndexOf('}')
+  if (start === -1 || end <= start) {
+    return text
+  }
+  return trimmed.slice(start, end + 1)
+}
+
+async function installApiJsonSanitizeRoute(page) {
+  if (page.__auroraApiJsonSanitize) {
+    return
+  }
+  page.__auroraApiJsonSanitize = true
+  const handler = async (route) => {
+    try {
+      const response = await route.fetch()
+      const headers = { ...response.headers() }
+      const body = stripPhpNoticePrefix(await response.text())
+      delete headers['content-length']
+      await route.fulfill({
+        status: response.status(),
+        headers,
+        body,
+      })
+    } catch {
+      try {
+        await route.abort()
+      } catch {
+        // ignore
+      }
+    }
+  }
+  page.__auroraApiJsonSanitizeHandler = handler
+  await page.route((url) => String(url).includes('?/Api'), handler)
+}
+
+async function uninstallApiJsonSanitizeRoute(page) {
+  if (!page.__auroraApiJsonSanitize) {
+    return
+  }
+  const handler = page.__auroraApiJsonSanitizeHandler
+  page.__auroraApiJsonSanitize = false
+  page.__auroraApiJsonSanitizeHandler = null
+  if (handler) {
+    await page
+      .unroute((url) => String(url).includes('?/Api'), handler)
+      .catch(() => {})
+  }
+}
+
+/**
+ * Same-origin URL from PLAYWRIGHT_BASE_URL for PHP CheckUrl (no outbound net).
+ * Prefer 127.0.0.1 to avoid localhost/IPv6 curl quirks in PHP.
+ * Non-html path → unique basename (avoids colliding HTML titles like "404 Not Found").
+ */
+function uniqueShortcutUrl() {
+  const base = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:8888/'
+  let origin = 'http://127.0.0.1:8888'
+  try {
+    const u = new URL(base)
+    if (u.hostname === 'localhost') {
+      u.hostname = '127.0.0.1'
+    }
+    origin = u.origin
+  } catch {
+    // keep default
+  }
+  return `${origin}/e2e-sc-${Date.now()}.txt`
+}
+
+async function waitForShortcutCheckUrl(page, url) {
+  const submit = page.getByTestId('files-create-link-submit')
+  const token = (url.match(/e2e-sc-\d+/) || [url])[0]
+  let checkResult = null
+  let lastCheckBody = null
+  let sawMatchingRequest = false
+
+  const onResponse = async (res) => {
+    try {
+      if (!isFilesApiMethod(res, 'CheckUrl')) return
+      const post = res.request().postData() || ''
+      if (!post.includes(token) && !post.includes(encodeURIComponent(token))) {
+        return
+      }
+      sawMatchingRequest = true
+      const body = parseApiResponseText(await res.text())
+      lastCheckBody = body
+      if (body?.Result) {
+        checkResult = body.Result
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  page.on('response', onResponse)
+  try {
+    await expect(submit).toBeEnabled({ timeout: 45000 })
+  } catch (e) {
+    const err = new Error(
+      `Files.CheckUrl did not enable Create for "${url}". ` +
+        `sawMatchingRequest=${sawMatchingRequest}. ` +
+        `Last API body: ${JSON.stringify(lastCheckBody)}.`
+    )
+    err.code = 'CHECK_URL_FAILED'
+    throw err
+  } finally {
+    page.off('response', onResponse)
+  }
+
+  return checkResult
+}
+
+/**
+ * FAB → Create shortcut → CheckUrl → CreateLink.
+ * Does not open the row (click would open the external URL).
+ * @returns {{ name: string, url: string, item: import('@playwright/test').Locator }}
+ */
+async function createShortcutViaFab(page, url) {
+  await installApiJsonSanitizeRoute(page)
+  await openCreateFabMenu(page)
+  const shortcutBtn = page.getByTestId('files-create-shortcut')
+  await expect(shortcutBtn).toBeVisible({ timeout: 15000 })
+  await shortcutBtn.evaluate((el) => el.click())
+
+  const dialog = page.getByTestId('files-create-link-dialog')
+  await expect(dialog).toBeVisible({ timeout: 15000 })
+
+  const urlInput = page.getByTestId('files-create-link-url').locator('input')
+  await expect(urlInput).toBeVisible({ timeout: 10000 })
+  const checkResultPromise = waitForShortcutCheckUrl(page, url)
+  await urlInput.click()
+  await urlInput.fill(url)
+  await urlInput.evaluate((el, value) => {
+    el.value = value
+    el.dispatchEvent(new Event('input', { bubbles: true }))
+    el.dispatchEvent(new Event('change', { bubbles: true }))
+  }, url)
+  await page.waitForTimeout(1200)
+
+  const checkResult = await checkResultPromise
+
+  let name = String(checkResult?.Name || '').trim()
+  if (!name) {
+    name = (
+      await dialog
+        .locator('.create-link__preview-name')
+        .first()
+        .textContent()
+        .catch(() => '')
+    ).trim()
+  }
+  if (!name) {
+    const err = new Error(`Files.CheckUrl did not yield a name for "${url}"`)
+    err.code = 'CHECK_URL_FAILED'
+    throw err
+  }
+
+  const submit = page.getByTestId('files-create-link-submit')
+  const createRespPromise = page.waitForResponse(
+    (res) => isFilesApiMethod(res, 'CreateLink'),
+    { timeout: 60000 }
+  )
+  await clickReady(submit)
+  const createResp = await createRespPromise
+  const createBody = parseApiResponseText(await createResp.text())
+  if (!createBody?.Result) {
+    throw new Error(
+      `Files.CreateLink failed for "${url}": ${JSON.stringify(createBody)}`
+    )
+  }
+
+  await expect(dialog).toBeHidden({ timeout: 45000 })
+  await waitForFilesList(page)
+
+  let item = page.getByTestId('files-item').filter({ hasText: name }).first()
+  const appeared = await item
+    .waitFor({ state: 'visible', timeout: 15000 })
+    .then(() => true)
+    .catch(() => false)
+  if (!appeared) {
+    item = await locateByName(page, name, 'files-item', { timeout: 60000 })
+    await closeFilesSearch(page)
+  }
+  return { name, url, item }
+}
+
+/**
+ * Delete a shortcut via item menu (row click opens the external URL).
+ */
+async function deleteShortcutViaMenu(page, name) {
+  await closeFilesSearch(page).catch(() => undefined)
+  await waitForFilesList(page)
+
+  let row = page.getByTestId('files-item').filter({ hasText: name }).first()
+  if (!(await row.isVisible().catch(() => false))) {
+    await searchFiles(page, name)
+    row = page.getByTestId('files-item').filter({ hasText: name }).first()
+    if (!(await row.isVisible().catch(() => false))) {
+      await closeFilesSearch(page).catch(() => undefined)
+      return
+    }
+  }
+
+  await clickReady(row.getByTestId('files-item-more'))
+  await expect(page.getByTestId('files-item-menu')).toBeVisible({
+    timeout: 15000,
+  })
+  const openLink = page.getByTestId('files-item-menu-openLink')
+  await expect(openLink).toBeVisible({ timeout: 10000 })
+  await clickReady(page.getByTestId('files-item-menu-delete'))
+  await confirmDeleteDialogIfShown(page)
+  await waitForFilesList(page)
+  await closeFilesSearch(page).catch(() => undefined)
+  await expect(
+    page.getByTestId('files-item').filter({ hasText: name })
+  ).toHaveCount(0, { timeout: 60000 })
+}
+
 async function deleteFolderIfPresent(page, folderName) {
   await closeFilesSearch(page).catch(() => undefined)
   await waitForFilesList(page)
@@ -553,6 +850,12 @@ module.exports = {
   cleanupArtifacts,
   purgeE2eLeftovers,
   createFolderViaFab,
+  isCreateShortcutAvailable,
+  uniqueShortcutUrl,
+  installApiJsonSanitizeRoute,
+  uninstallApiJsonSanitizeRoute,
+  createShortcutViaFab,
+  deleteShortcutViaMenu,
   deleteFolderIfPresent,
   longPressFilesItem,
   navigateToStorageRoot,

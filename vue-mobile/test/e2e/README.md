@@ -22,3 +22,12 @@ npm run test:e2e:ui -- --setup "FilesMobileWebclient iPhone13"
 
 Shared helpers: Core `test/e2e/helpers/` (`AURORA_MOBILE_E2E_ROOT`). Domain helpers: `./helpers/` here.
 
+| File | What it covers |
+|------|----------------|
+| `files.spec.js` | Open first file / folder |
+| `files-actions.spec.js` | Drawer, storages, search, FAB folder/upload, rename, public link, move |
+| `files-shortcut.spec.js` | FAB → Create shortcut, open external URL, delete via menu |
+| `files-extra-actions.spec.js` | Extra file actions |
+| `files-select-actions.spec.js` | Multi-select actions |
+
+
