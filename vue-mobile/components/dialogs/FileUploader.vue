@@ -64,20 +64,23 @@ export default {
       if (this.currentStorage.Type !== 'encrypted') {
         // getApiHost() already ends with '/'; same as web-api.js sendRequest.
         let url = getApiHost() + '?/Api/'
-        let sAuthToken = VueCookies.get('AuthToken')
+        // Auth rides on the httpOnly AuthToken cookie the server set at login; the
+        // client no longer has (or forwards) the token. X-Client marks this as a web
+        // client so the server keeps managing that cookie.
         // TwoFactorAuth AllowUsedDevices requires X-DeviceId on every Api entry
         // (including Quasar multipart upload); without it the server returns AuthError 102.
         let headers = [
+          { name: 'X-Client', value: 'webclient' },
           { name: 'X-DeviceId', value: VueCookies.get('DeviceId') || '' },
           { name: 'X-MobileApp', value: '1' },
         ]
-        if (sAuthToken) {
-          headers.push({ name: 'Authorization', value: 'Bearer ' + sAuthToken })
-        }
         return {
           url,
           method: 'POST',
           headers,
+          // Needed so the browser attaches the httpOnly AuthToken cookie on the
+          // cross-origin dev API host (same as web-api.js sendRequest).
+          withCredentials: true,
           fieldName: 'jua-uploader',
           formFields: [
             { name: 'jua-post-type', value: 'ajax' },
