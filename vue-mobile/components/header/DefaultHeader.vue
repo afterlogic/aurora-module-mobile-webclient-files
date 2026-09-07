@@ -20,28 +20,36 @@
         {{ $t('FILESWEBCLIENT.HEADING_BROWSER_TAB') }}
       </span>
 
-      <q-btn-dropdown
-        v-if="!isStorageRoot"
-        model-value
-        v-model="isPathMenuOpen"
+      <q-btn
+        v-if="parentPathOptions.length > 0"
         :ripple="false"
         :label="getShortName(currentPath[currentPath.length - 1], 20)"
-        dropdown-icon="arrow_drop_down"
-        class="files-dropdown"
+        icon-right="arrow_drop_down"
+        class="files-dropdown files-title"
         dense
         no-caps
         flat
       >
-        <q-list>
-          <div v-for="(path, index) in currentPath" :key="path">
-            <q-item v-if="currentPath.length - 1 !== index" @click="openPath(index)" clickable dense v-close-popup>
+        <q-menu v-model="isPathMenuOpen">
+          <q-list>
+            <q-item
+              v-for="option in parentPathOptions"
+              :key="option.key"
+              @click="openPath(option.index)"
+              clickable
+              dense
+              v-close-popup
+            >
               <div class="files-dropdown__item">
-                {{ getShortName(path, 20) }}
+                {{ option.label }}
               </div>
             </q-item>
-          </div>
-        </q-list>
-      </q-btn-dropdown>
+          </q-list>
+        </q-menu>
+      </q-btn>
+      <span v-else-if="!isStorageRoot" class="app-header__title-main files-title">
+        {{ getShortName(currentPath[currentPath.length - 1], 20) }}
+      </span>
       <span class="app-header__title-secondary" data-test-id="files-storage-name">
         {{ storageName }}
       </span>
@@ -81,6 +89,15 @@ export default {
     isStorageRoot() {
       return !this.currentPath?.length
     },
+    parentPathOptions() {
+      return (this.currentPath || [])
+        .slice(0, -1)
+        .map((path, index) => ({
+          key: `${index}-${path}`,
+          index,
+          label: getShortName(path, 20),
+        }))
+    },
     storageName() {
       return this.currentStorage?.DisplayName || ''
     },
@@ -110,6 +127,12 @@ export default {
 .files-dropdown {
   padding: 0 0 0 24px;
   min-height: auto;
+  max-width: 100%;
+  min-width: 0;
+
+  .q-btn__content {
+    flex-wrap: nowrap;
+  }
 
   &__item {
     font-style: normal;
@@ -127,5 +150,14 @@ export default {
   .q-icon {
     height: 20px;
   }
+}
+
+.files-title {
+  display: block;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>
