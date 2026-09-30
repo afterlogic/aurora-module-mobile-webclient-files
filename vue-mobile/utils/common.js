@@ -167,6 +167,7 @@ const parseFile = (file) => {
     sharedWithMeAccess: types.pInt(file?.ExtendedProps?.SharedWithMeAccess),
     favorite: types.pBool(file.IsFavorite),
     trashOriginalPath: types.pString(file?.ExtendedProps?.TrashOriginalPath),
+    trashOriginalType: types.pString(file?.ExtendedProps?.TrashOriginalType),
     decryptionProgress: false,
     iconName: '',
   }

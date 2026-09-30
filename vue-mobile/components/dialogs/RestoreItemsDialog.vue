@@ -28,6 +28,7 @@
 <script>
 import { mapActions, mapGetters } from 'pinia'
 import { useFilesStore } from '../../store/index-pinia'
+import { STORAGE_TYPES } from '../../enums'
 
 import AppDialog from 'src/components/common/AppDialog'
 import ButtonDialog from 'src/components/common/ButtonDialog'
@@ -52,7 +53,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(useFilesStore, ['selectedFiles']),
+    ...mapGetters(useFilesStore, ['selectedFiles', 'storageList']),
     itemsToRestore() {
       return this.selectedFiles.length ? this.selectedFiles : (this.file ? [this.file] : [])
     },
@@ -64,10 +65,9 @@ export default {
     },
     originalPaths() {
       return this.itemsToRestore
-        .map((item) => item.trashOriginalPath)
-        .filter(Boolean)
+        .filter((item) => item.trashOriginalPath)
         .slice(0, 3)
-        .map((path) => `${this.$t('FILESWEBCLIENT.LABEL_PERSONAL_STORAGE')}${path}`)
+        .map((item) => this.getOriginalLocation(item))
     },
     hasMoreOriginalPaths() {
       return this.itemsToRestore.filter((item) => item.trashOriginalPath).length > 3
@@ -75,6 +75,18 @@ export default {
   },
   methods: {
     ...mapActions(useFilesStore, ['asyncRestoreItems', 'changeItemsLists', 'selectFile']),
+    getOriginalLocation(item) {
+      const encryptedPrefix = '/.encrypted'
+      let type = item.trashOriginalType || STORAGE_TYPES.PERSONAL
+      let path = item.trashOriginalPath
+      if (type === STORAGE_TYPES.PERSONAL && (path === encryptedPrefix || path.startsWith(encryptedPrefix + '/'))) {
+        type = STORAGE_TYPES.ENCRYPTED
+        path = path.substring(encryptedPrefix.length)
+      }
+      const storageName = this.storageList.find((storage) => storage.Type === type)?.DisplayName
+        || this.$t('FILESWEBCLIENT.LABEL_PERSONAL_STORAGE')
+      return `${storageName}${path}`
+    },
     closeDialog() {
       this.$emit('closeDialog')
     },
