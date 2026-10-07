@@ -21,7 +21,7 @@ export default defineConfig({
       resolveId (id, importer) {
         if (
           importer &&
-          importer.includes(`${path.sep}file-actions.js`) &&
+          importer.replaceAll('\\', '/').includes('/file-actions.js') &&
           (id === '../store/index-pinia' || id.endsWith('/store/index-pinia'))
         ) {
           return path.resolve(root, 'test/unit/stubs/files-store.js')
