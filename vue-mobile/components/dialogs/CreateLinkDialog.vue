@@ -19,13 +19,15 @@
         <FileItemIcon v-else :file="previewIconFile" :width="40" :height="40" />
         <div class="create-link__preview-name q-mt-sm">{{ preview.name }}</div>
       </div>
+      <div class="q-mx-lg dialog__header-text">
+        {{ $t('FILESWEBCLIENT.LABEL_EXTERNAL_DOC_URL') }}
+      </div>
       <AppDialogInput
         data-test-id="files-create-link-url"
         class="q-mx-lg"
         v-model="link"
         autofocus
         outlined
-        :placeholder="$t('FILESWEBCLIENT.LABEL_EXTERNAL_DOC_URL')"
         @keyup.enter.stop="createLink"
       />
       <div class="q-mx-lg q-mt-sm text-caption text-grey-7">
